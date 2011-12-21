@@ -1,3 +1,6 @@
+<%@ page import="pub.platform.db.ConnectionManager" %>
+<%@ page import="pub.platform.db.DatabaseConnection" %>
+<%@ page import="pub.platform.db.RecordSet" %>
 <%@ page contentType="text/html; charset=GBK" %>
 <%@ include file="/pages/security/loginassistor.jsp" %>
 <%
@@ -15,6 +18,34 @@
         //System.out.println( om.getOperator().getPtDeptBean().getSuperdqmc());
     } catch (Exception e) {
         System.out.println("jsp" + e + "\n");
+    }
+    String deptname = "";
+    String operid = "";
+
+    String rolesall = null;
+
+    if (om != null) {
+        if (om.getOperator() != null) {
+            username = om.getOperatorName();
+            operid = om.getOperator().getOperid();
+            if (om.getOperator().getPtDeptBean() != null)
+                deptname = om.getOperator().getPtDeptBean().getDeptname();
+
+            //角色
+            List roles = new ArrayList();
+            DatabaseConnection conn = ConnectionManager.getInstance().get();
+            RecordSet rs = conn.executeQuery("select a.roledesc from ptoperrole b right join ptrole a on b.roleid = a.roleid  where b.operid='" + operid + "'");
+            while (rs.next()) {
+                roles.add(rs.getString("roledesc"));
+            }
+            ConnectionManager.getInstance().release();
+            rolesall = " ";
+            for (int i = 0; i < roles.size(); i++) {
+                rolesall += roles.get(i) + " ";
+            }
+
+        }
+
     }
 %>
 <script type="text/javascript">
@@ -252,7 +283,6 @@
             <img src="../../images/fbifis-header.jpg" height="45px">
         </td>
         <td width="30%">
-            <%--<img src="../../images/systitle.jpg" height="25px">--%>
         </td>
         <td style="height:25px;text-align:right" class="headfont">
             <span>您好,<%=username%>! </span>
@@ -282,7 +312,9 @@
             <div onclick="tabbarclk(this);" active="false" id="ver" class="tabs-item" style="float:left;width:80px;">
                 <span style="width:100%;">版本控制</span>
             </div>
-            <%--<%=" " + deptname + " | " + operid + " | <" + rolesall + ">" %>--%>
+            <div align="right" class="headfont">
+                <%=" " + deptname + " | " + operid + " | <" + rolesall + ">" %>
+            </div>
         </td>
     </tr>
     <tr height="4px">
