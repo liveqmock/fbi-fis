@@ -1,0 +1,148 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                /*padding-left: 80px;*/
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-input {
+                width: 180px;
+            }
+
+            .col-qry1 {
+                width: 40%;
+            }
+        </style>
+        <script language="JavaScript" type="text/JavaScript">
+            /*document.onkeydown = function TabReplace() {
+             if (event.keyCode == 13) {
+             if (event.srcElement.id == 'editForm:paynotescode'){
+             document.getElementById("editForm:btnAccept").click();
+             }
+             }
+             }*/
+            $ = jQuery;
+            $(document).ready(function() {
+                $('#editForm\\:pay').focus(function() {
+                    $('#editForm\\:paynotescode').select();
+                });
+            });
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px 15px 5px 15px">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="editForm">
+                <p:focus for="paynotescode"/>
+                <p:panel header="获取数据">
+                    <h:panelGrid width="100%" cellspacing="0" border="0" columns="2" columnClasses="col-qry1">
+                        <h:panelGroup>
+                            <h:panelGrid cellspacing="0" border="0" columns="3">
+                                <h:outputLabel value="凭证编号:"/>
+                                <h:inputText id="paynotescode" autocomplete="off" required="true"
+                                             requiredMessage="请输入凭证号"
+                                             style="width:200px"/>
+                                <h:message for="paynotescode" style="color:red;"/>
+                            </h:panelGrid>
+                        </h:panelGroup>
+                        <h:panelGrid cellspacing="0" border="0" columns="1"
+                                     width="100%">
+                            <h:panelGroup>
+                                <p:commandButton style="width:60px;" ajax="false"
+                                                 id="btnAccept"
+                                                 value="获 取"></p:commandButton>
+                                <p:spacer width="10px"/>
+                                <p:commandButton style="width:60px;" type="reset" value="重 置"></p:commandButton>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+                <p:fieldset legend="缴款书信息">
+                    <h:panelGrid id="detailPanel1" columns="1">
+                        <h:panelGrid columns="4" cellpadding="2" border="0"
+                                     columnClasses="col-label,col-input,col-label2,col-input">
+                            <h:outputLabel value="缴款书编号:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="总金额:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="打票日期:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="缴款人:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="代收银行:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="代收银行:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="缴款单位:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="验证码:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="缴款方式:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="备注:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="制单日期:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="制单人:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="缴款人开户行:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="缴款人账号:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="执收单位:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="缴库方式:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="银行收款日期:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="银行记账日期:"/>
+                            <h:outputLabel/>
+                            <h:outputLabel value="票据种类:"/>
+                            <h:outputLabel/>
+                        </h:panelGrid>
+                        <p:dataTable var="record" id="paymenttb" emptyMessage="数据记录为空...">
+                            <p:column headerText="项目">
+                                <h:outputText value="hhh"></h:outputText>
+                            </p:column>
+                            <p:column headerText="计量单位">
+                                <h:outputText value="d"></h:outputText>
+                            </p:column>
+
+                            <p:column headerText="数量">
+                                <h:outputText value="10"></h:outputText>
+                            </p:column>
+                            <p:column headerText="金额">
+                                <h:outputText value="10"></h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </p:fieldset>
+                <p:fieldset legend="操作">
+                    <h:panelGrid columns="1" cellpadding="2" border="0" style="width:700px;text-align:center;">
+                        <h:panelGroup>
+                            <h:commandButton id="btnPay"
+                                             ajax="true" value="收款确认"
+                                             style="width:90px">
+                            </h:commandButton>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

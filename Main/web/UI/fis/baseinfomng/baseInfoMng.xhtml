@@ -2,24 +2,176 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:p="http://primefaces.prime.com.tr/ui"
+                xmlns:p="http://primefaces.org/ui"
                 template="/templates/ui.xhtml">
     <ui:define name="head">
 
     </ui:define>
     <ui:define name="content">
         <div style="margin:5px;">
-            <p:growl id="msgs" showDetail="false"/>
-            <h:form id="basicinfoForm">
-                <p:panel header="��ȡ�����ֻ�������" id="pnldiv" style="width:500px;">
-                    <h:panelGrid columns="1" cellspacing="5" columnClasses="input-col-xxl">
-                        <h:commandButton id="btnExp" value="ȫ����ȡ"
-                                         action="#{basicinfoAcptAction.qryBasicinfo}">
-                            <f:param name="basicflag" value="ALL"/>
-                        </h:commandButton>
-                    </h:panelGrid>
-                </p:panel>
-            </h:form>
+            <p:tabView cache="false" dynamic="true" style="font-weight:normal;font-style:normal">
+                <p:tab title="代理银行">
+                    <p:growl id="bankmsgs" showDetail="false"/>
+                    <h:form id="bankForm">
+                        <p:menubar>
+                            <p:menuitem value="获取信息" id="btnbank" icon="ui-icon ui-icon-download" update="banktb"
+                                        action="#{baseInfoAction.onBtnbankClick}"></p:menuitem>
+                        </p:menubar>
+                        <p:dataTable id="banktb" value="#{baseInfoAction.fsBaseBankList}" var="record"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" rows="15" paginatorPosition="bottom"
+                                     rowsPerPageTemplate="100,50,30,15,5"
+                                     emptyMessage="数据记录为空...">
+                            <p:column filterBy="#{record.bankcode}" filterMatchMode="contains">
+                                <f:facet name="header">
+                                    编号
+                                </f:facet>
+                                <h:outputText value="#{record.bankcode}"/>
+                            </p:column>
+                            <p:column filterBy="#{record.bankname}" filterMatchMode="contains">
+                                <f:facet name="header">
+                                    名称
+                                </f:facet>
+                                <h:outputText value="#{record.bankname}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    项目ID
+                                </f:facet>
+                                <h:outputText value="#{record.itemid}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+                <p:tab title="执收单位">
+                    <h:form id="execunitForm">
+                        <p:menubar>
+                            <p:menuitem value="获取信息" id="btnexecunit" icon="ui-icon ui-icon-download" update="execunittb"
+                                        ></p:menuitem>
+                        </p:menubar>
+                        <p:dataTable id="execunittb" value="#{baseInfoAction.fsBaseCollectunitList}" var="record"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" rows="15" paginatorPosition="bottom"
+                                     rowsPerPageTemplate="100,50,30,15,5"
+                                     emptyMessage="数据记录为空...">
+                            <p:column filterBy="#{record.unitcode}" filterMatchMode="contains">
+                                <f:facet name="header">
+                                    编号
+                                </f:facet>
+                                <h:outputText value="#{record.unitcode}"/>
+                            </p:column>
+                            <p:column filterBy="#{record.unitname}" filterMatchMode="contains">
+                                <f:facet name="header">
+                                    名称
+                                </f:facet>
+                                <h:outputText value="#{record.unitname}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    项目ID
+                                </f:facet>
+                                <h:outputText value="#{record.itemid}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+                <p:tab title="票据种类">
+                    <h:form id="billForm">
+                        <p:menubar>
+                            <p:menuitem value="获取信息" id="btnbill" icon="ui-icon ui-icon-download" update="billtb"
+                                        ></p:menuitem>
+                        </p:menubar>
+                        <p:dataTable id="billtb" value="#{baseInfoAction.fsBaseBillinfoList}" var="record"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" rows="15" paginatorPosition="bottom"
+                                     rowsPerPageTemplate="100,50,30,15,5"
+                                     emptyMessage="数据记录为空...">
+                            <p:column filterBy="#{record.billcode}" filterMatchMode="contains">
+                                <f:facet name="header">
+                                    编号
+                                </f:facet>
+                                <h:outputText value="#{record.billcode}"/>
+                            </p:column>
+                            <p:column filterBy="#{record.billname}" filterMatchMode="contains">
+                                <f:facet name="header">
+                                    名称
+                                </f:facet>
+                                <h:outputText value="#{record.billname}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    项目ID
+                                </f:facet>
+                                <h:outputText value="#{record.itemid}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+                <p:tab title="项目">
+                    <h:form id="itemForm">
+                        <p:menubar>
+                            <p:menuitem value="获取信息" id="btnitem" icon="ui-icon ui-icon-download" update="itemtb"
+                                        ></p:menuitem>
+                        </p:menubar>
+                        <p:dataTable id="itemtb" value="#{baseInfoAction.fsBaseIteminfoList}" var="record"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" rows="15" paginatorPosition="bottom"
+                                     rowsPerPageTemplate="100,50,30,15,5"
+                                     emptyMessage="数据记录为空...">
+                            <p:column filterBy="#{record.itemcode}" filterMatchMode="contains">
+                                <f:facet name="header">
+                                    编号
+                                </f:facet>
+                                <h:outputText value="#{record.itemcode}"/>
+                            </p:column>
+                            <p:column filterBy="#{record.itemname}" filterMatchMode="contains">
+                                <f:facet name="header">
+                                    名称
+                                </f:facet>
+                                <h:outputText value="#{record.itemname}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    项目ID
+                                </f:facet>
+                                <h:outputText value="#{record.itemid}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+                <p:tab title="制单人">
+                    <h:form id="mkvchForm">
+                        <p:menubar>
+                            <p:menuitem value="获取信息" id="btnmkvch" icon="ui-icon ui-icon-download" update="mkvchtb"
+                                        ></p:menuitem>
+                        </p:menubar>
+                        <p:dataTable id="mkvchtb" value="#{baseInfoAction.fsBaseMkvchmaninfoList}" var="record"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" rows="15" paginatorPosition="bottom"
+                                     rowsPerPageTemplate="100,50,30,15,5"
+                                     emptyMessage="数据记录为空...">
+                            <p:column filterBy="#{record.mancode}" filterMatchMode="contains">
+                                <f:facet name="header">
+                                    编号
+                                </f:facet>
+                                <h:outputText value="#{record.mancode}"/>
+                            </p:column>
+                            <p:column filterBy="#{record.manname}" filterMatchMode="contains">
+                                <f:facet name="header">
+                                    名称
+                                </f:facet>
+                                <h:outputText value="#{record.manname}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    项目ID
+                                </f:facet>
+                                <h:outputText value="#{record.itemid}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+            </p:tabView>
         </div>
     </ui:define>
 </ui:composition>

@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                padding-left: 80px;
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-input {
+                width: 120px;
+            }
+
+            .col-qry1 {
+                width: 40%;
+            }
+        </style>
+        <script type="text/javascript" src="#{request.contextPath}/UI/support/pub.js"/>
+        <script type="text/javascript">
+            function openDetl(obj) {
+                var guid = obj.parentNode.parentNode.children[0].innerHTML;
+                var sfeature = "dialogwidth:850px; dialogheight:550px;center:yes;help:yes;resizable:no;scroll:yes;status:no";
+                var arg = new Object();
+                arg.doType = "select";
+                arg.guid = guid;
+                var rtn = dialog("common/payVoucherDetl.xhtml?doType=select&amp;guid=" + guid, arg, sfeature);
+            }
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px">
+            <p:tabView style="font-weight:normal;font-style:normal">
+                <p:tab title="确认到账处理">
+                    <p:growl id="qrymsgs" showDetail="false"/>
+
+                    <div id="qrytable">
+                        <h:form id="qryform">
+                            <p:menubar>
+                                <p:menuitem type="push" value="多笔确认处理" icon="ui-icon ui-icon-gear"
+                                            update="qrymsgs, qrypdt"
+                                            ajax="false"/>
+                            </p:menubar>
+                            <p:ajaxStatus style="height:18px;text-align:center">
+                                <f:facet name="start">
+                                    <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                                </f:facet>
+                                <f:facet name="complete">
+                                    <h:outputText value=""/>
+                                </f:facet>
+                            </p:ajaxStatus>
+                            <p:dataTable id="qrypdt" dynamic="true"
+                                         var="record"
+                                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         paginator="true" rows="15" paginatorPosition="bottom"
+                                         rowsPerPageTemplate="100,50,30,15,5"
+                                         emptyMessage="数据记录为空...">
+                                <p:column selectionMode="multiple"/>
+                                <p:column headerText="缴款书编号">
+                                    <h:outputText value="hhh"></h:outputText>
+                                </p:column>
+                                <p:column headerText="总金额">
+                                    <h:outputText value="d"></h:outputText>
+                                </p:column>
+                                <p:column headerText="缴款人">
+                                    <h:outputText value="10"></h:outputText>
+                                </p:column>
+                                <p:column headerText="缴款方式">
+                                    <h:outputText value="10"></h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                    </div>
+                </p:tab>
+                <p:tab title="已确认到账清单">
+                    <div id="table">
+                        <h:form id="form">
+                            <p:dataTable id="pdt" dynamic="true"
+                                         var="record"
+                                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         paginator="true" rows="15" paginatorPosition="bottom"
+                                         rowsPerPageTemplate="100,50,30,15,5"
+                                         emptyMessage="数据记录为空...">
+                                <p:column selectionMode="multiple"/>
+                                <p:column headerText="缴款书编号">
+                                    <h:outputText value="hhh"></h:outputText>
+                                </p:column>
+                                <p:column headerText="总金额">
+                                    <h:outputText value="d"></h:outputText>
+                                </p:column>
+                                <p:column headerText="缴款人">
+                                    <h:outputText value="10"></h:outputText>
+                                </p:column>
+                                <p:column headerText="缴款方式">
+                                    <h:outputText value="10"></h:outputText>
+                                </p:column>
+                                <p:column headerText="确认日期">
+                                    <h:outputText value="10"></h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                    </div>
+                </p:tab>
+            </p:tabView>
+        </div>
+    </ui:define>
+
+</ui:composition>
