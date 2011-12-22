@@ -77,34 +77,32 @@
                                      columnClasses="col-label,col-input,col-label2,col-input">
                             <h:outputLabel value="缴款书编号:"/>
                             <h:outputLabel/>
-                            <h:outputLabel value="总金额:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="打票日期:"/>
-                            <h:outputLabel/>
+
                             <h:outputLabel value="缴款人:"/>
                             <h:outputLabel/>
                             <h:outputLabel value="执收单位名称:"/>
                             <h:outputLabel/>
                             <h:outputLabel value="执收单位编码:"/>
                             <h:outputLabel/>
+                            <h:outputLabel value="总金额:"/>
+                            <h:outputLabel/>
                             <h:outputLabel value="制单人:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="银行收款日期:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="银行记账日期:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="票据种类:"/>
                             <h:outputLabel/>
                         </h:panelGrid>
                         <p:dataTable var="record" id="paymenttb" emptyMessage="数据记录为空...">
-                            <p:column headerText="项目">
+                            <p:column headerText="项目编号">
+                                <h:outputText value="hhh"></h:outputText>
+                            </p:column>
+                            <p:column headerText="项目名称">
                                 <h:outputText value="hhh"></h:outputText>
                             </p:column>
                             <p:column headerText="计量单位">
                                 <h:outputText value="d"></h:outputText>
                             </p:column>
-
                             <p:column headerText="数量">
+                                <h:outputText value="10"></h:outputText>
+                            </p:column>
+                            <p:column headerText="收费标准">
                                 <h:outputText value="10"></h:outputText>
                             </p:column>
                             <p:column headerText="金额">

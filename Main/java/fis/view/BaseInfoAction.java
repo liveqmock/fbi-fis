@@ -30,7 +30,7 @@ public class BaseInfoAction {
     private List<FsBaseBank> fsBaseBankList;
     private FsBaseBank fsBaseBank;
 
-    private List<FsBaseCollectunit> fsBaseCollectunitList;
+    private List<FsBasePerformdept> fsBasePerformdeptList;
     private List<FsBaseBillinfo> fsBaseBillinfoList;
     private List<FsBasePrograminfo> fsBasePrograminfoList;
     private List<FsBaseMkvchmaninfo> fsBaseMkvchmaninfoList;
@@ -39,7 +39,7 @@ public class BaseInfoAction {
     public void init() {
         try {
             fsBaseBankList = baseInfoService.selectBankInfo();
-            fsBaseCollectunitList = baseInfoService.selectUnitInfo();
+            fsBasePerformdeptList = baseInfoService.selectDeptInfo();
             fsBaseBillinfoList = baseInfoService.selectBillInfo();
             fsBasePrograminfoList = baseInfoService.selectProgramInfo();
             fsBaseMkvchmaninfoList = baseInfoService.selectManInfo();
@@ -62,7 +62,7 @@ public class BaseInfoAction {
     /*执收单位获取*/
     public String onBtnexecunitClick() {
         try {
-            fsBaseCollectunitList = baseInfoService.unitInfoAccpt();
+            fsBasePerformdeptList = baseInfoService.deptInfoAccpt();
         } catch (Exception ex) {
             logger.error("获取代理银行信息失败." + ex.getMessage());
             MessageUtil.addError("获取代理银行信息失败." + ex.getMessage());
@@ -128,12 +128,12 @@ public class BaseInfoAction {
         this.fsBaseBank = fsBaseBank;
     }
 
-    public List<FsBaseCollectunit> getFsBaseCollectunitList() {
-        return fsBaseCollectunitList;
+    public List<FsBasePerformdept> getFsBasePerformdeptList() {
+        return fsBasePerformdeptList;
     }
 
-    public void setFsBaseCollectunitList(List<FsBaseCollectunit> fsBaseCollectunitList) {
-        this.fsBaseCollectunitList = fsBaseCollectunitList;
+    public void setFsBasePerformdeptList(List<FsBasePerformdept> fsBasePerformdeptList) {
+        this.fsBasePerformdeptList = fsBasePerformdeptList;
     }
 
     public List<FsBaseBillinfo> getFsBaseBillinfoList() {

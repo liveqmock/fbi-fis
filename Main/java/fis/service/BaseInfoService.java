@@ -19,7 +19,7 @@ public class BaseInfoService {
     @Resource
     private FsBaseBankMapper fsBaseBankMapper;
     @Resource
-    private FsBaseCollectunitMapper fsBaseCollectunitMapper;
+    private FsBasePerformdeptMapper fsBasePerformdeptMapper;
     @Resource
     private FsBaseBillinfoMapper fsBaseBillinfoMapper;
     @Resource
@@ -36,13 +36,13 @@ public class BaseInfoService {
         return fsBaseBankMapper.selectByExample(new FsBaseBankExample());
     }
     /*执收单位*/
-    public List<FsBaseCollectunit> selectUnitInfo() {
-        return fsBaseCollectunitMapper.selectByExample(new FsBaseCollectunitExample());
+    public List<FsBasePerformdept> selectDeptInfo() {
+        return fsBasePerformdeptMapper.selectByExample(new FsBasePerformdeptExample());
     }
 
-    public List<FsBaseCollectunit> unitInfoAccpt() {
+    public List<FsBasePerformdept> deptInfoAccpt() {
         //todo 获取接口信息 insert
-        return fsBaseCollectunitMapper.selectByExample(new FsBaseCollectunitExample());
+        return fsBasePerformdeptMapper.selectByExample(new FsBasePerformdeptExample());
     }
     /*票据种类*/
     public List<FsBaseBillinfo> selectBillInfo() {
