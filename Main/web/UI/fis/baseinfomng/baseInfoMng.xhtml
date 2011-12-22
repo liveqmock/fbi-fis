@@ -113,22 +113,22 @@
                             <p:menuitem value="获取信息" id="btnitem" icon="ui-icon ui-icon-download" update="itemtb"
                                         ></p:menuitem>
                         </p:menubar>
-                        <p:dataTable id="itemtb" value="#{baseInfoAction.fsBaseIteminfoList}" var="record"
+                        <p:dataTable id="itemtb" value="#{baseInfoAction.fsBasePrograminfoList}" var="record"
                                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                      paginator="true" rows="15" paginatorPosition="bottom"
                                      rowsPerPageTemplate="100,50,30,15,5"
                                      emptyMessage="数据记录为空...">
-                            <p:column filterBy="#{record.itemcode}" filterMatchMode="contains">
+                            <p:column filterBy="#{record.programcode}" filterMatchMode="contains">
                                 <f:facet name="header">
                                     编号
                                 </f:facet>
-                                <h:outputText value="#{record.itemcode}"/>
+                                <h:outputText value="#{record.programcode}"/>
                             </p:column>
-                            <p:column filterBy="#{record.itemname}" filterMatchMode="contains">
+                            <p:column filterBy="#{record.programname}" filterMatchMode="contains">
                                 <f:facet name="header">
                                     名称
                                 </f:facet>
-                                <h:outputText value="#{record.itemname}"/>
+                                <h:outputText value="#{record.programname}"/>
                             </p:column>
                             <p:column>
                                 <f:facet name="header">

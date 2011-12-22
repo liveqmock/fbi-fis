@@ -33,14 +33,11 @@
 
 
 
-        <table schema="fis" tableName="fs_base_bank">
+       <!-- <table schema="fis" tableName="fs_base_bank">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        <table schema="fis" tableName="fs_base_baseinfo">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
+
         <table schema="fis" tableName="fs_base_billinfo">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
@@ -48,12 +45,12 @@
         <table schema="fis" tableName="fs_base_collectunit">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="fis" tableName="fs_base_iteminfo">
+        </table>-->
+        <table schema="fis" tableName="fs_base_programinfo">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        <table schema="fis" tableName="fs_base_mkvchmaninfo">
+        <!--<table schema="fis" tableName="fs_base_mkvchmaninfo">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
@@ -84,7 +81,7 @@
         <table schema="fis" tableName="fs_refundinfo">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
+        </table>-->
 
     </context>
 
