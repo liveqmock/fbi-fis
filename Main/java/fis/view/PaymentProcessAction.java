@@ -54,7 +54,7 @@ public class PaymentProcessAction {
                 if (!fsPaymentinfo.getProcessstatus().equals(ProcessStatus.PROCESS_INIT.getCode())
                         && !fsPaymentinfo.getProcessstatus().equals(ProcessStatus.PROCESS_CONFIRMFAIL.getCode())) {
                     String processstsname = processStatus.getAliasEnums().get(fsPaymentinfo.getProcessstatus()).getTitle();
-                    MessageUtil.addWarn("缴款书处理状态为 " + processstsname + "，无法进行确认付款。");
+                    MessageUtil.addWarn("缴款书处理状态为 " + processstsname + "，无法进行确认收款。");
                     setButtonDisabled(true);
                     return null;
                 }
@@ -93,6 +93,7 @@ public class PaymentProcessAction {
             ex.printStackTrace();
             return null;
         }
+        MessageUtil.addInfo("收款已确认成功。");
         return null;
     }
 

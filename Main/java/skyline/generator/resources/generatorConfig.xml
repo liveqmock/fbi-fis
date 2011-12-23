@@ -40,10 +40,10 @@
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="historyno" sqlStatement="select decode(max(historyno),null,1,max(historyno)+1) from fs_paymentinfohis t where t.paynotescode=#{paynotescode,jdbcType=VARCHAR}" identity="false"/>
         </table>
-       <!--<table schema="fis" tableName="fs_paymentinfo">
+       <table schema="fis" tableName="fs_paymentinfo">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>-->
+        </table>
        <!-- <table schema="fis" tableName="fs_base_bank">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>

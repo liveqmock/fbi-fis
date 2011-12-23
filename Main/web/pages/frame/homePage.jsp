@@ -212,8 +212,11 @@
         if (tabbarCell == undefined) {
             biztabbar.addTab(divID, tabname, "*");
             biztabbar.setContentHref(divID, url);
+            biztabbar.setTabActive(divID);
+        } else {
+            biztabbar.setTabActive(divID);
+            biztabbar.forceLoad(divID,url);
         }
-        biztabbar.setTabActive(divID);
     }
     function sysaddtabbar(divID, tabname, url) {
         var tabbarCell = systabbar.cells(divID);

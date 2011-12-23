@@ -94,6 +94,9 @@
                                 <p:column headerText="处理状态">
                                     <h:outputText value="#{paymentToactAction.processStatus.aliasEnums[record.processstatus].title}"></h:outputText>
                                 </p:column>
+                                <p:column headerText="操作">
+                                    <p:commandLink style="color:blue;" value="详 细"></p:commandLink>
+                                </p:column>
                             </p:dataTable>
                         </h:form>
                     </div>
@@ -110,10 +113,10 @@
                                <p:column headerText="缴款书编号">
                                     <h:outputText value="#{record.paynotescode}"></h:outputText>
                                 </p:column>
-                                <p:column headerText="缴款人">
+                                <p:column headerText="缴款人" style="text-align:center;">
                                     <h:outputText value="#{record.payer}"></h:outputText>
                                 </p:column>
-                                <p:column headerText="校验码">
+                                <p:column headerText="校验码" style="text-align:center;">
                                     <h:outputText value="#{record.checkcode}"></h:outputText>
                                 </p:column>
                                 <p:column headerText="执收单位名称">
@@ -122,19 +125,22 @@
                                 <p:column headerText="执收单位编号">
                                     <h:outputText value="#{record.performdept}"></h:outputText>
                                 </p:column>
-                                <p:column headerText="总金额">
+                                <p:column headerText="总金额" style="text-align:right;">
                                     <h:outputText value="#{record.totalamt}">
                                         <f:convertNumber pattern="###,##0.00"/>
                                     </h:outputText>
                                 </p:column>
-                                <p:column headerText="记账日期">
+                                <p:column headerText="记账日期" style="text-align:center;">
                                     <h:outputText value="#{record.bankacctdate}"></h:outputText>
                                 </p:column>
-                                <p:column headerText="到账标志">
-                                    <h:outputText value="#{paymentToactAction.recfeeFlag.aliasEnums['1'].title}"></h:outputText>
+                                <p:column headerText="到账标志" style="text-align:center;">
+                                    <h:outputText value="#{paymentToactAction.recfeeFlag.aliasEnums[record.recfeeflag].title}"></h:outputText>
                                 </p:column>
-                                <p:column headerText="处理状态">
+                                <p:column headerText="处理状态" style="text-align:center;">
                                     <h:outputText value="#{paymentToactAction.processStatus.aliasEnums[record.processstatus].title}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="操作" style="text-align:center;">
+                                    <p:commandLink style="color:blue;" value="详 细"></p:commandLink>
                                 </p:column>
                             </p:dataTable>
                         </h:form>

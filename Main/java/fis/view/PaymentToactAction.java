@@ -36,8 +36,7 @@ public class PaymentToactAction {
     @PostConstruct
     public void init() {
         try {
-            fsPaymentinfoList1 = paymentService.selectPayinfoNoToact();
-            fsPaymentinfoList2 = paymentService.selectPayinfoToact();
+            queryPayinfo();
         } catch (Exception ex) {
             logger.error("查询到账信息错误：" + ex.getMessage());
             MessageUtil.addError("查询到账信息错误：" + ex.getCause().getMessage().replaceAll("\n", "").replaceAll("\r", ""));
@@ -50,17 +49,28 @@ public class PaymentToactAction {
             return null;
         }
         try {
-            paymentService.sendPayinfoToact(fsPaymentinfos,ProcessStatus.PROCESS_TOACTSUC.getCode());
-
+            paymentService.sendPayinfoToact(fsPaymentinfos, ProcessStatus.PROCESS_TOACTSUC.getCode());
         } catch (Exception ex) {
             logger.error("发送到账信息失败：" + ex.getMessage());
             MessageUtil.addError("发送到账信息失败：" + ex.getCause().getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            return null;
+        }
+        try {
+            queryPayinfo();
+        } catch (Exception ex) {
+            logger.error("查询到账信息错误：" + ex.getMessage());
+            MessageUtil.addError("查询到账信息错误：" + ex.getCause().getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }
 
         MessageUtil.addInfo("发送成功。");
 
         return null;
+    }
+
+    private void queryPayinfo() {
+        fsPaymentinfoList1 = paymentService.selectPayinfoNoToact();
+        fsPaymentinfoList2 = paymentService.selectPayinfoToact();
     }
 
     public PaymentService getPaymentService() {

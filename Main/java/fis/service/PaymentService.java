@@ -52,7 +52,7 @@ public class PaymentService {
     @Transactional
     public void sendPayinfoConfirm(List<FsPaymentinfo> fsPaymentinfoList, String processsts) throws InvocationTargetException, IllegalAccessException {
         //todo 发送 如果发送成功
-        int recfeeflag = Integer.parseInt(RecfeeFlag.RECFEE_NOTOACT.getCode());
+        String recfeeflag = RecfeeFlag.RECFEE_TOACT.getCode();
         if (1 == 1) {
             for (FsPaymentinfo record : fsPaymentinfoList) {
                 updatePaymentinfo(record, recfeeflag, processsts);
@@ -68,7 +68,7 @@ public class PaymentService {
     public void sendPayinfoToact(FsPaymentinfo[] fsPaymentinfos, String processsts) throws InvocationTargetException, IllegalAccessException {
         //todo 发送到账信息
         //如果   成功:处理状态=2 失败=4 ; 更新 到账标志=1
-        int recfeeflag = Integer.parseInt(RecfeeFlag.RECFEE_TOACT.getCode());
+        String recfeeflag = RecfeeFlag.RECFEE_TOACT.getCode();
         if (1 == 1) {
             for (FsPaymentinfo record : fsPaymentinfos) {
                 updatePaymentinfo(record, recfeeflag, processsts);
@@ -83,7 +83,7 @@ public class PaymentService {
     }
 
     //
-    public void updatePaymentinfo(FsPaymentinfo record, int recfeeflag, String processsts) throws InvocationTargetException, IllegalAccessException {
+    public void updatePaymentinfo(FsPaymentinfo record, String recfeeflag, String processsts) throws InvocationTargetException, IllegalAccessException {
         //更新到账信息、处理状态 插入历史记录
         OperatorManager operatorManager = SystemService.getOperatorManager();
         Date dt = new Date();
