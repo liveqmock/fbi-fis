@@ -32,7 +32,18 @@
         </javaClientGenerator>
 
 
-
+        <!--<table schema="fis" tableName="sys_joblog">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>-->
+        <table schema="fis" tableName="fs_paymentinfohis">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <generatedKey column="historyno" sqlStatement="select decode(max(historyno),null,1,max(historyno)+1) from fs_paymentinfohis t where t.paynotescode=#{paynotescode,jdbcType=VARCHAR}" identity="false"/>
+        </table>
+       <!--<table schema="fis" tableName="fs_paymentinfo">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>-->
        <!-- <table schema="fis" tableName="fs_base_bank">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
@@ -46,10 +57,10 @@
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>-->
-        <table schema="fis" tableName="fs_base_programinfo">
+        <!--<table schema="fis" tableName="fs_base_performdept">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
+        </table>-->
         <!--<table schema="fis" tableName="fs_base_mkvchmaninfo">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
@@ -58,10 +69,7 @@
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        <table schema="fis" tableName="fs_paymentinfo">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
+
         <table schema="fis" tableName="fs_paymenttoact">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>

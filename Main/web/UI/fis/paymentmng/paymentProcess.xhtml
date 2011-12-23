@@ -27,16 +27,16 @@
             }
         </style>
         <script language="JavaScript" type="text/JavaScript">
-            /*document.onkeydown = function TabReplace() {
-             if (event.keyCode == 13) {
-             if (event.srcElement.id == 'editForm:paynotescode'){
-             document.getElementById("editForm:btnAccept").click();
-             }
-             }
-             }*/
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'editForm:paynotescode') {
+                        event.keyCode =9;
+                    }
+                }
+            }
             $ = jQuery;
             $(document).ready(function() {
-                $('#editForm\\:pay').focus(function() {
+                $('#editForm\\:paynotescode').focus(function() {
                     $('#editForm\\:paynotescode').select();
                 });
             });
@@ -44,7 +44,7 @@
     </ui:define>
 
     <ui:define name="content">
-        <div style="margin:5px 15px 5px 15px">
+        <div style="margin:5px">
             <p:growl id="msgs" showDetail="false"/>
             <h:form id="editForm">
                 <p:focus for="paynotescode"/>
@@ -54,7 +54,7 @@
                             <h:panelGrid cellspacing="0" border="0" columns="3">
                                 <h:outputLabel value="凭证编号:"/>
                                 <h:inputText id="paynotescode" autocomplete="off" required="true"
-                                             requiredMessage="请输入凭证号"
+                                             requiredMessage="请输入凭证号" value="#{paymentProcessAction.paynotescode}"
                                              style="width:200px"/>
                                 <h:message for="paynotescode" style="color:red;"/>
                             </h:panelGrid>
@@ -63,7 +63,7 @@
                                      width="100%">
                             <h:panelGroup>
                                 <p:commandButton style="width:60px;" ajax="false"
-                                                 id="btnAccept"
+                                                 id="btnAccept" action="#{paymentProcessAction.onBtnAccept}"
                                                  value="获 取"></p:commandButton>
                                 <p:spacer width="10px"/>
                                 <p:commandButton style="width:60px;" type="reset" value="重 置"></p:commandButton>
@@ -71,42 +71,56 @@
                         </h:panelGrid>
                     </h:panelGrid>
                 </p:panel>
+                <p:ajaxStatus style="height:18px;text-align:center">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
                 <p:fieldset legend="缴款书信息">
                     <h:panelGrid id="detailPanel1" columns="1">
                         <h:panelGrid columns="4" cellpadding="2" border="0"
                                      columnClasses="col-label,col-input,col-label2,col-input">
                             <h:outputLabel value="缴款书编号:"/>
-                            <h:outputLabel/>
-
+                            <h:outputLabel value="#{paymentProcessAction.fsPaymentinfo.paynotescode}"/>
                             <h:outputLabel value="缴款人:"/>
-                            <h:outputLabel/>
+                            <h:outputLabel value="#{paymentProcessAction.fsPaymentinfo.payer}"/>
                             <h:outputLabel value="执收单位名称:"/>
-                            <h:outputLabel/>
+                            <h:outputLabel value="#{paymentProcessAction.fsPaymentinfo.prfrmdeptname}"/>
                             <h:outputLabel value="执收单位编码:"/>
-                            <h:outputLabel/>
+                            <h:outputLabel value="#{paymentProcessAction.fsPaymentinfo.performdept}"/>
                             <h:outputLabel value="总金额:"/>
-                            <h:outputLabel/>
+                            <h:outputLabel value="#{paymentProcessAction.fsPaymentinfo.totalamt}">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:outputLabel>
+                            <h:outputLabel value="验证码:"/>
+                            <h:outputLabel value="#{paymentProcessAction.fsPaymentinfo.checkcode}"/>
                             <h:outputLabel value="制单人:"/>
-                            <h:outputLabel/>
+                            <h:outputLabel value="#{paymentProcessAction.fsPaymentinfo.creater}"/>
                         </h:panelGrid>
-                        <p:dataTable var="record" id="paymenttb" emptyMessage="数据记录为空...">
+                        <p:dataTable value="#{paymentProcessAction.fsPaymentinfoList}" var="record" id="paymenttb"
+                                     emptyMessage="数据记录为空...">
                             <p:column headerText="项目编号">
-                                <h:outputText value="hhh"></h:outputText>
+                                <h:outputText value="#{record.program}"></h:outputText>
                             </p:column>
                             <p:column headerText="项目名称">
-                                <h:outputText value="hhh"></h:outputText>
+                                <h:outputText value="#{record.programname}"></h:outputText>
                             </p:column>
                             <p:column headerText="计量单位">
-                                <h:outputText value="d"></h:outputText>
+                                <h:outputText value="#{record.units}"></h:outputText>
                             </p:column>
                             <p:column headerText="数量">
-                                <h:outputText value="10"></h:outputText>
+                                <h:outputText value="#{record.amount}"></h:outputText>
                             </p:column>
                             <p:column headerText="收费标准">
-                                <h:outputText value="10"></h:outputText>
+                                <h:outputText value="#{record.standard}"></h:outputText>
                             </p:column>
                             <p:column headerText="金额">
-                                <h:outputText value="10"></h:outputText>
+                                <h:outputText value="#{record.amt}">
+                                    <f:convertNumber pattern="###,##0.00"/>
+                                </h:outputText>
                             </p:column>
                         </p:dataTable>
                     </h:panelGrid>
@@ -114,7 +128,7 @@
                 <p:fieldset legend="操作">
                     <h:panelGrid columns="1" cellpadding="2" border="0" style="width:700px;text-align:center;">
                         <h:panelGroup>
-                            <h:commandButton id="btnPay"
+                            <h:commandButton id="btnPay" action="#{paymentProcessAction.onBtnPayClick}"
                                              ajax="true" value="收款确认"
                                              style="width:90px">
                             </h:commandButton>

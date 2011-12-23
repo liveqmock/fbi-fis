@@ -49,7 +49,7 @@
                         <h:form id="qryform">
                             <p:menubar>
                                 <p:menuitem type="push" value="多笔确认处理" icon="ui-icon ui-icon-gear"
-                                            update="qrymsgs, qrypdt"
+                                            action="#{paymentToactAction.onMultipleSend}" update="qrymsgs, qrypdt"
                                             ajax="false"/>
                             </p:menubar>
                             <p:ajaxStatus style="height:18px;text-align:center">
@@ -60,24 +60,39 @@
                                     <h:outputText value=""/>
                                 </f:facet>
                             </p:ajaxStatus>
-                            <p:dataTable id="qrypdt" dynamic="true"
-                                         var="record"
+                            <p:dataTable id="qrypdt"
+                                         value="#{paymentToactAction.fsPaymentinfoList1}" var="record"
+                                         selection="#{paymentToactAction.fsPaymentinfos}" rowKey="#{record.paynotescode}"
                                          paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                          paginator="true" rows="15" paginatorPosition="bottom"
                                          rowsPerPageTemplate="100,50,30,15,5"
                                          emptyMessage="数据记录为空...">
                                 <p:column selectionMode="multiple"/>
                                 <p:column headerText="缴款书编号">
-                                    <h:outputText value="hhh"></h:outputText>
-                                </p:column>
-                                <p:column headerText="总金额">
-                                    <h:outputText value="d"></h:outputText>
+                                    <h:outputText value="#{record.paynotescode}"></h:outputText>
                                 </p:column>
                                 <p:column headerText="缴款人">
-                                    <h:outputText value="10"></h:outputText>
+                                    <h:outputText value="#{record.payer}"></h:outputText>
                                 </p:column>
-                                <p:column headerText="缴款方式">
-                                    <h:outputText value="10"></h:outputText>
+                                <p:column headerText="校验码">
+                                    <h:outputText value="#{record.checkcode}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="执收单位名称">
+                                    <h:outputText value="#{record.prfrmdeptname}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="执收单位编号">
+                                    <h:outputText value="#{record.performdept}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="总金额">
+                                    <h:outputText value="#{record.totalamt}">
+                                        <f:convertNumber pattern="###,##0.00"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="到账标志">
+                                    <h:outputText value="#{paymentToactAction.recfeeFlag.aliasEnums[record.recfeeflag].title}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="处理状态">
+                                    <h:outputText value="#{paymentToactAction.processStatus.aliasEnums[record.processstatus].title}"></h:outputText>
                                 </p:column>
                             </p:dataTable>
                         </h:form>
@@ -86,27 +101,40 @@
                 <p:tab title="已确认到账清单">
                     <div id="table">
                         <h:form id="form">
-                            <p:dataTable id="pdt" dynamic="true"
-                                         var="record"
+                            <p:dataTable id="pdt"
+                                         value="#{paymentToactAction.fsPaymentinfoList2}" var="record"
                                          paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                          paginator="true" rows="15" paginatorPosition="bottom"
                                          rowsPerPageTemplate="100,50,30,15,5"
                                          emptyMessage="数据记录为空...">
-                                <p:column selectionMode="multiple"/>
-                                <p:column headerText="缴款书编号">
-                                    <h:outputText value="hhh"></h:outputText>
-                                </p:column>
-                                <p:column headerText="总金额">
-                                    <h:outputText value="d"></h:outputText>
+                               <p:column headerText="缴款书编号">
+                                    <h:outputText value="#{record.paynotescode}"></h:outputText>
                                 </p:column>
                                 <p:column headerText="缴款人">
-                                    <h:outputText value="10"></h:outputText>
+                                    <h:outputText value="#{record.payer}"></h:outputText>
                                 </p:column>
-                                <p:column headerText="缴款方式">
-                                    <h:outputText value="10"></h:outputText>
+                                <p:column headerText="校验码">
+                                    <h:outputText value="#{record.checkcode}"></h:outputText>
                                 </p:column>
-                                <p:column headerText="确认日期">
-                                    <h:outputText value="10"></h:outputText>
+                                <p:column headerText="执收单位名称">
+                                    <h:outputText value="#{record.prfrmdeptname}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="执收单位编号">
+                                    <h:outputText value="#{record.performdept}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="总金额">
+                                    <h:outputText value="#{record.totalamt}">
+                                        <f:convertNumber pattern="###,##0.00"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="记账日期">
+                                    <h:outputText value="#{record.bankacctdate}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="到账标志">
+                                    <h:outputText value="#{paymentToactAction.recfeeFlag.aliasEnums['1'].title}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="处理状态">
+                                    <h:outputText value="#{paymentToactAction.processStatus.aliasEnums[record.processstatus].title}"></h:outputText>
                                 </p:column>
                             </p:dataTable>
                         </h:form>
