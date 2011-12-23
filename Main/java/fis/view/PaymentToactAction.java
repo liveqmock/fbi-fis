@@ -63,7 +63,7 @@ public class PaymentToactAction {
             return null;
         }
 
-        MessageUtil.addInfo("发送成功。");
+        MessageUtil.addInfo("到账已确认成功。");
 
         return null;
     }
