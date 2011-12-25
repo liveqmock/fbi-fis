@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:fbi="http://www.fbifaces.org"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                padding-left: 80px;
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-input {
+                width: 120px;
+            }
+
+            .col-qry1 {
+                width: 40%;
+            }
+        </style>
+        <script type="text/javascript" src="#{request.contextPath}/UI/support/pub.js"/>
+        <script type="text/javascript">
+
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px">
+            <p:growl id="qrymsgs" showDetail="false"/>
+            <h:form id="qryform">
+                <p:menubar style="margin-top:10px;margin-bottom:10px;">
+                    <p:menuitem value="Excel导出" icon="ui-icon ui-icon-gear" ajax="false">
+                        <fbi:DataExporter target="qrypdt" type="xls" titleName="退付信息" fileName="refundinfo"></fbi:DataExporter>
+                    </p:menuitem>
+                </p:menubar>
+                <p:dataTable id="qrypdt"
+                             value="#{refundQryAction.fsRefundinfoList}" var="record"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="bottom"
+                             rowsPerPageTemplate="100,50,30,15,5"
+                             emptyMessage="数据记录为空...">
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            申请书编号
+                        </f:facet>
+                        <h:outputText value="#{record.refundapplycode}"></h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            原缴款书编号
+                        </f:facet>
+                        <h:outputText value="#{record.paynotescode}"></h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            执收单位编号
+                        </f:facet>
+                        <h:outputText value="#{record.performdept}"></h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            执收单位名称
+                        </f:facet>
+                        <h:outputText value="#{record.prfrmdeptname}"></h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            领款人名称
+                        </f:facet>
+                        <h:outputText value="#{record.recusername}"></h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            领款人开户行
+                        </f:facet>
+                        <h:outputText value="#{record.recuserbank}"></h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            领款人账号
+                        </f:facet>
+                        <h:outputText value="#{record.recuserbankaccount}"></h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            退付原因
+                        </f:facet>
+                        <h:outputText value="#{record.refundreason}"></h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            审核金额
+                        </f:facet>
+                        <h:outputText value="#{record.auditamt}">
+                            <f:convertNumber pattern="###,##0.00"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            总金额
+                        </f:facet>
+                        <h:outputText value="#{record.totalamt}">
+                            <f:convertNumber pattern="###,##0.00"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            处理状态
+                        </f:facet>
+                        <h:outputText
+                                value="#{refundQryAction.refundProcessSts.aliasEnums[record.processstatus].title}"></h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

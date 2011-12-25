@@ -140,6 +140,16 @@ public class PaymentService {
     }
 
     /**
+     * 查询缴款书所有信息*/
+    public List<FsPaymentinfo> selectPayinfo() {
+        String[] processstsAry = new String[5];
+        for (int i = 0; i < 5; i++) {
+            processstsAry[i] = String.valueOf(i);
+        }
+        return fsPaymentinfoMapper.selectPayinfoForToact(processstsAry);
+    }
+
+    /**
      * 查询退付信息*/
     public List<FsRefundinfo> selectRefundinfoByAppcd(String applcode) {
         List<FsRefundinfo> fsRefundinfoList = new ArrayList<FsRefundinfo>();
@@ -196,5 +206,10 @@ public class PaymentService {
         fsRefundinfohisMapper.insertSelective(fsRefundinfohis);
         //插入日志
         sysJoblogMapper.insert(sysJoblog);
+    }
+
+    public List<FsRefundinfo> selectRefundinfo() {
+        FsRefundinfoExample example = new FsRefundinfoExample();
+        return fsRefundinfoMapper.selectByExample(example);
     }
  }

@@ -28,14 +28,7 @@
         </style>
         <script type="text/javascript" src="#{request.contextPath}/UI/support/pub.js"/>
         <script type="text/javascript">
-            function openDetl(obj) {
-                var guid = obj.parentNode.parentNode.children[0].innerHTML;
-                var sfeature = "dialogwidth:850px; dialogheight:550px;center:yes;help:yes;resizable:no;scroll:yes;status:no";
-                var arg = new Object();
-                arg.doType = "select";
-                arg.guid = guid;
-                var rtn = dialog("common/payVoucherDetl.xhtml?doType=select&amp;guid=" + guid, arg, sfeature);
-            }
+
         </script>
     </ui:define>
 
@@ -47,7 +40,7 @@
 
                     <div id="qrytable">
                         <h:form id="qryform">
-                            <p:menubar>
+                            <p:menubar style="margin-top:10px;margin-bottom:10px;">
                                 <p:menuitem type="push" value="多笔确认处理" icon="ui-icon ui-icon-gear"
                                             action="#{paymentToactAction.onMultipleSend}" update="qrymsgs, qrypdt"
                                             ajax="false"/>

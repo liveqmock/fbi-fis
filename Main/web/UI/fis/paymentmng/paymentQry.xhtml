@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:fbi="http://www.fbifaces.org"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                padding-left: 80px;
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-input {
+                width: 120px;
+            }
+
+            .col-qry1 {
+                width: 40%;
+            }
+        </style>
+        <script type="text/javascript" src="#{request.contextPath}/UI/support/pub.js"/>
+        <script type="text/javascript">
+
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px">
+            <p:growl id="qrymsgs" showDetail="false"/>
+            <h:form id="qryform">
+                <p:menubar style="margin-top:10px;margin-bottom:10px;">
+                    <p:menuitem ajax="false" value="Excel导出" icon="ui-icon ui-icon-gear">
+                        <fbi:DataExporter target="qrypdt" type="xls" titleName="缴款书信息" fileName="paymentinfo"></fbi:DataExporter>
+                    </p:menuitem>
+                </p:menubar>
+                <p:dataTable id="qrypdt"
+                             value="#{paymentQryAction.fsPaymentinfoList}" var="record" rowKey="#{record.paynotescode}"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="bottom"
+                             rowsPerPageTemplate="100,50,30,15,5"
+                             emptyMessage="数据记录为空...">
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            缴款书编号
+                        </f:facet>
+                        <h:outputText value="#{record.paynotescode}"></h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            缴款人
+                        </f:facet>
+                        <h:outputText value="#{record.payer}"></h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            校验码
+                        </f:facet>
+                        <h:outputText value="#{record.checkcode}"></h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            执收单位名称
+                        </f:facet>
+                        <h:outputText value="#{record.prfrmdeptname}"></h:outputText>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header" style="text-align:center">
+                            执收单位编号
+                        </f:facet>
+                        <h:outputText value="#{record.performdept}"></h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            总金额
+                        </f:facet>
+                        <h:outputText value="#{record.totalamt}">
+                            <f:convertNumber pattern="###,##0.00"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            到账标志
+                        </f:facet>
+                        <h:outputText
+                                value="#{paymentQryAction.recfeeFlag.aliasEnums[record.recfeeflag].title}"></h:outputText>
+                    </p:column>
+                    <p:column style="text-align:center">
+                        <f:facet name="header">
+                            处理状态
+                        </f:facet>
+                        <h:outputText
+                                value="#{paymentQryAction.processStatus.aliasEnums[record.processstatus].title}"></h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
