@@ -61,7 +61,7 @@ public class PaymentProcessAction {
                 setButtonDisabled(false);
             }
         } catch (Exception ex) {
-            logger.error("获取缴款书信息失败:编号=" + paynotescode + ";" + ex.getMessage());
+            logger.error("获取缴款书信息失败:编号=" + paynotescode + ";" + ex.getCause().getMessage());
             MessageUtil.addError("获取缴款书信息失败:编号=" + paynotescode + ";" + ex.getCause().getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             ex.printStackTrace();
             return null;

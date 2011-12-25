@@ -3,13 +3,9 @@ package fis.service;
 import com.sun.org.apache.regexp.internal.RE;
 import fis.common.constant.ProcessStatus;
 import fis.common.constant.RecfeeFlag;
-import fis.repository.dao.FsPaymentinfoMapper;
-import fis.repository.dao.FsPaymentinfohisMapper;
-import fis.repository.dao.SysJoblogMapper;
-import fis.repository.model.FsPaymentinfo;
-import fis.repository.model.FsPaymentinfoExample;
-import fis.repository.model.FsPaymentinfohis;
-import fis.repository.model.SysJoblog;
+import fis.common.constant.RefundProcessSts;
+import fis.repository.dao.*;
+import fis.repository.model.*;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.stereotype.Service;
@@ -20,6 +16,7 @@ import skyline.service.SystemService;
 import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,11 +35,15 @@ public class PaymentService {
     @Resource
     private FsPaymentinfohisMapper fsPaymentinfohisMapper;
     @Resource
+    private FsRefundinfoMapper fsRefundinfoMapper;
+    @Resource
+    private FsRefundinfohisMapper fsRefundinfohisMapper;
+    @Resource
     private SysJoblogMapper sysJoblogMapper;
 
     public List<FsPaymentinfo> selectPayinfoByPaynotescd(String paynotescd) {
         List<FsPaymentinfo> fsPaymentinfoList = fsPaymentinfoMapper.selectPayinfoByPaynotescd(paynotescd);
-        if (fsPaymentinfoList.size() < 1) {
+        if (fsPaymentinfoList == null || fsPaymentinfoList.size() < 1) {
             //todo 接口查询
         }
         return fsPaymentinfoList;
@@ -105,7 +106,7 @@ public class PaymentService {
         sysJoblog.setTablename("fs_paymentinfo");
         sysJoblog.setRowpkid(record.getPaynotescode());
         sysJoblog.setJobname("更新");
-        sysJoblog.setJobdesc("发送成功后更新:处理状态=" + processsts);
+        sysJoblog.setJobdesc("发送后更新:处理状态=" + processsts);
         sysJoblog.setJobtime(dt);
         sysJoblog.setJobuserid(operatorManager.getOperatorId());
         sysJoblog.setJobusername(operatorManager.getOperatorName());
@@ -137,4 +138,63 @@ public class PaymentService {
         processstsAry[0] = ProcessStatus.PROCESS_TOACTSUC.getCode();
         return fsPaymentinfoMapper.selectPayinfoForToact(processstsAry);
     }
-}
+
+    /**
+     * 查询退付信息*/
+    public List<FsRefundinfo> selectRefundinfoByAppcd(String applcode) {
+        List<FsRefundinfo> fsRefundinfoList = new ArrayList<FsRefundinfo>();
+        fsRefundinfoList = fsRefundinfoMapper.selectByRefundAppCode(applcode);
+        if (fsRefundinfoList == null || fsRefundinfoList.size() < 1) {
+            //todo 接口
+        }
+        return fsRefundinfoList;
+    }
+
+    @Transactional
+    public void sendRefundConfirm(List<FsRefundinfo> fsRefundinfoList,String refundProcessSts) {
+        //todo 发送 如果发送成功
+        if (1 == 1) {
+            for (FsRefundinfo record : fsRefundinfoList) {
+                updateRefundinfo(record,refundProcessSts);
+            }
+        } else {
+            for (FsRefundinfo record : fsRefundinfoList) {
+                updateRefundinfo(record, RefundProcessSts.PROCESS_CONFIRMFAIL.getCode());
+            }
+        }
+    }
+
+    private void updateRefundinfo(FsRefundinfo record,String refundProcessSts) {
+        OperatorManager operatorManager = SystemService.getOperatorManager();
+        Date dt = new Date();
+        record.setLastUpdBy(operatorManager.getOperatorId());
+        record.setLastUpdDate(dt);
+        record.setProcessstatus(refundProcessSts);
+        FsRefundinfohis fsRefundinfohis = new FsRefundinfohis();
+        fsRefundinfohis.setRefundapplycode(record.getRefundapplycode());
+        fsRefundinfohis.setPaynotescode(record.getPaynotescode());
+        fsRefundinfohis.setProcessstatus(refundProcessSts);
+        fsRefundinfohis.setCreatedBy(operatorManager.getOperatorId());
+        fsRefundinfohis.setCreatedDt(dt);
+        fsRefundinfohis.setAreacode(record.getAreacode());
+        //日志表插入
+        SysJoblog sysJoblog = new SysJoblog();
+        sysJoblog.setTablename("fs_refundinfo");
+        sysJoblog.setRowpkid(record.getPaynotescode());
+        sysJoblog.setJobname("更新");
+        sysJoblog.setJobdesc("发送后更新:处理状态=" + refundProcessSts);
+        sysJoblog.setJobtime(dt);
+        sysJoblog.setJobuserid(operatorManager.getOperatorId());
+        sysJoblog.setJobusername(operatorManager.getOperatorName());
+
+        FsRefundinfoExample rfExample = new FsRefundinfoExample();
+        rfExample.clear();
+        rfExample.createCriteria().andRefundapplycodeEqualTo(record.getRefundapplycode());
+        //插入退付表
+        fsRefundinfoMapper.updateByExampleSelective(record,rfExample);
+        //插入历史表
+        fsRefundinfohisMapper.insertSelective(fsRefundinfohis);
+        //插入日志
+        sysJoblogMapper.insert(sysJoblog);
+    }
+ }

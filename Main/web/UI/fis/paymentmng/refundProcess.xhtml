@@ -27,17 +27,17 @@
             }
         </style>
         <script language="JavaScript" type="text/JavaScript">
-            /*document.onkeydown = function TabReplace() {
-             if (event.keyCode == 13) {
-             if (event.srcElement.id == 'editForm:paynotescode'){
-             document.getElementById("editForm:btnAccept").click();
-             }
-             }
-             }*/
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'editForm:refundapplcode') {
+                        event.keyCode = 9;
+                    }
+                }
+            }
             $ = jQuery;
             $(document).ready(function() {
-                $('#editForm\\:pay').focus(function() {
-                    $('#editForm\\:paynotescode').select();
+                $('#editForm\\:refundapplcode').focus(function() {
+                    $('#editForm\\:refundapplcode').select();
                 });
             });
         </script>
@@ -47,101 +47,78 @@
         <div style="margin:5px 15px 5px 15px">
             <p:growl id="msgs" showDetail="false"/>
             <h:form id="editForm">
-                <p:focus for="paynotescode"/>
+                <p:focus for="refundapplcode"/>
                 <p:panel header="获取数据">
                     <h:panelGrid width="100%" cellspacing="0" border="0" columns="2" columnClasses="col-qry1">
                         <h:panelGroup>
                             <h:panelGrid cellspacing="0" border="0" columns="3">
                                 <h:outputLabel value="申请书编号:"/>
-                                <h:inputText id="paynotescode" autocomplete="off" required="true"
-                                             requiredMessage="请输入凭证号"
+                                <h:inputText id="refundapplcode" autocomplete="off" required="true"
+                                             requiredMessage="请输入凭证号" value="#{refundAction.refundapplcode}"
                                              style="width:200px"/>
-                                <h:message for="paynotescode" style="color:red;"/>
+                                <h:message for="refundapplcode" style="color:red;"/>
                             </h:panelGrid>
                         </h:panelGroup>
                         <h:panelGrid cellspacing="0" border="0" columns="1"
                                      width="100%">
                             <h:panelGroup>
                                 <p:commandButton style="width:60px;" ajax="false"
-                                                 id="btnAccept"
+                                                 id="btnAccept" action="#{refundAction.onBtnAcceptClick}"
                                                  value="获 取"></p:commandButton>
-                                <p:spacer width="10px"/>
-                                <p:commandButton style="width:60px;" type="reset" value="重 置"></p:commandButton>
                             </h:panelGroup>
                         </h:panelGrid>
                     </h:panelGrid>
                 </p:panel>
-                <p:fieldset legend="退付信息">
-                    <h:panelGrid id="detailPanel1" columns="1">
-                        <h:panelGrid columns="4" cellpadding="2" border="0"
-                                     columnClasses="col-label,col-input,col-label2,col-input">
-                            <h:outputLabel value="申请书编号:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="原缴款书编号:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="金额:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="打票日期:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="缴款人:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="代收银行:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="代收银行:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="缴款单位:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="验证码:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="缴款方式:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="备注:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="制单日期:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="制单人:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="缴款人开户行:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="缴款人账号:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="执收单位:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="缴库方式:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="银行收款日期:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="银行记账日期:"/>
-                            <h:outputLabel/>
-                            <h:outputLabel value="票据种类:"/>
-                            <h:outputLabel/>
-                        </h:panelGrid>
-                        <p:dataTable var="record" id="paymenttb" emptyMessage="数据记录为空...">
-                            <p:column headerText="项目">
-                                <h:outputText value="hhh"></h:outputText>
-                            </p:column>
-                            <p:column headerText="计量单位">
-                                <h:outputText value="d"></h:outputText>
-                            </p:column>
-                            <p:column headerText="数量">
-                                <h:outputText value="10"></h:outputText>
-                            </p:column>
-                            <p:column headerText="金额">
-                                <h:outputText value="10"></h:outputText>
-                            </p:column>
-                        </p:dataTable>
-                    </h:panelGrid>
-                </p:fieldset>
-                <p:fieldset legend="操作">
-                    <h:panelGrid columns="1" cellpadding="2" border="0" style="width:700px;text-align:center;">
+                <p:dataTable value="#{refundAction.fsRefundinfoList}" var="record" id="refundtb"
+                             emptyMessage="数据记录为空...">
+                    <p:column headerText="申请书编号" style="text-align:center">
+                        <h:outputText value="#{record.refundapplycode}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="原缴款书编号" style="text-align:center">
+                        <h:outputText value="#{record.paynotescode}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="执收单位编号" style="text-align:center">
+                        <h:outputText value="#{record.performdept}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="执收单位名称" style="text-align:center">
+                        <h:outputText value="#{record.prfrmdeptname}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="领款人名称" style="text-align:center">
+                        <h:outputText value="#{record.recusername}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="领款人开户行" style="text-align:center">
+                        <h:outputText value="#{record.recuserbank}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="领款人账号" style="text-align:center">
+                        <h:outputText value="#{record.recuserbankaccount}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="退付原因" style="text-align:center">
+                        <h:outputText value="#{record.refundreason}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="审核金额" style="text-align:center">
+                        <h:outputText value="#{record.auditamt}">
+                            <f:convertNumber pattern="###,##0.00"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="总金额" style="text-align:center">
+                        <h:outputText value="#{record.totalamt}">
+                            <f:convertNumber pattern="###,##0.00"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="处理状态" style="text-align:center">
+                        <h:outputText value="#{refundAction.refundProcessSts.aliasEnums[record.processstatus].title}"></h:outputText>
+                    </p:column>
+                </p:dataTable>
+                <p:panel>
+                    <h:panelGrid columns="1" cellpadding="2" border="0" style="width:100%;text-align:center;">
                         <h:panelGroup>
-                            <h:commandButton id="btnPay"
-                                             ajax="true" value="退付"
+                            <h:commandButton id="btnRefund" action="#{refundAction.onBtnRefundClick}"
+                                             value="退付"
                                              style="width:90px">
                             </h:commandButton>
                         </h:panelGroup>
                     </h:panelGrid>
-                </p:fieldset>
+                </p:panel>
             </h:form>
         </div>
     </ui:define>

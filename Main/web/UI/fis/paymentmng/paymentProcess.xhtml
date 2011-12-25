@@ -65,8 +65,6 @@
                                 <p:commandButton style="width:60px;" ajax="false"
                                                  id="btnAccept" action="#{paymentProcessAction.onBtnAccept}"
                                                  value="获 取"></p:commandButton>
-                                <p:spacer width="10px"/>
-                                <p:commandButton style="width:60px;" type="reset" value="重 置"></p:commandButton>
                             </h:panelGroup>
                         </h:panelGrid>
                     </h:panelGrid>
@@ -129,7 +127,7 @@
                     <h:panelGrid columns="1" cellpadding="2" border="0" style="width:100%;text-align:center;">
                         <h:panelGroup>
                             <h:commandButton id="btnPay" action="#{paymentProcessAction.onBtnPayClick}"
-                                             ajax="true" value="确认收款"
+                                             value="确认收款"
                                              style="width:90px">
                             </h:commandButton>
                         </h:panelGroup>
