@@ -100,22 +100,22 @@
                         </h:panelGrid>
                         <p:dataTable value="#{paymentProcessAction.fsPaymentinfoList}" var="record" id="paymenttb"
                                      emptyMessage="数据记录为空...">
-                            <p:column headerText="项目编号">
+                            <p:column headerText="项目编号" style="text-align:center">
                                 <h:outputText value="#{record.program}"></h:outputText>
                             </p:column>
-                            <p:column headerText="项目名称">
+                            <p:column headerText="项目名称" style="text-align:center">
                                 <h:outputText value="#{record.programname}"></h:outputText>
                             </p:column>
-                            <p:column headerText="计量单位">
+                            <p:column headerText="计量单位" style="text-align:center">
                                 <h:outputText value="#{record.units}"></h:outputText>
                             </p:column>
-                            <p:column headerText="数量">
+                            <p:column headerText="数量" style="text-align:center">
                                 <h:outputText value="#{record.amount}"></h:outputText>
                             </p:column>
-                            <p:column headerText="收费标准">
+                            <p:column headerText="收费标准" style="text-align:center">
                                 <h:outputText value="#{record.standard}"></h:outputText>
                             </p:column>
-                            <p:column headerText="金额">
+                            <p:column headerText="金额" style="text-align:center">
                                 <h:outputText value="#{record.amt}">
                                     <f:convertNumber pattern="###,##0.00"/>
                                 </h:outputText>
