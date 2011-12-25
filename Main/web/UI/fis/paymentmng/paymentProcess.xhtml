@@ -84,21 +84,21 @@
                         <h:panelGrid columns="2" cellpadding="2" border="0" style="width:100%;"
                                      columnClasses="col-label">
                             <h:outputLabel value="缴款书编号:"/>
-                            <h:inputText style="width:30%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.paynotescode}"/>
+                            <h:inputText style="width:20%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.paynotescode}"/>
                             <h:outputLabel value="缴款人:"/>
-                            <h:inputText style="width:30%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.payer}"/>
+                            <h:inputText style="width:15%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.payer}"/>
                             <h:outputLabel value="执收单位名称:"/>
-                            <h:inputText style="width:50%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.prfrmdeptname}"/>
+                            <h:inputText style="width:30%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.prfrmdeptname}"/>
                             <h:outputLabel value="执收单位编码:"/>
-                            <h:inputText style="width:50%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.performdept}"/>
+                            <h:inputText style="width:20%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.performdept}"/>
                             <h:outputLabel value="总金额:"/>
                             <h:inputText style="width:20%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.totalamt}">
                                 <f:convertNumber pattern="###,##0.00"/>
                             </h:inputText>
                             <h:outputLabel value="验证码:"/>
-                            <h:inputText style="width:35%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.checkcode}"/>
+                            <h:inputText style="width:15%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.checkcode}"/>
                             <h:outputLabel value="制单人:"/>
-                            <h:inputText style="width:29%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.creater}"/>
+                            <h:inputText style="width:20%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.creater}"/>
                         </h:panelGrid>
                         <p:dataTable value="#{paymentProcessAction.fsPaymentinfoList}" var="record" id="paymenttb"
                                      emptyMessage="数据记录为空...">
@@ -129,7 +129,7 @@
                     <h:panelGrid columns="1" cellpadding="2" border="0" style="width:100%;text-align:center;">
                         <h:panelGroup>
                             <h:commandButton id="btnPay" action="#{paymentProcessAction.onBtnPayClick}"
-                                             ajax="true" value="收款确认"
+                                             ajax="true" value="确认收款"
                                              style="width:90px">
                             </h:commandButton>
                         </h:panelGroup>
