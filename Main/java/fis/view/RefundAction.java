@@ -37,7 +37,7 @@ public class RefundAction {
         try{
             fsRefundinfoList = paymentService.selectRefundinfoByAppcd(refundapplcode);
             if (fsRefundinfoList == null || fsRefundinfoList.size() < 1) {
-                MessageUtil.addWarn("请先输入申请书编号获取信息。");
+                MessageUtil.addWarn("没有数据，请检查申请书号是否正确。");
                 return null;
             }
             FsRefundinfo fsRefundinfo = fsRefundinfoList.get(0);
