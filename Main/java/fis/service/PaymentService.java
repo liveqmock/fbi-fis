@@ -88,15 +88,16 @@ public class PaymentService {
         //更新到账信息、处理状态 插入历史记录
         OperatorManager operatorManager = SystemService.getOperatorManager();
         Date dt = new Date();
-        record.setRecfeeflag(recfeeflag);
-        record.setProcessstatus(processsts);
+        FsPaymentinfo rcd = new FsPaymentinfo();
+        rcd.setRecfeeflag(recfeeflag);
+        rcd.setProcessstatus(processsts);
         if (processsts.equals(ProcessStatus.PROCESS_CONFIRMSUC.getCode())) {
-            record.setBankrecdate(sdf.format(dt));              //设置收款日期
+            rcd.setBankrecdate(sdf.format(dt));              //设置收款日期
         } else if (processsts.equals(ProcessStatus.PROCESS_TOACTSUC.getCode())) {
-            record.setBankacctdate(sdf.format(dt));             //设置记账日期
+            rcd.setBankacctdate(sdf.format(dt));             //设置记账日期
         }
-        record.setLastUpdBy(operatorManager.getOperatorId());
-        record.setLastUpdDate(dt);
+        rcd.setLastUpdBy(operatorManager.getOperatorId());
+        rcd.setLastUpdDate(dt);
         FsPaymentinfohis fsPaymentinfohis = new FsPaymentinfohis();
         BeanUtils.copyProperties(fsPaymentinfohis, record);
         fsPaymentinfohis.setCreatedBy(operatorManager.getOperatorId());
@@ -113,7 +114,7 @@ public class PaymentService {
         FsPaymentinfoExample payExample = new FsPaymentinfoExample();
         payExample.clear();
         payExample.createCriteria().andPaynotescodeEqualTo(record.getPaynotescode());
-        fsPaymentinfoMapper.updateByExampleSelective(record, payExample);
+        fsPaymentinfoMapper.updateByExampleSelective(rcd, payExample);
         //插入历史
         fsPaymentinfohisMapper.insertSelective(fsPaymentinfohis);
         //插入日志

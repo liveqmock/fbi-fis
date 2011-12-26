@@ -661,7 +661,7 @@
         select
         unique
         pd.deptname as prfrmdeptname
-        ,pay.pkid,pay. billid,pay.paynotescode,pay.totalamt,pay.printdate,pay.payer,pay.agentbank,pay.payerdept,pay.checkcode
+        ,pay.paynotescode,pay.totalamt,pay.printdate,pay.payer,pay.agentbank,pay.payerdept,pay.checkcode
         ,pay.recmethod,pay.remark,pay.createtime,pay.creater,pay.payerbank,pay.payerbankacct,pay.performdept
         ,pay.paymethod,pay.notescode,pay.bankrecdate,pay.bankacctdate
         ,pay.noteskind,pay.ispreaudit,pay.recfeeflag,pay.payfeemethod
