@@ -33,7 +33,7 @@
 
 
     <!-- enable component scanning (beware that this does not enable mapper scanning!) -->
-    <context:component-scan base-package="fis,skyline"/>
+    <context:component-scan base-package="fis,skyline,gateway"/>
 
     <!-- enable autowire -->
     <context:annotation-config/>

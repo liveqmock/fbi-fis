@@ -58,6 +58,7 @@ public class GetreturnNonTaxNotes extends AbstractBizProcessor {
                 itemMap.put("CREATER", itemInfos[13]);
                 itemMap.put("AGENTBANK", itemInfos[14]);
                 // TODO 少一个字段  ？？ 重要！！！！
+                // TODO 返回的报文正文的各字段数据有可能少一项，导致如有下行代码，会抛出数组越界异常,待检查
                 //itemMap.put("PRINTTAG", itemInfos[15]);
                 dataMapList.add(itemMap);
             }
