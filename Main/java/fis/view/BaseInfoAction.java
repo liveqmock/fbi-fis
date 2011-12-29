@@ -10,7 +10,9 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,71 +36,80 @@ public class BaseInfoAction {
     private List<FsBaseBillinfo> fsBaseBillinfoList;
     private List<FsBasePrograminfo> fsBasePrograminfoList;
     private List<FsBaseMkvchmaninfo> fsBaseMkvchmaninfoList;
+    private String parambofcode;
 
     @PostConstruct
     public void init() {
         try {
-            fsBaseBankList = baseInfoService.selectBankInfo();
-            fsBasePerformdeptList = baseInfoService.selectDeptInfo();
-            fsBaseBillinfoList = baseInfoService.selectBillInfo();
-            fsBasePrograminfoList = baseInfoService.selectProgramInfo();
-            fsBaseMkvchmaninfoList = baseInfoService.selectManInfo();
+            Map parammap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+            parambofcode = parammap.get("bofcode").toString();
+            fsBaseBankList = baseInfoService.selectBankInfo(parambofcode);
+            fsBasePerformdeptList = baseInfoService.selectDeptInfo(parambofcode);
+            fsBaseBillinfoList = baseInfoService.selectBillInfo(parambofcode);
+            fsBasePrograminfoList = baseInfoService.selectProgramInfo(parambofcode);
+            fsBaseMkvchmaninfoList = baseInfoService.selectManInfo(parambofcode);
         } catch (Exception ex) {
             logger.error("获取代理银行信息失败." + ex.getMessage());
-            MessageUtil.addError("获取代理银行信息失败." + ex.getMessage());
+            MessageUtil.addError("获取代理银行信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
         }
     }
 
     public String onBtnbankClick() {
         try {
-            fsBaseBankList = baseInfoService.bankInfoAccpt();
+            fsBaseBankList = baseInfoService.bankInfoAccpt(parambofcode);
         } catch (Exception ex) {
             logger.error("获取代理银行信息失败." + ex.getMessage());
-            MessageUtil.addError("获取代理银行信息失败." + ex.getMessage());
+            MessageUtil.addError("获取代理银行信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }
         return null;
     }
+
     /*执收单位获取*/
     public String onBtnexecunitClick() {
         try {
-            fsBasePerformdeptList = baseInfoService.deptInfoAccpt();
+            fsBasePerformdeptList = baseInfoService.deptInfoAccpt(parambofcode);
+//            javax.faces.vie
         } catch (Exception ex) {
-            logger.error("获取代理银行信息失败." + ex.getMessage());
-            MessageUtil.addError("获取代理银行信息失败." + ex.getMessage());
+            logger.error("获取执收单位信息失败." + ex.getMessage());
+            MessageUtil.addError("获取执收单位信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }
         return null;
     }
+
     /*票据种类获取*/
     public String onBtnbillClick() {
         try {
-            fsBaseBillinfoList = baseInfoService.billInfoAccpt();
+            fsBaseBillinfoList = baseInfoService.billInfoAccpt(parambofcode);
+
         } catch (Exception ex) {
-            logger.error("获取代理银行信息失败." + ex.getMessage());
-            MessageUtil.addError("获取代理银行信息失败." + ex.getMessage());
+            logger.error("获取票据种类信息失败." + ex.getMessage());
+            MessageUtil.addError("获取票据种类信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }
         return null;
     }
+
     /*项目获取*/
     public String onBtnitemClick() {
         try {
-            fsBasePrograminfoList = baseInfoService.programInfoAccpt();
+            fsBasePrograminfoList = baseInfoService.programInfoAccpt(parambofcode);
         } catch (Exception ex) {
-            logger.error("获取代理银行信息失败." + ex.getMessage());
-            MessageUtil.addError("获取代理银行信息失败." + ex.getMessage());
+            logger.error("获取项目信息失败." + ex.getMessage());
+            MessageUtil.addError("获取项目信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }
         return null;
     }
+
     /*制单人获取*/
     public String onBtnmkvchClick() {
         try {
-            fsBaseMkvchmaninfoList = baseInfoService.manInfoAccpt();
+            fsBaseMkvchmaninfoList = baseInfoService.manInfoAccpt(parambofcode);
         } catch (Exception ex) {
-            logger.error("获取代理银行信息失败." + ex.getMessage());
-            MessageUtil.addError("获取代理银行信息失败." + ex.getMessage());
+            logger.error("获取制单人信息失败." + ex.getMessage());
+            MessageUtil.addError("获取制单人信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }
         return null;

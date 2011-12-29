@@ -34,8 +34,8 @@ public class RefundQryAction {
         try {
             fsRefundinfoList = paymentService.selectRefundinfo();
         } catch (Exception ex) {
-            logger.error("查询缴款书信息失败:" + ex.getCause().getMessage());
-            MessageUtil.addError("查询缴款书信息失败:" + ex.getCause().getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            logger.error("查询缴款书信息失败:" + ex.getMessage());
+            MessageUtil.addError("查询缴款书信息失败:" + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
         }
     }
 

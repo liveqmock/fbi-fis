@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.util.List;
 
 /**
@@ -30,14 +31,15 @@ public class PaymentQryAction {
     private List<FsPaymentinfo> fsPaymentinfoList;
     private ProcessStatus processStatus = ProcessStatus.PROCESS_INIT;
     private RecfeeFlag recfeeFlag = RecfeeFlag.RECFEE_NOTOACT;
-
+    private String parambofcode;
     @PostConstruct
     public void init() {
         try {
-            fsPaymentinfoList = paymentService.selectPayinfo();
+            parambofcode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("bofcode").toString();
+            fsPaymentinfoList = paymentService.selectPayinfo(parambofcode);
         } catch (Exception ex) {
-            logger.error("查询缴款书信息失败:" + ex.getCause().getMessage());
-            MessageUtil.addError("查询缴款书信息失败:" + ex.getCause().getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            logger.error("查询缴款书信息失败:" + ex.getMessage());
+            MessageUtil.addError("查询缴款书信息失败:" + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
         }
     }
 

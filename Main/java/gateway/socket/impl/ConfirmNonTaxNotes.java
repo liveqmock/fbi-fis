@@ -29,8 +29,8 @@ public class ConfirmNonTaxNotes extends AbstractBizProcessor {
         消息头+4位响应码+报文正文
         报文正文为：缴款书1号+间隔符+缴款书2号+…..
         */
-        if (rtnDataGaram.substring(64, 68).equalsIgnoreCase("0000")) {
-            StringTokenizer strTokenizer = new StringTokenizer(rtnDataGaram.substring(68), "\n");
+        if (rtnDataGaram.substring(62, 66).equalsIgnoreCase("0000")) {
+            StringTokenizer strTokenizer = new StringTokenizer(rtnDataGaram.substring(66), "\n");
             String item = null;
             int index = 0;
             while (strTokenizer.hasMoreTokens()) {
@@ -48,12 +48,10 @@ public class ConfirmNonTaxNotes extends AbstractBizProcessor {
     public static void main(String[] args) {
         List<String> paramList = new ArrayList<String>();
         // PAYNOTESCODE,NOTESCODE,BANKACCTDATE,RECFEEFLAG
-        paramList.add("000000043");
-        paramList.add("");
-        paramList.add("");
-        paramList.add("");
-        paramList.add("");
-        paramList.add("");
+        paramList.add("000000061");
+        paramList.add("150000000006");
+        paramList.add("20111229");
+        paramList.add("1");
         try {
             List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266019", "confirmNonTaxNotes", paramList);
             System.out.println("Total 笔数 : " + dataList.size());

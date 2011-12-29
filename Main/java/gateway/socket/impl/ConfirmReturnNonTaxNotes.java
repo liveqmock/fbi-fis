@@ -12,7 +12,7 @@ import java.util.*;
  * User: zhangxiaobo
  * Date: 11-12-20
  * Time: 下午3:00
- * 非税--查询基础数据
+ * 非税-退付确认
  */
 public class ConfirmReturnNonTaxNotes extends AbstractBizProcessor {
 
@@ -49,7 +49,7 @@ public class ConfirmReturnNonTaxNotes extends AbstractBizProcessor {
     public static void main(String[] args) {
         List<String> paramList = new ArrayList<String>();
         // REFUNDAPPLYCODE, PAYNOTESCODE  000006,209001
-        paramList.add("000006");
+        paramList.add("0000007");
         paramList.add("209001");
         try {
             List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266019", "confirmReturnNonTaxNotes", paramList);

@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.util.List;
 
 /**
@@ -33,13 +34,16 @@ public class PaymentToactAction {
     private ProcessStatus processStatus = ProcessStatus.PROCESS_INIT;
     private RecfeeFlag recfeeFlag = RecfeeFlag.RECFEE_NOTOACT;
 
+    private String parambofcode;
+
     @PostConstruct
     public void init() {
         try {
+            parambofcode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("bofcode").toString();
             queryPayinfo();
         } catch (Exception ex) {
             logger.error("查询到账信息错误：" + ex.getMessage());
-            MessageUtil.addError("查询到账信息错误：" + ex.getCause().getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            MessageUtil.addError("查询到账信息错误：" + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
         }
     }
 
@@ -49,17 +53,17 @@ public class PaymentToactAction {
             return null;
         }
         try {
-            paymentService.sendPayinfoToact(fsPaymentinfos, ProcessStatus.PROCESS_TOACTSUC.getCode());
+            paymentService.sendPayinfoToact(fsPaymentinfos, ProcessStatus.PROCESS_TOACTSUC.getCode(),parambofcode);
         } catch (Exception ex) {
             logger.error("发送到账信息失败：" + ex.getMessage());
-            MessageUtil.addError("发送到账信息失败：" + ex.getCause().getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            MessageUtil.addError("发送到账信息失败：" + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }
         try {
             queryPayinfo();
         } catch (Exception ex) {
             logger.error("查询到账信息错误：" + ex.getMessage());
-            MessageUtil.addError("查询到账信息错误：" + ex.getCause().getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            MessageUtil.addError("查询到账信息错误：" + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }
 
@@ -69,8 +73,8 @@ public class PaymentToactAction {
     }
 
     private void queryPayinfo() {
-        fsPaymentinfoList1 = paymentService.selectPayinfoNoToact();
-        fsPaymentinfoList2 = paymentService.selectPayinfoToact();
+        fsPaymentinfoList1 = paymentService.selectPayinfoNoToact(parambofcode);
+        fsPaymentinfoList2 = paymentService.selectPayinfoToact(parambofcode);
     }
 
     public PaymentService getPaymentService() {

@@ -23,13 +23,13 @@
             }
 
             .col-qry1 {
-                width: 40%;
+                width: 70%;
             }
         </style>
         <script language="JavaScript" type="text/JavaScript">
             document.onkeydown = function TabReplace() {
                 if (event.keyCode == 13) {
-                    if (event.srcElement.id == 'editForm:refundapplcode') {
+                    if (event.srcElement.id != 'editForm:btnAccept') {
                         event.keyCode = 9;
                     }
                 }
@@ -39,28 +39,34 @@
                 $('#editForm\\:refundapplcode').focus(function() {
                     $('#editForm\\:refundapplcode').select();
                 });
+                $('#editForm\\:performdept').focus(function() {
+                    $('#editForm\\:performdept').select();
+                });
             });
         </script>
     </ui:define>
 
     <ui:define name="content">
-        <div style="margin:5px 15px 5px 15px">
+        <div style="margin:5px;">
             <p:growl id="msgs" showDetail="false"/>
             <h:form id="editForm">
                 <p:focus for="refundapplcode"/>
                 <p:panel header="获取数据">
                     <h:panelGrid width="100%" cellspacing="0" border="0" columns="2" columnClasses="col-qry1">
                         <h:panelGroup>
-                            <h:panelGrid cellspacing="0" border="0" columns="3">
+                            <h:panelGrid cellspacing="0" border="0" columns="5">
                                 <h:outputLabel value="申请书编号:"/>
                                 <h:inputText id="refundapplcode" autocomplete="off" required="true"
                                              requiredMessage="请输入凭证号" value="#{refundAction.refundapplcode}"
                                              style="width:200px"/>
-                                <h:message for="refundapplcode" style="color:red;"/>
+                                <p:spacer width="5px"/>
+                                <h:outputLabel value="执收单位编号:"/>
+                                <h:inputText id="performdept" autocomplete="off" required="true"
+                                             requiredMessage="请输入单位编号" value="#{refundAction.performdept}"
+                                             style="width:200px"/>
                             </h:panelGrid>
                         </h:panelGroup>
-                        <h:panelGrid cellspacing="0" border="0" columns="1"
-                                     width="100%">
+                        <h:panelGrid cellspacing="0" border="0" columns="1">
                             <h:panelGroup>
                                 <p:commandButton style="width:60px;" ajax="false"
                                                  id="btnAccept" action="#{refundAction.onBtnAcceptClick}"

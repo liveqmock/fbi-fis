@@ -32,10 +32,13 @@ public class RefundAction {
     private List<FsRefundinfo> fsRefundinfoList;
     private String refundapplcode;
     private RefundProcessSts refundProcessSts = RefundProcessSts.PROCESS_INIT;
+    private String parambofcode;  //≤∆’˛æ÷±‡¬Î
+    private String performdept;   //÷¥ ’µ•Œª±‡∫≈
 
     public String onBtnAcceptClick() {
         try{
-            fsRefundinfoList = paymentService.selectRefundinfoByAppcd(refundapplcode);
+            parambofcode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("bofcode").toString();
+            fsRefundinfoList = paymentService.selectRefundinfoByAppcd(refundapplcode,parambofcode,performdept);
             if (fsRefundinfoList == null || fsRefundinfoList.size() < 1) {
                 MessageUtil.addWarn("√ª”– ˝æ›£¨«ÎºÏ≤È…Í«Î È∫≈ «∑Ò’˝»∑°£");
                 return null;
@@ -52,7 +55,7 @@ public class RefundAction {
         } catch (Exception ex) {
             logger.error("ªÒ»°ÕÀ∏∂–≈œ¢ ß∞‹£∫ÕÀ∏∂…Í«Î∫≈=" + refundapplcode + "£¨" + ex.getCause().getMessage());
             MessageUtil.addError("ªÒ»°ÕÀ∏∂–≈œ¢ ß∞‹£∫ÕÀ∏∂…Í«Î∫≈=" + refundapplcode + "£¨"
-                    + ex.getCause().getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+                    + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }
         return null;
@@ -68,20 +71,21 @@ public class RefundAction {
             FsRefundinfo fsRefundinfo = fsRefundinfoList.get(0);
             List<FsRefundinfo> refundList = new ArrayList<FsRefundinfo>();
             refundList.add(fsRefundinfo);
-            paymentService.sendRefundConfirm(refundList,RefundProcessSts.PROCESS_CONFIRMSUC.getCode());
+            paymentService.sendRefundConfirm(refundList,RefundProcessSts.PROCESS_CONFIRMSUC.getCode(),parambofcode);
             setButtonDisabled(true);
         } catch (Exception ex) {
-            logger.error("ÕÀ∏∂ ß∞‹£∫ÕÀ∏∂…Í«Î∫≈=" + refundapplcode + "£¨" + ex.getCause().getMessage());
+            logger.error("ÕÀ∏∂ ß∞‹£∫ÕÀ∏∂…Í«Î∫≈=" + refundapplcode + "£¨" + ex.getMessage());
             MessageUtil.addError("ÕÀ∏∂–≈œ¢£∫ÕÀ∏∂…Í«Î∫≈=" + refundapplcode + "£¨"
-                    + ex.getCause().getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+                    + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }
         try {
-            fsRefundinfoList = paymentService.selectRefundinfoByAppcd(fsRefundinfoList.get(0).getRefundapplycode());
+            fsRefundinfoList = paymentService.selectRefundinfoByAppcd(fsRefundinfoList.get(0).getRefundapplycode(),
+                    parambofcode,fsRefundinfoList.get(0).getPerformdept().toString());
         }  catch (Exception ex) {
-            logger.error("ªÒ»°ÕÀ∏∂–≈œ¢ ß∞‹£∫ÕÀ∏∂…Í«Î∫≈=" + refundapplcode + "£¨" + ex.getCause().getMessage());
+            logger.error("ªÒ»°ÕÀ∏∂–≈œ¢ ß∞‹£∫ÕÀ∏∂…Í«Î∫≈=" + refundapplcode + "£¨" + ex.getMessage());
             MessageUtil.addError("ªÒ»°ÕÀ∏∂–≈œ¢ ß∞‹£∫ÕÀ∏∂…Í«Î∫≈=" + refundapplcode + "£¨"
-                    + ex.getCause().getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+                    + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }
         MessageUtil.addInfo("ÕÀ∏∂»∑»œ≥…π¶°£");
@@ -125,5 +129,13 @@ public class RefundAction {
 
     public void setRefundProcessSts(RefundProcessSts refundProcessSts) {
         this.refundProcessSts = refundProcessSts;
+    }
+
+    public String getPerformdept() {
+        return performdept;
+    }
+
+    public void setPerformdept(String performdept) {
+        this.performdept = performdept;
     }
 }

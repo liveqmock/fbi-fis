@@ -1,5 +1,7 @@
 package gateway.socket.impl;
 
+import fis.common.BeanCopy;
+import fis.repository.model.FsPaymentinfo;
 import gateway.AbstractBizProcessor;
 import gateway.service.BizInterService;
 import org.slf4j.Logger;
@@ -101,7 +103,8 @@ public class QueryNonTaxNotes extends AbstractBizProcessor {
                 System.out.println("BANKRECDATE : " + dataMap.get("BANKRECDATE"));
                 System.out.println("NOTESKIND : " + dataMap.get("NOTESKIND"));
                 System.out.println("NOTESCODE : " + dataMap.get("NOTESCODE"));
-
+                FsPaymentinfo fsPaymentinfo = (FsPaymentinfo) BeanCopy.copyObject("fis.repository.model.FsPaymentinfo", dataMap);
+                String sss = "sd";
             }
         } catch (Exception e) {
             e.printStackTrace();

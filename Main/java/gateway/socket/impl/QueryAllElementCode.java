@@ -56,6 +56,10 @@ public class QueryAllElementCode extends AbstractBizProcessor {
     public static void main(String[] args) {
         List<String> paramList = new ArrayList<String>();
         paramList.add("USER");
+        paramList.add("PROGRAM");
+        paramList.add("USER");
+        paramList.add("USER");
+        paramList.add("USER");
         try {
             List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266019", "queryAllElementCode",paramList);
             System.out.println("Total ±ÊÊý : " + dataList.size());

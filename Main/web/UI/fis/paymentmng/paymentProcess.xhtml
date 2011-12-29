@@ -23,13 +23,13 @@
             }
 
             .col-qry1 {
-                width: 40%;
+                width: 60%;
             }
         </style>
         <script language="JavaScript" type="text/JavaScript">
             document.onkeydown = function TabReplace() {
                 if (event.keyCode == 13) {
-                    if (event.srcElement.id == 'editForm:paynotescode') {
+                    if (event.srcElement.id != 'editForm:btnAccept') {
                         event.keyCode =9;
                     }
                 }
@@ -38,6 +38,9 @@
             $(document).ready(function() {
                 $('#editForm\\:paynotescode').focus(function() {
                     $('#editForm\\:paynotescode').select();
+                });
+                $('#editForm\\:checkcode').focus(function() {
+                    $('#editForm\\:checkcode').select();
                 });
             });
         </script>
@@ -51,16 +54,19 @@
                 <p:panel header="获取数据">
                     <h:panelGrid width="100%" cellspacing="0" border="0" columns="2" columnClasses="col-qry1">
                         <h:panelGroup>
-                            <h:panelGrid cellspacing="0" border="0" columns="3">
-                                <h:outputLabel value="凭证编号:"/>
+                            <h:panelGrid cellspacing="0" border="0" columns="5">
+                                <h:outputLabel value="缴款书编号:"/>
                                 <h:inputText id="paynotescode" autocomplete="off" required="true"
-                                             requiredMessage="请输入凭证号" value="#{paymentProcessAction.paynotescode}"
+                                             requiredMessage="请输入缴款书编号" value="#{paymentProcessAction.paynotescode}"
                                              style="width:200px"/>
-                                <h:message for="paynotescode" style="color:red;"/>
+                                <p:spacer width="5px"/>
+                                <h:outputLabel value="校验码:"/>
+                                <h:inputText id="checkcode" autocomplete="off" required="true"
+                                             requiredMessage="请输入校验码" value="#{paymentProcessAction.checkcode}"
+                                             style="width:200px"/>
                             </h:panelGrid>
                         </h:panelGroup>
-                        <h:panelGrid cellspacing="0" border="0" columns="1"
-                                     width="100%">
+                        <h:panelGrid cellspacing="0" border="0" columns="1">
                             <h:panelGroup>
                                 <p:commandButton style="width:60px;" ajax="false"
                                                  id="btnAccept" action="#{paymentProcessAction.onBtnAccept}"
@@ -81,8 +87,8 @@
                     <h:panelGrid id="detailPanel1" columns="1" style="width: 100%;">
                         <h:panelGrid columns="2" cellpadding="2" border="0" style="width:100%;"
                                      columnClasses="col-label">
-                            <h:outputLabel value="缴款书编号:"/>
-                            <h:inputText style="width:20%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.paynotescode}"/>
+                            <h:outputLabel value="票据编号:"/>
+                            <h:inputText style="width:20%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.notescode}"/>
                             <h:outputLabel value="缴款人:"/>
                             <h:inputText style="width:15%;" disabled="true" value="#{paymentProcessAction.fsPaymentinfo.payer}"/>
                             <h:outputLabel value="执收单位名称:"/>

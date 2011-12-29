@@ -57,8 +57,8 @@ public class GetreturnNonTaxNotes extends AbstractBizProcessor {
                 itemMap.put("TOTALAMT", itemInfos[12]);
                 itemMap.put("CREATER", itemInfos[13]);
                 itemMap.put("AGENTBANK", itemInfos[14]);
-                // TODO 少一个字段  ？？ 重要！！！！
-                // TODO 返回的报文正文的各字段数据有可能少一项，导致如有下行代码，会抛出数组越界异常,待检查
+                //  少一个字段  返回最后一个为空值
+                //  返回的报文正文的各字段数据有可能少一项，导致如有下行代码，会抛出数组越界异常,待检查
                 //itemMap.put("PRINTTAG", itemInfos[15]);
                 dataMapList.add(itemMap);
             }
@@ -71,7 +71,7 @@ public class GetreturnNonTaxNotes extends AbstractBizProcessor {
     public static void main(String[] args) {
         List<String> paramList = new ArrayList<String>();
         // 申请书编号1+，+执收单位编码1
-        paramList.add("000006");
+        paramList.add("0000007");
         paramList.add("209001");
         try {
             List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266019", "getreturnNonTaxNotes", paramList);

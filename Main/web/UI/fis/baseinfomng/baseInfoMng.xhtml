@@ -9,13 +9,14 @@
     </ui:define>
     <ui:define name="content">
         <div style="margin:5px;">
-            <p:tabView cache="false" dynamic="true" style="font-weight:normal;font-style:normal">
+            <p:tabView style="font-weight:normal;font-style:normal">
                 <p:tab title="代理银行">
-                    <p:growl id="bankmsgs" showDetail="false"/>
+                    <p:growl id="msgs" showDetail="false"/>
+                    <div id="qrydiv">
                     <h:form id="bankForm">
                         <p:menubar style="margin-top:10px;margin-bottom:10px;">
-                            <p:menuitem value="获取信息" id="btnbank" icon="ui-icon ui-icon-download" update="banktb"
-                                        action="#{baseInfoAction.onBtnbankClick}"></p:menuitem>
+                            <p:menuitem type="push" value="获取信息" icon="ui-icon ui-icon-download" update="msgs,banktb"
+                                        action="#{baseInfoAction.onBtnbankClick}" ajax="false"></p:menuitem>
                         </p:menubar>
                         <p:dataTable id="banktb" value="#{baseInfoAction.fsBaseBankList}" var="record"
                                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -42,12 +43,13 @@
                             </p:column>
                         </p:dataTable>
                     </h:form>
+                    </div>
                 </p:tab>
                 <p:tab title="执收单位">
                     <h:form id="execunitForm">
                         <p:menubar style="margin-top:10px;margin-bottom:10px;">
-                            <p:menuitem value="获取信息" id="btnexecunit" icon="ui-icon ui-icon-download" update="execunittb"
-                                        ></p:menuitem>
+                            <p:menuitem value="获取信息" id="btnexecunit" icon="ui-icon ui-icon-download" update="msgs,execunittb"
+                                        action="#{baseInfoAction.onBtnexecunitClick}" ajax="false"></p:menuitem>
                         </p:menubar>
                         <p:dataTable id="execunittb" value="#{baseInfoAction.fsBasePerformdeptList}" var="record"
                                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -79,7 +81,7 @@
                     <h:form id="billForm">
                         <p:menubar style="margin-top:10px;margin-bottom:10px;">
                             <p:menuitem value="获取信息" id="btnbill" icon="ui-icon ui-icon-download" update="billtb"
-                                        ></p:menuitem>
+                                        action="#{baseInfoAction.onBtnbillClick}" ajax="false"></p:menuitem>
                         </p:menubar>
                         <p:dataTable id="billtb" value="#{baseInfoAction.fsBaseBillinfoList}" var="record"
                                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -111,7 +113,7 @@
                     <h:form id="itemForm">
                         <p:menubar style="margin-top:10px;margin-bottom:10px;">
                             <p:menuitem value="获取信息" id="btnitem" icon="ui-icon ui-icon-download" update="itemtb"
-                                        ></p:menuitem>
+                                        action="#{baseInfoAction.onBtnitemClick}" ajax="false"></p:menuitem>
                         </p:menubar>
                         <p:dataTable id="itemtb" value="#{baseInfoAction.fsBasePrograminfoList}" var="record"
                                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -143,7 +145,7 @@
                     <h:form id="mkvchForm">
                         <p:menubar style="margin-top:10px;margin-bottom:10px;">
                             <p:menuitem value="获取信息" id="btnmkvch" icon="ui-icon ui-icon-download" update="mkvchtb"
-                                        ></p:menuitem>
+                                        action="#{baseInfoAction.onBtnmkvchClick}"></p:menuitem>
                         </p:menubar>
                         <p:dataTable id="mkvchtb" value="#{baseInfoAction.fsBaseMkvchmaninfoList}" var="record"
                                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"

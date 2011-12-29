@@ -35,17 +35,19 @@ public class PaymentProcessAction {
     private List<FsPaymentinfo> fsPaymentinfoList;
     private FsPaymentinfo fsPaymentinfo;
     private String paynotescode;
-
+    private String checkcode;
+    private String parambofcode;  //财政局编码
     private ProcessStatus processStatus = ProcessStatus.PROCESS_INIT;
 
     @PostConstruct
     public void init() {
+        parambofcode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("bofcode").toString();
         fsPaymentinfo = new FsPaymentinfo();
     }
 
     public String onBtnAccept() {
         try {
-            fsPaymentinfoList = paymentService.selectPayinfoByPaynotescd(paynotescode);
+            fsPaymentinfoList = paymentService.selectPayinfoByPaynotescd(parambofcode, paynotescode, checkcode);
             if (fsPaymentinfoList == null || fsPaymentinfoList.size() < 1) {
                 MessageUtil.addWarn("没有数据，请检查缴款书编号是否正确。");
                 return null;
@@ -61,8 +63,9 @@ public class PaymentProcessAction {
                 setButtonDisabled(false);
             }
         } catch (Exception ex) {
-            logger.error("获取缴款书信息失败:编号=" + paynotescode + ";" + ex.getCause().getMessage());
-            MessageUtil.addError("获取缴款书信息失败:编号=" + paynotescode + ";" + ex.getCause().getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            logger.error("获取缴款书信息失败:编号=" + paynotescode + ";" + ex.getMessage());
+            logger.error("获取缴款书信息失败:编号=" + paynotescode + ";" + ex.getMessage());
+            MessageUtil.addError("获取缴款书信息失败:编号=" + paynotescode + ";" + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             ex.printStackTrace();
             return null;
         }
@@ -85,11 +88,11 @@ public class PaymentProcessAction {
             }
             List<FsPaymentinfo> fsPaymentinfoListsend = new ArrayList<FsPaymentinfo>();
             fsPaymentinfoListsend.add(fsPaymentinfo);
-            paymentService.sendPayinfoConfirm(fsPaymentinfoListsend, ProcessStatus.PROCESS_CONFIRMSUC.getCode());
+            paymentService.sendPayinfoConfirm(fsPaymentinfoListsend, ProcessStatus.PROCESS_CONFIRMSUC.getCode(), parambofcode);
             setButtonDisabled(true);
         } catch (Exception ex) {
-            logger.error("确认收款发送失败：缴款书编号=" + paynotescode + "，" + ex.getMessage());
-            MessageUtil.addError("确认收款发送失败：缴款书编号=" + paynotescode + "，" + ex.getCause().getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            logger.error(ex.getMessage());
+            MessageUtil.addError(ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             ex.printStackTrace();
             return null;
         }
@@ -135,5 +138,13 @@ public class PaymentProcessAction {
 
     public void setFsPaymentinfoList(List<FsPaymentinfo> fsPaymentinfoList) {
         this.fsPaymentinfoList = fsPaymentinfoList;
+    }
+
+    public String getCheckcode() {
+        return checkcode;
+    }
+
+    public void setCheckcode(String checkcode) {
+        this.checkcode = checkcode;
     }
 }

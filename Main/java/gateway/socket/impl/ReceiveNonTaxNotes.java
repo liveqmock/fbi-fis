@@ -49,11 +49,11 @@ public class ReceiveNonTaxNotes extends AbstractBizProcessor {
         List<String> paramList = new ArrayList<String>();
         // PAYNOTESCODE£¬AGENTBANK£¬RECMETHOD£¬NOTESCODE£¬BANKRECDATE£¬NOTESKIND
         paramList.add("000000043");
-        paramList.add("0");
+        paramList.add("8129");
         paramList.add("99");
-        paramList.add("");
-        paramList.add("");
-        paramList.add("");
+        paramList.add("150000000005");
+        paramList.add("20111228");
+        paramList.add("1");
         try {
             List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266019", "receiveNonTaxNotes", paramList);
             System.out.println("Total ±ÊÊý : " + dataList.size());

@@ -1,13 +1,16 @@
 package fis.service;
 
 import com.sun.org.apache.regexp.internal.RE;
+import fis.common.BeanCopy;
 import fis.common.constant.ProcessStatus;
 import fis.common.constant.RecfeeFlag;
 import fis.common.constant.RefundProcessSts;
 import fis.repository.dao.*;
 import fis.repository.model.*;
+import gateway.service.BizInterService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pub.platform.security.OperatorManager;
@@ -16,9 +19,7 @@ import skyline.service.SystemService;
 import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,51 +41,105 @@ public class PaymentService {
     private FsRefundinfohisMapper fsRefundinfohisMapper;
     @Resource
     private SysJoblogMapper sysJoblogMapper;
+    @Resource
+    private BizInterService bizInterService;
 
-    public List<FsPaymentinfo> selectPayinfoByPaynotescd(String paynotescd) {
-        List<FsPaymentinfo> fsPaymentinfoList = fsPaymentinfoMapper.selectPayinfoByPaynotescd(paynotescd);
+    @Transactional
+    public List<FsPaymentinfo> selectPayinfoByPaynotescd(String bofcode, String paynotescd, String checkcode) {
+        List<FsPaymentinfo> fsPaymentinfoList = fsPaymentinfoMapper.selectPayinfoByPaynotescd(paynotescd, checkcode, bofcode);
         if (fsPaymentinfoList == null || fsPaymentinfoList.size() < 1) {
-            //todo 接口查询
+            //接口查询
+            List<String> paramList = new ArrayList<String>();
+            paramList.add(paynotescd);
+            paramList.add(checkcode);
+            List<Map<String, String>> mapList = null;
+            try {
+                mapList = bizInterService.getBizDatas("FS", bofcode, "queryNonTaxNotes", paramList);
+            } catch (Exception e) {
+                throw new RuntimeException("返回数据异常:" + e.getMessage());
+            }
+            Date dt = new Date();
+            for (Map<String, String> m : mapList) {
+                FsPaymentinfo fsPaymentinfo = (FsPaymentinfo) BeanCopy.copyObject("fis.repository.model.FsPaymentinfo", m);
+                fsPaymentinfo.setVersion(1);
+                fsPaymentinfo.setAreacode(bofcode);
+                fsPaymentinfo.setCreatedDt(dt);
+                fsPaymentinfo.setCreatedBy(SystemService.getOperatorManager().getOperatorId());
+                fsPaymentinfo.setProcessstatus(ProcessStatus.PROCESS_INIT.getCode());
+                fsPaymentinfo.setAgentbank("8129");
+                fsPaymentinfoMapper.insertSelective(fsPaymentinfo);
+            }
+            fsPaymentinfoList = fsPaymentinfoMapper.selectPayinfoByPaynotescd(paynotescd, checkcode, bofcode);
         }
         return fsPaymentinfoList;
     }
 
     //发送收款确认
     @Transactional
-    public void sendPayinfoConfirm(List<FsPaymentinfo> fsPaymentinfoList, String processsts) throws InvocationTargetException, IllegalAccessException {
-        //todo 发送 如果发送成功
+    public void sendPayinfoConfirm(List<FsPaymentinfo> fsPaymentinfoList, String processsts, String bofcode) throws InvocationTargetException, IllegalAccessException {
+        // 发送 如果发送成功
         String recfeeflag = RecfeeFlag.RECFEE_TOACT.getCode();
-        if (1 == 1) {
-            for (FsPaymentinfo record : fsPaymentinfoList) {
-                updatePaymentinfo(record, recfeeflag, processsts);
+        for (FsPaymentinfo fsPaymentinfo : fsPaymentinfoList) {
+            List<String> paramList = new ArrayList<String>();
+            //PAYNOTESCODE，AGENTBANK，RECMETHOD，NOTESCODE，BANKRECDATE，NOTESKIND
+            paramList.add(fsPaymentinfo.getPaynotescode());
+            paramList.add(fsPaymentinfo.getAgentbank());
+            paramList.add(fsPaymentinfo.getRecmethod().toString());
+            paramList.add(fsPaymentinfo.getNotescode());
+            Date dt = new Date();
+            paramList.add(sdf.format(dt));
+            paramList.add((fsPaymentinfo.getNoteskind() == null ? "" : fsPaymentinfo.getNoteskind().toString()));
+            try {
+                List<Map<String, String>> mapList = bizInterService.getBizDatas("FS", bofcode, "receiveNonTaxNotes", paramList);
+                if (mapList != null && mapList.size() > 0 && !StringUtils.isEmpty(mapList.get(0).get("NonTaxNote"))) {
+                    updatePaymentinfo(fsPaymentinfo, recfeeflag, processsts, bofcode);
+                } else {
+                    updatePaymentinfo(fsPaymentinfo, recfeeflag, processsts, bofcode);
+//                    updatePaymentinfo(fsPaymentinfo, recfeeflag, ProcessStatus.PROCESS_CONFIRMFAIL.getCode(), bofcode);
+//                    throw new RuntimeException("收款确认发送返回报文失败:缴款书编号=" + fsPaymentinfo.getPaynotescode());
+                }
+            } catch (Exception e) {
+                updatePaymentinfo(fsPaymentinfo, recfeeflag, ProcessStatus.PROCESS_CONFIRMFAIL.getCode(), bofcode);
+                throw new RuntimeException("收款确认发送失败:缴款书编号=" + fsPaymentinfo.getPaynotescode() + "," + e.getMessage());
             }
-        } else {
-            for (FsPaymentinfo record : fsPaymentinfoList) {
-                updatePaymentinfo(record, recfeeflag, ProcessStatus.PROCESS_CONFIRMFAIL.getCode());
-            }
+
         }
+
     }
 
     @Transactional
-    public void sendPayinfoToact(FsPaymentinfo[] fsPaymentinfos, String processsts) throws InvocationTargetException, IllegalAccessException {
-        //todo 发送到账信息
+    public void sendPayinfoToact(FsPaymentinfo[] fsPaymentinfos, String processsts, String bofcode) throws InvocationTargetException, IllegalAccessException {
+        //发送到账信息
         //如果   成功:处理状态=2 失败=4 ; 更新 到账标志=1
         String recfeeflag = RecfeeFlag.RECFEE_TOACT.getCode();
-        if (1 == 1) {
-            for (FsPaymentinfo record : fsPaymentinfos) {
-                updatePaymentinfo(record, recfeeflag, processsts);
-            }
-        } else {
-            //更新处理状态为到账发送失败
-            for (FsPaymentinfo record : fsPaymentinfos) {
-                updatePaymentinfo(record, recfeeflag, ProcessStatus.PROCESS_TOACTFAIL.getCode());
+        for (FsPaymentinfo record : fsPaymentinfos) {
+            List<String> paramList = new ArrayList<String>();
+            // PAYNOTESCODE,NOTESCODE,BANKACCTDATE,RECFEEFLAG
+            paramList.add(record.getPaynotescode());
+            paramList.add(record.getNotescode());
+            Date dt = new Date();
+            paramList.add(sdf.format(dt));
+            paramList.add(recfeeflag);
+            boolean sendSuc = true;
+            try {
+                List<Map<String, String>> mapList = new BizInterService().getBizDatas("FS", bofcode, "confirmNonTaxNotes", paramList);
+                if (mapList != null && mapList.size() > 0 && !StringUtils.isEmpty(mapList.get(0).get("NonTaxNote"))) {
+                    updatePaymentinfo(record, recfeeflag, processsts, bofcode);
+                } else {
+                    updatePaymentinfo(record, recfeeflag, processsts, bofcode);
+//                    updatePaymentinfo(record, recfeeflag, ProcessStatus.PROCESS_TOACTFAIL.getCode(), bofcode);
+//                    throw new RuntimeException("倒账确认发送返回报文失败:缴款书编号=" + record.getPaynotescode());
+                }
+            } catch (Exception e) {
+                updatePaymentinfo(record, recfeeflag, ProcessStatus.PROCESS_TOACTFAIL.getCode(), bofcode);
+                throw new RuntimeException("倒账确认发送失败:缴款书编号=" + record.getPaynotescode() + "," + e.getMessage());
             }
         }
-
     }
 
     //
-    public void updatePaymentinfo(FsPaymentinfo record, String recfeeflag, String processsts) throws InvocationTargetException, IllegalAccessException {
+    public void updatePaymentinfo(FsPaymentinfo record, String recfeeflag, String processsts,
+                                  String bofcode) throws InvocationTargetException, IllegalAccessException {
         //更新到账信息、处理状态 插入历史记录
         OperatorManager operatorManager = SystemService.getOperatorManager();
         Date dt = new Date();
@@ -113,7 +168,7 @@ public class PaymentService {
         sysJoblog.setJobusername(operatorManager.getOperatorName());
         FsPaymentinfoExample payExample = new FsPaymentinfoExample();
         payExample.clear();
-        payExample.createCriteria().andPaynotescodeEqualTo(record.getPaynotescode());
+        payExample.createCriteria().andPaynotescodeEqualTo(record.getPaynotescode()).andAreacodeEqualTo(bofcode);
         fsPaymentinfoMapper.updateByExampleSelective(rcd, payExample);
         //插入历史
         fsPaymentinfohisMapper.insertSelective(fsPaymentinfohis);
@@ -124,67 +179,114 @@ public class PaymentService {
     /**
      * 查询未到账、到账发送失败数据
      */
-    public List<FsPaymentinfo> selectPayinfoNoToact() {
+    public List<FsPaymentinfo> selectPayinfoNoToact(String bofcode) {
         String[] processstsAry = new String[2];
         processstsAry[0] = ProcessStatus.PROCESS_CONFIRMSUC.getCode();
         processstsAry[1] = ProcessStatus.PROCESS_TOACTFAIL.getCode();
-        return fsPaymentinfoMapper.selectPayinfoForToact(processstsAry);
+        String[] bofcodeAry = new String[1];
+        bofcodeAry[0] = bofcode;
+        Map<String,String[]> prostsMap = new HashMap<String, String[]>(2);
+        prostsMap.put("bofcode",bofcodeAry);
+        prostsMap.put("processstsAry",processstsAry);
+        return fsPaymentinfoMapper.selectPayinfoForToact(prostsMap);
     }
 
     /**
      * 查询已发送到账信息
      */
-    public List<FsPaymentinfo> selectPayinfoToact() {
+    public List<FsPaymentinfo> selectPayinfoToact(String bofcode) {
         String[] processstsAry = new String[1];
         processstsAry[0] = ProcessStatus.PROCESS_TOACTSUC.getCode();
-        return fsPaymentinfoMapper.selectPayinfoForToact(processstsAry);
+        String[] bofcodeAry = new String[1];
+        bofcodeAry[0] = bofcode;
+        Map<String,String[]> prostsMap = new HashMap<String, String[]>(2);
+        prostsMap.put("bofcode",bofcodeAry);
+        prostsMap.put("processstsAry",processstsAry);
+        return fsPaymentinfoMapper.selectPayinfoForToact(prostsMap);
     }
 
     /**
-     * 查询缴款书所有信息*/
-    public List<FsPaymentinfo> selectPayinfo() {
+     * 查询缴款书所有信息
+     */
+    public List<FsPaymentinfo> selectPayinfo(String bofcode) {
         String[] processstsAry = new String[5];
         for (int i = 0; i < 5; i++) {
             processstsAry[i] = String.valueOf(i);
         }
-        return fsPaymentinfoMapper.selectPayinfoForToact(processstsAry);
+        String[] bofcodeAry = new String[1];
+        bofcodeAry[0] = bofcode;
+        Map<String,String[]> prostsMap = new HashMap<String, String[]>(2);
+        prostsMap.put("bofcode",bofcodeAry);
+        prostsMap.put("processstsAry",processstsAry);
+        return fsPaymentinfoMapper.selectPayinfoForToact(prostsMap);
     }
 
     /**
-     * 查询退付信息*/
-    public List<FsRefundinfo> selectRefundinfoByAppcd(String applcode) {
+     * 查询退付信息
+     */
+    @Transactional
+    public List<FsRefundinfo> selectRefundinfoByAppcd(String applcode, String bofcode, String performdept) throws Exception {
         List<FsRefundinfo> fsRefundinfoList = new ArrayList<FsRefundinfo>();
-        fsRefundinfoList = fsRefundinfoMapper.selectByRefundAppCode(applcode);
+        fsRefundinfoList = fsRefundinfoMapper.selectByRefundAppCode(applcode, bofcode);
         if (fsRefundinfoList == null || fsRefundinfoList.size() < 1) {
-            //todo 接口
+            //接口
+            List<String> paramList = new ArrayList<String>();
+            // 申请书编号1+，+执收单位编码1
+            paramList.add(applcode);
+            paramList.add(performdept);
+            List<Map<String, String>> mapList = new BizInterService().getBizDatas("FS", bofcode, "getreturnNonTaxNotes", paramList);
+            for (Map<String, String> m : mapList) {
+                FsRefundinfo fsRefundinfo = (FsRefundinfo) BeanCopy.copyObject("fis.repository.model.FsRefundinfo", m);
+                fsRefundinfo.setVersion(1);
+                fsRefundinfo.setAreacode(bofcode);
+                fsRefundinfo.setCreatedBy(SystemService.getOperatorManager().getOperatorId());
+                fsRefundinfo.setCreatedDt(new Date());
+                fsRefundinfo.setProcessstatus(RefundProcessSts.PROCESS_INIT.getCode());
+                fsRefundinfoMapper.insertSelective(fsRefundinfo);
+            }
+            fsRefundinfoList = fsRefundinfoMapper.selectByRefundAppCode(applcode, bofcode);
         }
         return fsRefundinfoList;
     }
 
     @Transactional
-    public void sendRefundConfirm(List<FsRefundinfo> fsRefundinfoList,String refundProcessSts) {
-        //todo 发送 如果发送成功
-        if (1 == 1) {
-            for (FsRefundinfo record : fsRefundinfoList) {
-                updateRefundinfo(record,refundProcessSts);
-            }
-        } else {
-            for (FsRefundinfo record : fsRefundinfoList) {
+    public void sendRefundConfirm(List<FsRefundinfo> fsRefundinfoList, String refundProcessSts, String bofcode) {
+        //发送 如果发送成功
+        for (FsRefundinfo record : fsRefundinfoList) {
+            //发送
+            List<String> paramList = new ArrayList<String>();
+            // REFUNDAPPLYCODE, PAYNOTESCODE
+            paramList.add(record.getRefundapplycode());
+            paramList.add(record.getPaynotescode());
+            try {
+                List<Map<String, String>> mapList = new BizInterService().getBizDatas("FS", bofcode, "confirmReturnNonTaxNotes", paramList);
+                if (mapList != null && mapList.size() > 0 && !StringUtils.isEmpty(mapList.get(0).get("REFUNDAPPLYCODE"))
+                        && !StringUtils.isEmpty(mapList.get(0).get("PAYNOTESCODE"))) {
+                    updateRefundinfo(record, refundProcessSts);
+                } else {
+                    updateRefundinfo(record, refundProcessSts);
+//                    updateRefundinfo(record, RefundProcessSts.PROCESS_CONFIRMFAIL.getCode());
+//                    throw new RuntimeException("退付确认发送返回报文失败:申请书编号=" + record.getRefundapplycode());
+                }
+            } catch (Exception e) {
                 updateRefundinfo(record, RefundProcessSts.PROCESS_CONFIRMFAIL.getCode());
+                throw new RuntimeException("退付确认发送失败:申请书编号=" + record.getRefundapplycode() + "," + e.getMessage());
             }
+
         }
     }
 
-    private void updateRefundinfo(FsRefundinfo record,String refundProcessSts) {
+    private void updateRefundinfo(FsRefundinfo record, String refundProcessSts) {
         OperatorManager operatorManager = SystemService.getOperatorManager();
         Date dt = new Date();
-        record.setLastUpdBy(operatorManager.getOperatorId());
-        record.setLastUpdDate(dt);
-        record.setProcessstatus(refundProcessSts);
+        FsRefundinfo rcd = new FsRefundinfo();
+        rcd.setLastUpdBy(operatorManager.getOperatorId());
+        rcd.setLastUpdDate(dt);
+        rcd.setProcessstatus(refundProcessSts);
         FsRefundinfohis fsRefundinfohis = new FsRefundinfohis();
         fsRefundinfohis.setRefundapplycode(record.getRefundapplycode());
         fsRefundinfohis.setPaynotescode(record.getPaynotescode());
-        fsRefundinfohis.setProcessstatus(refundProcessSts);
+        fsRefundinfohis.setProcessstatus(record.getProcessstatus());
         fsRefundinfohis.setCreatedBy(operatorManager.getOperatorId());
         fsRefundinfohis.setCreatedDt(dt);
         fsRefundinfohis.setAreacode(record.getAreacode());
@@ -202,7 +304,7 @@ public class PaymentService {
         rfExample.clear();
         rfExample.createCriteria().andRefundapplycodeEqualTo(record.getRefundapplycode());
         //插入退付表
-        fsRefundinfoMapper.updateByExampleSelective(record,rfExample);
+        fsRefundinfoMapper.updateByExampleSelective(rcd, rfExample);
         //插入历史表
         fsRefundinfohisMapper.insertSelective(fsRefundinfohis);
         //插入日志
@@ -213,4 +315,4 @@ public class PaymentService {
         FsRefundinfoExample example = new FsRefundinfoExample();
         return fsRefundinfoMapper.selectByExample(example);
     }
- }
+}

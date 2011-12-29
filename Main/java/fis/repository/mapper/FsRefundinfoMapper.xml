@@ -481,5 +481,6 @@
           on t.performdept=p.deptcode
         where
           t.refundapplycode=#{refundappcode,jdbcType=VARCHAR}
+          and t.areacode=#{bofcode,jdbcType=VARCHAR}
     </select>
 </mapper>
