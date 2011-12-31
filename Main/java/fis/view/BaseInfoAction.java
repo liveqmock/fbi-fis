@@ -2,6 +2,8 @@ package fis.view;
 
 import fis.repository.model.*;
 import fis.service.BaseInfoService;
+import org.primefaces.component.tabview.Tab;
+import org.primefaces.component.tabview.TabView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import skyline.common.utils.MessageUtil;
@@ -10,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import java.util.List;
 import java.util.Map;
@@ -57,9 +60,11 @@ public class BaseInfoAction {
     public String onBtnbankClick() {
         try {
             fsBaseBankList = baseInfoService.bankInfoAccpt(parambofcode);
+            setActiveTab(0);
         } catch (Exception ex) {
             logger.error("获取代理银行信息失败." + ex.getMessage());
             MessageUtil.addError("获取代理银行信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            setActiveTab(0);
             return null;
         }
         return null;
@@ -69,10 +74,11 @@ public class BaseInfoAction {
     public String onBtnexecunitClick() {
         try {
             fsBasePerformdeptList = baseInfoService.deptInfoAccpt(parambofcode);
-//            javax.faces.vie
+            setActiveTab(1);
         } catch (Exception ex) {
             logger.error("获取执收单位信息失败." + ex.getMessage());
             MessageUtil.addError("获取执收单位信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            setActiveTab(1);
             return null;
         }
         return null;
@@ -82,10 +88,11 @@ public class BaseInfoAction {
     public String onBtnbillClick() {
         try {
             fsBaseBillinfoList = baseInfoService.billInfoAccpt(parambofcode);
-
+            setActiveTab(2);
         } catch (Exception ex) {
             logger.error("获取票据种类信息失败." + ex.getMessage());
             MessageUtil.addError("获取票据种类信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            setActiveTab(2);
             return null;
         }
         return null;
@@ -95,9 +102,11 @@ public class BaseInfoAction {
     public String onBtnitemClick() {
         try {
             fsBasePrograminfoList = baseInfoService.programInfoAccpt(parambofcode);
+            setActiveTab(3);
         } catch (Exception ex) {
             logger.error("获取项目信息失败." + ex.getMessage());
             MessageUtil.addError("获取项目信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            setActiveTab(3);
             return null;
         }
         return null;
@@ -107,12 +116,20 @@ public class BaseInfoAction {
     public String onBtnmkvchClick() {
         try {
             fsBaseMkvchmaninfoList = baseInfoService.manInfoAccpt(parambofcode);
+            setActiveTab(4);
         } catch (Exception ex) {
             logger.error("获取制单人信息失败." + ex.getMessage());
             MessageUtil.addError("获取制单人信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            setActiveTab(4);
             return null;
         }
         return null;
+    }
+
+    private void setActiveTab(int tabindex) {
+        UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
+        org.primefaces.component.tabview.TabView tabView = (TabView) viewRoot.findComponent("baseTabview");
+        tabView.setActiveIndex(tabindex);
     }
 
     public BaseInfoService getBaseInfoService() {

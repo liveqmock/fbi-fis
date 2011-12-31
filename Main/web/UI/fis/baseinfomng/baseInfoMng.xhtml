@@ -9,7 +9,7 @@
     </ui:define>
     <ui:define name="content">
         <div style="margin:5px;">
-            <p:tabView style="font-weight:normal;font-style:normal">
+            <p:tabView id="baseTabview" style="font-weight:normal;font-style:normal">
                 <p:tab title="代理银行">
                     <p:growl id="msgs" showDetail="false"/>
                     <div id="qrydiv">
@@ -145,7 +145,7 @@
                     <h:form id="mkvchForm">
                         <p:menubar style="margin-top:10px;margin-bottom:10px;">
                             <p:menuitem value="获取信息" id="btnmkvch" icon="ui-icon ui-icon-download" update="mkvchtb"
-                                        action="#{baseInfoAction.onBtnmkvchClick}"></p:menuitem>
+                                        action="#{baseInfoAction.onBtnmkvchClick}" ajax="false"></p:menuitem>
                         </p:menubar>
                         <p:dataTable id="mkvchtb" value="#{baseInfoAction.fsBaseMkvchmaninfoList}" var="record"
                                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
