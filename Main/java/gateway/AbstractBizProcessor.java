@@ -28,7 +28,6 @@ public abstract class AbstractBizProcessor implements IBizProcessable {
         ENDPOINT_IP = PropertyManager.getProperty("fbifis.endpoint.ip." + bizCode.toLowerCase() + "." + postCode);
         ENDPOINT_PORT = PropertyManager.getIntProperty("fbifis.endpoint.port." + bizCode.toLowerCase() + "." + postCode);
         client = new XSocketBlockClient(ENDPOINT_IP, ENDPOINT_PORT, TIME_OUT);
-        client.setHeadLength(12);
         StringBuilder dataBuilder = new StringBuilder(BANK_CODE);
         dataBuilder.append("@").append(new SimpleDateFormat("yyyy").format(new Date())).append("@");
         for (String param : paramList) {

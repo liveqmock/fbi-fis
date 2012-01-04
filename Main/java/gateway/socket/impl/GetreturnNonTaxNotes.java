@@ -23,7 +23,7 @@ public class GetreturnNonTaxNotes extends AbstractBizProcessor {
 
         List<Map<String, String>> dataMapList = new ArrayList<Map<String, String>>();
         init(bizCode, postCode, "bankservice", "getreturnNonTaxNotes", paramList);
-        String rtnDataGaram = client.sendDataUntilRcv(dataGaram);
+        String rtnDataGaram = client.sendDataUntilRcv(dataGaram, 12);
         logger.info("【************开始转换接收到的报文*************】");
         /*
         消息头+4位响应码+退费项目明细条数8位+报文正文
@@ -57,9 +57,9 @@ public class GetreturnNonTaxNotes extends AbstractBizProcessor {
                 itemMap.put("TOTALAMT", itemInfos[12]);
                 itemMap.put("CREATER", itemInfos[13]);
                 itemMap.put("AGENTBANK", itemInfos[14]);
-                //  少一个字段  返回最后一个为空值
-                //  返回的报文正文的各字段数据有可能少一项，导致如有下行代码，会抛出数组越界异常,待检查
-                //itemMap.put("PRINTTAG", itemInfos[15]);
+                if (itemInfos.length > 14) {
+                    itemMap.put("PRINTTAG", itemInfos[15]);
+                }
                 dataMapList.add(itemMap);
             }
         } else {

@@ -23,7 +23,7 @@ public class SyncElementCode extends AbstractBizProcessor {
 
         List<Map<String, String>> dataMapList = new ArrayList<Map<String, String>>();
         init(bizCode, postCode, "elementservice", "syncElementCode", paramList);
-        String rtnDataGaram = client.sendDataUntilRcv(dataGaram);
+        String rtnDataGaram = client.sendDataUntilRcv(dataGaram, 12);
         logger.info("【************开始转换接收到的报文*************】返回码：" + rtnDataGaram.substring(62, 66));
         /*
         消息头+4位响应码+32基本数据编码+12版本号+8基础数据条数+报文正文

@@ -23,7 +23,7 @@ public class ReceiveNonTaxNotes extends AbstractBizProcessor {
 
         List<Map<String, String>> dataMapList = new ArrayList<Map<String, String>>();
         init(bizCode, postCode, "bankservice", "receiveNonTaxNotes", paramList);
-        String rtnDataGaram = client.sendDataUntilRcv(dataGaram);
+        String rtnDataGaram = client.sendDataUntilRcv(dataGaram, 12);
         logger.info("【************开始转换接收到的报文*************】");
         /*
         消息头+4位响应码+报文正文

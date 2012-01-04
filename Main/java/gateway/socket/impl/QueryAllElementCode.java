@@ -23,15 +23,12 @@ public class QueryAllElementCode extends AbstractBizProcessor {
 
         List<Map<String, String>> dataMapList = new ArrayList<Map<String, String>>();
         init(bizCode, postCode, "elementservice", "queryAllElementCode", paramList);
-        String rtnDataGaram = client.sendDataUntilRcv(dataGaram);
+        String rtnDataGaram = client.sendDataUntilRcv(dataGaram, 12);
         logger.info("【************开始转换接收到的报文*************】返回码:" + rtnDataGaram.substring(62, 66));
         /*
           64消息头+4位响应码+32基本数据编码+12版本号+8基础数据条数+报文正文
         */
         if (rtnDataGaram.substring(62, 66).equalsIgnoreCase("0000")) {
-            // TODO 此处截取报文正文，开始截取位置待定！！！重要！！！
-            // TODO 如有报文正文，此处报文正文起始截取位置应为 118
-            // TODO 各基础数据项的返回报文应一致
             String dataContent = rtnDataGaram.substring(106);
             logger.info("报文正文：" + dataContent);
 

@@ -27,7 +27,7 @@ public class QueryElementVersion extends AbstractBizProcessor {
         List<Map<String, String>> dataMapList = new ArrayList<Map<String, String>>();
         init(bizCode, postCode, "elementservice", "queryElementVersion", paramList);
 
-        String rtnDataGaram = client.sendDataUntilRcv(dataGaram);
+        String rtnDataGaram = client.sendDataUntilRcv(dataGaram, 12);
         logger.info("【************开始转换接收到的报文*************】返回码：" + rtnDataGaram.substring(62, 66));
         // 消息头+4位响应码+32基本数据编码+,+版本号
         // 其中，版本号为不足部分，在版本号前补0，比如：100001，其报文中内容为：000000100001。

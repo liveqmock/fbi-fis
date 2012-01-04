@@ -19,9 +19,8 @@ public class XSocketBlockClient extends ConnectClient implements IConnectHandler
     private static final Logger logger = LoggerFactory.getLogger(XSocketBlockClient.class);
     private IBlockingConnection blockingConnection;
     private INonBlockingConnection nonBlockingConnection;
-    private int headLength;
+   // private int headLength;
     private int remainRecvLength;
-    private boolean isRecvStart;
     private boolean isRecvOver;
 
     private String dataGaram;
@@ -42,14 +41,14 @@ public class XSocketBlockClient extends ConnectClient implements IConnectHandler
         return true;
     }
 
-    public String sendDataUntilRcv(String dataContent) throws Exception {
+    public String sendDataUntilRcv(String dataContent, int headLength) throws Exception {
 
         logger.info("【本地客户端】发送报文：" + dataContent);
         String dataGaram = null;
         if (sendData(dataContent)) {
-            int garamLength = Integer.parseInt(blockingConnection.readStringByLength(12));
+            int garamLength = Integer.parseInt(blockingConnection.readStringByLength(headLength));
             logger.info("【本地客户端】接收报文内容长度：" + garamLength);
-            dataGaram = blockingConnection.readStringByLength(garamLength - 12);
+            dataGaram = blockingConnection.readStringByLength(garamLength - headLength);
         }
         logger.info("【本地客户端】接收报文内容：" + dataGaram);
         return dataGaram;
@@ -144,14 +143,6 @@ public class XSocketBlockClient extends ConnectClient implements IConnectHandler
 
     public void setDataGaram(String dataGaram) {
         this.dataGaram = dataGaram;
-    }
-
-    public long getHeadLength() {
-        return headLength;
-    }
-
-    public void setHeadLength(int headLength) {
-        this.headLength = headLength;
     }
 
     public long getRemainRecvLength() {
