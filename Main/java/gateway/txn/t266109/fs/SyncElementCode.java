@@ -13,7 +13,7 @@ import java.util.*;
  * Time: 下午3:00
  * 非税--查询基础数据
  */
-public class SyncElementCode extends AbstractFSBizProcessor {
+public class SyncElementCode extends AbstractFSTxnBizProcessor {
 
     private static Logger logger = LoggerFactory.getLogger(SyncElementCode.class);
 

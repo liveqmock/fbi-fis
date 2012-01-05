@@ -13,7 +13,7 @@ import java.util.*;
  * Time: 下午3:00
  * 非税--查询基础数据
  */
-public class QueryAllElementCode extends AbstractFSBizProcessor {
+public class QueryAllElementCode extends AbstractFSTxnBizProcessor {
 
     private static Logger logger = LoggerFactory.getLogger(QueryAllElementCode.class);
 

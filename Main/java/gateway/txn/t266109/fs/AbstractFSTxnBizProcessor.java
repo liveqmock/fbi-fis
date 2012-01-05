@@ -1,6 +1,6 @@
 package gateway.txn.t266109.fs;
 
-import gateway.AbstractBizProcessor;
+import gateway.txn.AbstractTxnProcessor;
 import gateway.socket.client.impl.XSocketBlockClient;
 import pub.platform.advance.utils.PropertyManager;
 
@@ -15,7 +15,7 @@ import java.util.List;
  * Time: ÏÂÎç2:50
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractFSBizProcessor extends AbstractBizProcessor {
+public abstract class AbstractFSTxnBizProcessor extends AbstractTxnProcessor {
     protected static String BANK_CODE = PropertyManager.getProperty("fbifis.sys.bank.code");
     protected static long TIME_OUT = PropertyManager.getLongProperty("fbifis.xsocket.timeout");
 

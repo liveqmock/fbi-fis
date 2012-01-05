@@ -15,7 +15,7 @@ import java.util.*;
  * Time: 下午3:00
  * 非税--查询基础数据
  */
-public class QueryNonTaxNotes extends AbstractFSBizProcessor {
+public class QueryNonTaxNotes extends AbstractFSTxnBizProcessor {
 
     private static Logger logger = LoggerFactory.getLogger(QueryNonTaxNotes.class);
 

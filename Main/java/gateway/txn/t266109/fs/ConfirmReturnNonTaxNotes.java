@@ -13,7 +13,7 @@ import java.util.*;
  * Time: 下午3:00
  * 非税-退付确认
  */
-public class ConfirmReturnNonTaxNotes extends AbstractFSBizProcessor {
+public class ConfirmReturnNonTaxNotes extends AbstractFSTxnBizProcessor {
 
     private static Logger logger = LoggerFactory.getLogger(ConfirmReturnNonTaxNotes.class);
 

@@ -1,6 +1,6 @@
 package gateway.service;
 
-import gateway.AbstractBizProcessor;
+import gateway.txn.AbstractTxnProcessor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,8 +25,8 @@ public class BizInterService {
         bizName = "gateway.txn.t" + postCode + "." + bizCode.toLowerCase()
                 + "." + bizName.substring(0, 1).toUpperCase() + bizName.substring(1, bizName.length());
         Class bizClass = Class.forName(bizName);
-        AbstractBizProcessor bizProcessor = (AbstractBizProcessor) bizClass.newInstance();
-        return bizProcessor.process(bizCode, postCode, paramList);
+        AbstractTxnProcessor txnProcessor = (AbstractTxnProcessor) bizClass.newInstance();
+        return txnProcessor.process(bizCode, postCode, paramList);
     }
 
 }

@@ -1,4 +1,4 @@
-package gateway;
+package gateway.txn;
 
 /**
  * Created by IntelliJ IDEA.
@@ -7,5 +7,5 @@ package gateway;
  * Time: обнГ2:50
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractBizProcessor implements IBizProcessable {
+public abstract class AbstractTxnProcessor implements TxnProcessable {
 }

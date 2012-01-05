@@ -16,7 +16,7 @@ import java.util.Map;
  * Time: обнГ3:00
  * To change this template use File | Settings | File Templates.
  */
-public class QueryElementVersion extends AbstractFSBizProcessor {
+public class QueryElementVersion extends AbstractFSTxnBizProcessor {
 
     private static Logger logger = LoggerFactory.getLogger(QueryElementVersion.class);
 
