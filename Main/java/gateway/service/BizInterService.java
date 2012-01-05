@@ -22,7 +22,8 @@ public class BizInterService {
     public List<Map<String, String>> getBizDatas(String bizCode, String postCode, String bizName, List<String> paramList)
             throws Exception {
 
-        bizName = "gateway.socket.impl." + bizName.substring(0, 1).toUpperCase() + bizName.substring(1, bizName.length());
+        bizName = "gateway.txn.t" + postCode + "." + bizCode.toLowerCase()
+                + "." + bizName.substring(0, 1).toUpperCase() + bizName.substring(1, bizName.length());
         Class bizClass = Class.forName(bizName);
         AbstractBizProcessor bizProcessor = (AbstractBizProcessor) bizClass.newInstance();
         return bizProcessor.process(bizCode, postCode, paramList);
