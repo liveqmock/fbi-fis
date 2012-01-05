@@ -46,7 +46,7 @@ public class QueryElementVersion extends AbstractFSBizProcessor {
         List<String> strList = new ArrayList<String>();
         strList.add("BANK");
         try {
-            List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266019", "queryElementVersion", strList);
+            List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266109", "queryElementVersion", strList);
             System.out.println("Total ±ÊÊý : " + dataList.size());
             for (Map<String, String> dataMap : dataList) {
                 System.out.println("°æ±¾ : " + dataMap.get(strList.get(0)));

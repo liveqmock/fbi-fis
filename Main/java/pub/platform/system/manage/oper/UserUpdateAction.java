@@ -35,8 +35,8 @@ public class UserUpdateAction extends Action {
 
         operbean.setDeptid(this.req.getFieldValue(i, "deptid"));
         operbean.setOpername(this.req.getFieldValue(i, "opername"));
-        operbean.setOpertype("2");
-        // operbean.setOpertype(this.req.getFieldValue(i,"opertype"));
+//        operbean.setOpertype("2");
+        operbean.setOpertype(this.req.getFieldValue(i,"opertype"));
         operbean.setOperpasswd(this.req.getFieldValue(i, "operpasswd"));
         operbean.setIssuper(this.req.getFieldValue(i, "issuper"));
         operbean.setSex(this.req.getFieldValue(i, "sex"));

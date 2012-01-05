@@ -24,7 +24,7 @@
             }
 
             .col-qry1 {
-                width: 40%;
+                width: 50%;
             }
         </style>
         <script type="text/javascript">
@@ -36,6 +36,45 @@
         <div style="margin:5px">
             <p:growl id="qrymsgs" showDetail="false"/>
             <h:form id="qryform">
+                <p:focus for="refundappcode"/>
+                <p:panel header="查询数据">
+                    <h:panelGrid width="100%" cellspacing="0" border="0" columns="2" columnClasses="col-qry1">
+                        <h:panelGroup>
+                            <h:panelGrid cellspacing="0" border="0" columns="5">
+                                <h:outputLabel value="申请书编号:"/>
+                                <h:inputText id="refundappcode" value="#{refundQryAction.refundAppcode}"
+                                             style="width:100px"/>
+                                <p:spacer width="5px"/>
+                                <h:outputLabel value="处理状态:"/>
+                                <h:selectOneMenu value="#{refundQryAction.strRefundProcessSts}" style="width:107px">
+                                    <f:selectItems value="#{refundQryAction.procStsSelects}"></f:selectItems>
+                                </h:selectOneMenu>
+                                <h:outputLabel value="起始日期:"/>
+                                <h:inputText id="startdate" value="#{refundQryAction.startdate}"
+                                             style="width:100px" onclick="WdatePicker({dateFmt:'yyyy/MM/dd'})"/>
+                                <p:spacer width="5px"/>
+                                <h:outputLabel value="终止日期:"/>
+                                <h:inputText id="enddate" value="#{refundQryAction.enddate}"
+                                             style="width:100px" onclick="WdatePicker({dateFmt:'yyyy/MM/dd'})"/>
+                            </h:panelGrid>
+                        </h:panelGroup>
+                        <h:panelGrid cellspacing="0" border="0" columns="1">
+                            <h:panelGroup>
+                                <p:commandButton style="width:60px;" ajax="true" update="qrypdt"
+                                                 id="btnQuery" action="#{refundQryAction.onBtnQueryClick}"
+                                                 value="查 询"></p:commandButton>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+                <p:ajaxStatus style="height:18px;text-align:center">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
                 <p:menubar style="margin-top:10px;margin-bottom:10px;">
                     <p:menuitem value="Excel导出" icon="ui-icon ui-icon-gear" ajax="false">
                         <fbi:DataExporter target="qrypdt" type="xls" titleName="退付信息" fileName="refundinfo"></fbi:DataExporter>

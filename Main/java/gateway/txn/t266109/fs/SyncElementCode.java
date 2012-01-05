@@ -52,7 +52,7 @@ public class SyncElementCode extends AbstractFSBizProcessor {
         List<String> paramList = new ArrayList<String>();
         paramList.add("BANK");
         try {
-            List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266019", "syncElementCode",paramList);
+            List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266109", "syncElementCode",paramList);
             System.out.println("Total ±ÊÊý : " + dataList.size());
             for(Map<String, String> dataMap : dataList) {
                 System.out.println("UpdateFlag : " + dataMap.get("updateFlag"));

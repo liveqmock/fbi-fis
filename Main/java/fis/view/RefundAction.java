@@ -5,8 +5,10 @@ import fis.repository.model.FsRefundinfo;
 import fis.service.PaymentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pub.platform.advance.utils.PropertyManager;
 import skyline.common.utils.MessageUtil;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -34,6 +36,12 @@ public class RefundAction {
     private RefundProcessSts refundProcessSts = RefundProcessSts.PROCESS_INIT;
     private String parambofcode;  //财政局编码
     private String performdept;   //执收单位编号
+    private String banksign;      //银行标识
+
+    @PostConstruct
+    public void init() {
+        banksign = PropertyManager.getProperty("fbifis.sys.bank.code");
+    }
 
     public String onBtnAcceptClick() {
         try{
@@ -137,5 +145,13 @@ public class RefundAction {
 
     public void setPerformdept(String performdept) {
         this.performdept = performdept;
+    }
+
+    public String getBanksign() {
+        return banksign;
+    }
+
+    public void setBanksign(String banksign) {
+        this.banksign = banksign;
     }
 }

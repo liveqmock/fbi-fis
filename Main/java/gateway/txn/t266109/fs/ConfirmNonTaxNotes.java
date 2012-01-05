@@ -52,7 +52,7 @@ public class ConfirmNonTaxNotes extends AbstractFSBizProcessor {
         paramList.add("20111229");
         paramList.add("1");
         try {
-            List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266019", "confirmNonTaxNotes", paramList);
+            List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266109", "confirmNonTaxNotes", paramList);
             System.out.println("Total ±ÊÊý : " + dataList.size());
             int i = 0;
             for (Map<String, String> dataMap : dataList) {

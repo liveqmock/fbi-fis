@@ -686,4 +686,39 @@
             #{item}
         </foreach>
     </select>
+    <select id="selectPayinfoForQry" resultMap="BaseResultMap">
+        select
+        unique
+        pd.deptname as prfrmdeptname
+        ,pay.paynotescode,pay.totalamt,pay.printdate,pay.payer,pay.agentbank,pay.payerdept,pay.checkcode
+        ,pay.recmethod,pay.remark,pay.createtime,pay.creater,pay.payerbank,pay.payerbankacct,pay.performdept
+        ,pay.paymethod,pay.notescode,pay.bankrecdate,pay.bankacctdate
+        ,pay.noteskind,pay.ispreaudit,pay.recfeeflag,pay.payfeemethod
+        ,pay.version,pay.areacode,pay.processstatus
+        from
+        fs_paymentinfo pay
+        left join fs_base_performdept pd
+        on pay.performdept = pd.deptcode
+        where
+        pay.areacode = #{bofcode,jdbcType=VARCHAR}
+        <if test="processstatus !=null and processstatus !=''">
+            AND pay.processstatus = #{processstatus,jdbcType=VARCHAR}
+        </if>
+        <if test="notescode !=null and notescode !=''">
+            AND pay.notescode = #{notescode,jdbcType=VARCHAR}
+        </if>
+        <if test="recStartd !=null and recStartd !=''">
+            AND pay.bankrecdate >= #{recStartd,jdbcType=VARCHAR}
+        </if>
+        <if test="recEndd !=null and recEndd !=''">
+            AND #{recEndd,jdbcType=VARCHAR} >= pay.bankrecdate
+        </if>
+        <if test="acctStartd !=null and acctStartd !=''">
+            AND pay.bankacctdate >= #{acctStartd,jdbcType=VARCHAR}
+        </if>
+        <if test="acctEndd !=null and acctEndd !=''">
+            AND #{acctEndd,jdbcType=VARCHAR} >= pay.bankacctdate
+        </if>
+
+    </select>
 </mapper>

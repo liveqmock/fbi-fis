@@ -57,7 +57,7 @@ public class QueryAllElementCode extends AbstractFSBizProcessor {
         paramList.add("USER");
         paramList.add("USER");
         try {
-            List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266019", "queryAllElementCode",paramList);
+            List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266109", "queryAllElementCode",paramList);
             System.out.println("Total ±ÊÊý : " + dataList.size());
             for(Map<String, String> dataMap : dataList) {
                 System.out.println("Code : " + dataMap.get("Code"));

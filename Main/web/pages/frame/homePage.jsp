@@ -54,7 +54,7 @@
 
 <html>
 <head>
-<title>消费信贷客户关系管理</title>
+<title>城阳非税管理系统</title>
 <meta content="mshtml 6.00.2800.1106" name="generator">
 <LINK href="<%=contextPath%>/css/diytabbar.css" type="text/css" rel="stylesheet">
 <LINK href="<%=contextPath%>/dhtmlx/codebase/dhtmlxlayout.css" type="text/css" rel="stylesheet">
@@ -77,7 +77,7 @@
         width: 100%;
         height: 100%;
         padding: 0px;
-        overflow: auto;
+        overflow: hidden;
 
     }
 
@@ -121,6 +121,7 @@
         bizdhxLayout.cells("a").setWidth(200);
         bizdhxLayout.cells("a").hideHeader();
         bizdhxLayout.cells("b").hideHeader();
+        bizdhxLayout.setAutoSize("a;b","a;b");
         bizdhxAccord = bizdhxLayout.cells("a").attachAccordion();
         biztabbar = bizdhxLayout.cells("b").attachTabbar();
 
@@ -223,8 +224,11 @@
         if (tabbarCell == undefined) {
             systabbar.addTab(divID, tabname, "*");
             systabbar.setContentHref(divID, url);
+            systabbar.setTabActive(divID);
+        } else {
+            systabbar.setTabActive(divID);
+            systabbar.forceLoad(divID,url);
         }
-        systabbar.setTabActive(divID);
     }
     var layoutary = new Array('bizlayout', 'syslayout', 'helplayout', 'verlayout');
 
@@ -265,39 +269,36 @@
     }
 
     function doOnResize() {
-        var parentObj = document.getElementById("bizlayout");
-        alert(document.body.clientHeight);
-        parentObj.style.height = document.body.clientHeight - 50;
-        bizdhxAccord.setSizes();
-        sysdhxAccord.setSizes();
-
+        bizdhxLayout.setSizes();
+        sysdhxLayout.setSizes();
     }
 </script>
 </head>
 
-<body onload="doOnLoad()">
+<body onload="doOnLoad()" onResize="doOnResize();">
 <%--关闭tab时返回上一个浏览的tab--%>
 <input type="hidden" id="lasttabdivid">
 
 <table width="100%" cellpadding="0" cellspacing="0" style="margin:0px;padding:0px;height: 100%;">
     <tr width="100%" height="25px">
         <td width="10%" rowspan="2">
-            &nbsp;&nbsp;
+            &nbsp;
             <img src="../../images/fbifis-header.jpg" height="45px">
         </td>
         <td width="30%">
         </td>
         <td style="height:25px;text-align:right" class="headfont">
             <span>您好,<%=username%>! </span>
+            <span><%= " | <" + rolesall + "> |" %></span>
             <span onclick="changepwd()"
-                  onMouseOver="this.style.cursor='hand'">|&nbsp;&nbsp;修改密码</span>
+                  onMouseOver="this.style.cursor='hand'">修改密码</span>
             <%--<span onclick="goFirst() "
             onMouseOver="this.style.cursor='hand'">|&nbsp;&nbsp;回首页</span>--%>
              <span onclick="Relogin()"
-                   onMouseOver="this.style.cursor='hand'">|  退出 &nbsp;&nbsp;</span>
+                   onMouseOver="this.style.cursor='hand'">| 退出&nbsp;&nbsp;</span>
         </td>
     </tr>
-    <tr height="25px">
+    <tr width="100%" height="25px">
         <td colspan="2" width="100%" style="height:25px;">
             <div onclick="tabbarclk(this);" active="true" id="biz" class="tabs-item-active"
                  style="float:left;width:80px;">
@@ -316,15 +317,15 @@
                 <span style="width:100%;">版本控制</span>
             </div>
             <div align="right" class="headfont">
-                <%=" " + deptname + " | " + operid + " | <" + rolesall + ">" %>
+                <%--<%=" " + deptname + " | " + operid + " | <" + rolesall + ">" %>--%>
             </div>
         </td>
     </tr>
-    <tr height="4px">
+    <tr width="100%" height="4px">
         <td width="100%" style="height:4px;background-color: #3169AD;" colspan="3"></td>
     </tr>
-    <tr>
-        <td colspan="3">
+    <tr width="100%">
+        <td width="100%" colspan="3">
             <div class="divlayout" id="bizlayout"></div>
             <div class="divlayout" id="syslayout"></div>
             <div class="divlayout" id="helplayout"> help</div>

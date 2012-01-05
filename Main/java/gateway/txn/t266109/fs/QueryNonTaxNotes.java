@@ -90,7 +90,7 @@ public class QueryNonTaxNotes extends AbstractFSBizProcessor {
         paramList.add("150000000005");
         paramList.add("DZXL5R");
         try {
-            List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266019", "queryNonTaxNotes", paramList);
+            List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266109", "queryNonTaxNotes", paramList);
             System.out.println("Total ±ÊÊý : " + dataList.size());
             for (Map<String, String> dataMap : dataList) {
                 System.out.println("BILLID : " + dataMap.get("BILLID"));

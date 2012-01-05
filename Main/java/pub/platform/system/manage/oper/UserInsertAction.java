@@ -27,8 +27,8 @@ public class UserInsertAction extends Action
             operbean.setDeptid(this.req.getFieldValue(i,"deptid"));
             operbean.setOperid(this.req.getFieldValue(i,"operid"));
             operbean.setOpername(this.req.getFieldValue(i,"opername"));
-            //operbean.setOpertype(this.req.getFieldValue(i,"opertype"));
-            operbean.setOpertype("2");
+            operbean.setOpertype(this.req.getFieldValue(i,"opertype"));
+//            operbean.setOpertype("2");
             operbean.setOperpasswd(this.req.getFieldValue(i,"operpasswd"));
             operbean.setIssuper(this.req.getFieldValue(i,"issuper"));
             operbean.setSex(this.req.getFieldValue(i,"sex"));
