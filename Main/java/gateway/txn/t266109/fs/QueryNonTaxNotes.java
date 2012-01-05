@@ -1,4 +1,4 @@
-package gateway.txn.t266019.fs;
+package gateway.txn.t266109.fs;
 
 import fis.common.BeanCopy;
 import fis.repository.model.FsPaymentinfo;
