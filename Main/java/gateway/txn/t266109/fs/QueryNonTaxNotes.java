@@ -1,7 +1,7 @@
 package gateway.txn.t266109.fs;
 
 import fis.common.BeanCopy;
-import fis.repository.model.FsPaymentinfo;
+import fis.repository.fs.model.FsPaymentinfo;
 import gateway.service.BizInterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,8 +102,7 @@ public class QueryNonTaxNotes extends AbstractFSTxnBizProcessor {
                 System.out.println("BANKRECDATE : " + dataMap.get("BANKRECDATE"));
                 System.out.println("NOTESKIND : " + dataMap.get("NOTESKIND"));
                 System.out.println("NOTESCODE : " + dataMap.get("NOTESCODE"));
-                FsPaymentinfo fsPaymentinfo = (FsPaymentinfo) BeanCopy.copyObject("fis.repository.model.FsPaymentinfo", dataMap);
-                String sss = "sd";
+
             }
         } catch (Exception e) {
             e.printStackTrace();

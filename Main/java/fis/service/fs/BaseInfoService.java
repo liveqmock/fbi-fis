@@ -86,16 +86,9 @@ public class BaseInfoService {
         fsBasePerformdept.setOperid(SystemService.getOperatorManager().getOperatorId());
         List<String> paramList = new ArrayList<String>();
         paramList.add("FSAGENCY");
-//        List<Map<String, String>> mapList = bizInterService.getBizDatas("FS", bofcode, "queryAllElementCode", paramList);
+        List<Map<String, String>> mapList = bizInterService.getBizDatas("FS", bofcode, "queryAllElementCode", paramList);
         //插入前先删除本地数据
         fsBasePerformdeptMapper.deleteByExample(new FsBasePerformdeptExample());
-        List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
-        Map<String,String> map = new HashMap<String,String>();
-        map.put("Code","1111");
-        map.put("Name","2222");
-        map.put("itemid","110");
-        map.put("ersion","12345");
-        mapList.add(map);
         for (Map<String, String> m : mapList) {
             String code = m.get("Code");
             String name = m.get("Name");
