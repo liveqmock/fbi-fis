@@ -1,17 +1,14 @@
-package fis.view;
+package fis.view.fs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import skyline.common.utils.MessageUtil;
 import skyline.repository.model.Ptoper;
 import skyline.service.PlatformService;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.

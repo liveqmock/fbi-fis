@@ -1,8 +1,7 @@
-package fis.view;
+package fis.view.fs;
 
-import fis.repository.model.*;
-import fis.service.BaseInfoService;
-import org.primefaces.component.tabview.Tab;
+import fis.repository.fs.model.*;
+import fis.service.fs.BaseInfoService;
 import org.primefaces.component.tabview.TabView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

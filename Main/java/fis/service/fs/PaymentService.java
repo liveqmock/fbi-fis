@@ -1,15 +1,13 @@
-package fis.service;
+package fis.service.fs;
 
-import com.sun.org.apache.regexp.internal.RE;
 import fis.common.BeanCopy;
 import fis.common.constant.ProcessStatus;
 import fis.common.constant.RecfeeFlag;
 import fis.common.constant.RefundProcessSts;
-import fis.repository.dao.*;
-import fis.repository.model.*;
+import fis.repository.fs.dao.*;
+import fis.repository.fs.model.*;
 import gateway.service.BizInterService;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +59,7 @@ public class PaymentService {
             }
             Date dt = new Date();
             for (Map<String, String> m : mapList) {
-                FsPaymentinfo fsPaymentinfo = (FsPaymentinfo) BeanCopy.copyObject("fis.repository.model.FsPaymentinfo", m);
+                FsPaymentinfo fsPaymentinfo = (FsPaymentinfo) BeanCopy.copyObject("fis.repository.fs.model.FsPaymentinfo", m);
                 fsPaymentinfo.setVersion(1);
                 fsPaymentinfo.setAreacode(bofcode);
                 fsPaymentinfo.setCreatedDt(dt);
@@ -230,7 +228,7 @@ public class PaymentService {
             paramList.add(performdept);
             List<Map<String, String>> mapList = new BizInterService().getBizDatas("FS", bofcode, "getreturnNonTaxNotes", paramList);
             for (Map<String, String> m : mapList) {
-                FsRefundinfo fsRefundinfo = (FsRefundinfo) BeanCopy.copyObject("fis.repository.model.FsRefundinfo", m);
+                FsRefundinfo fsRefundinfo = (FsRefundinfo) BeanCopy.copyObject("fis.repository.fs.model.FsRefundinfo", m);
                 fsRefundinfo.setVersion(1);
                 fsRefundinfo.setAreacode(bofcode);
                 fsRefundinfo.setCreatedBy(SystemService.getOperatorManager().getOperatorId());

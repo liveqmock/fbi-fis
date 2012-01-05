@@ -1,8 +1,8 @@
-package fis.view;
+package fis.view.fs;
 
 import fis.common.constant.ProcessStatus;
-import fis.repository.model.FsPaymentinfo;
-import fis.service.PaymentService;
+import fis.repository.fs.model.FsPaymentinfo;
+import fis.service.fs.PaymentService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

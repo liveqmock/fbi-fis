@@ -1,8 +1,8 @@
-package fis.view;
+package fis.view.fs;
 
 import fis.common.constant.RefundProcessSts;
-import fis.repository.model.FsRefundinfo;
-import fis.service.PaymentService;
+import fis.repository.fs.model.FsRefundinfo;
+import fis.service.fs.PaymentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pub.platform.advance.utils.PropertyManager;

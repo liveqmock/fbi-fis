@@ -1,7 +1,7 @@
-package fis.service;
+package fis.service.fs;
 
-import fis.repository.dao.*;
-import fis.repository.model.*;
+import fis.repository.fs.dao.*;
+import fis.repository.fs.model.*;
 import gateway.service.BizInterService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
