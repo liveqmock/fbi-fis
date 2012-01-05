@@ -18,16 +18,16 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="fis.repository.model" targetProject="Main/java">
+        <javaModelGenerator targetPackage="fis.repository.fs.model" targetProject="Main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="fis.repository.mapper" targetProject="Main/java">
+        <sqlMapGenerator targetPackage="fis.repository.fs.mapper" targetProject="Main/java">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="fis.repository.dao" targetProject="Main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="fis.repository.fs.dao" targetProject="Main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
