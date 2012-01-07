@@ -5,6 +5,8 @@ package gateway.ftp.pfbank;
  * 功能：工具类，解析和补充字符串
  */
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -58,7 +60,9 @@ public class DisposeStr {
             for (int k = 0; k < j; k++) {
                 curStr[k] = StrByte[len - j + k];
             }
-            retArrStr.add(new String(curStr));
+            String strVal = new String(curStr).trim();
+//            strVal = StringUtils.isEmpty(strVal)?null:strVal;
+            retArrStr.add(new String(curStr).trim());
         }
         return retArrStr;
     }
