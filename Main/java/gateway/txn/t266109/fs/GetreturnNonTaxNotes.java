@@ -3,6 +3,7 @@ package gateway.txn.t266109.fs;
 import gateway.service.BizInterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pub.platform.advance.utils.PropertyManager;
 
 import java.util.*;
 
@@ -56,7 +57,7 @@ public class GetreturnNonTaxNotes extends AbstractFSTxnBizProcessor {
                 itemMap.put("TOTALAMT", itemInfos[12]);
                 itemMap.put("CREATER", itemInfos[13]);
                 itemMap.put("AGENTBANK", itemInfos[14]);
-                if (itemInfos.length > 14) {
+                if (itemInfos.length > 15) {
                     itemMap.put("PRINTTAG", itemInfos[15]);
                 }
                 dataMapList.add(itemMap);

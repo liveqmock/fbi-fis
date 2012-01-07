@@ -25,7 +25,8 @@ public class FtpDownLoad {
     String username = Config.getString("ftpusername");
     String password = Config.getString("ftppassword");
     String pathFile = Config.getString("ftppathFile");
-    String downFile = "./bankinpufile/";
+    String downFile = Config.getString("downFilePath");
+//    "./bankinpufile/";
 
     public boolean getFile(ArrayList fileList) {
 

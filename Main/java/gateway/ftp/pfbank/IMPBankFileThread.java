@@ -46,10 +46,10 @@ public class IMPBankFileThread implements Job {
         Tools tools = new Tools();
         ArrayList list = tools.getDownFiles();
 
-        //下载文件
-        fd.getFile(list);
+        //todo 下载文件
+//        fd.getFile(list);
         //本地文件目录，
-        String localpath = "./bankinpufile/";
+        String localpath = Config.getString("downFilePath");
         ArrayList sucFilesList = new ArrayList();
 
         for (int i = 0; i < list.size(); i++) {
@@ -60,7 +60,8 @@ public class IMPBankFileThread implements Job {
                 if (filename.startsWith("0310-PURCH")) {
                     //开始存入数据库
                     ArrayList SQLlist = getData.getDataList(localpath + filename, PURCHSIZE);
-                    //CreateSQL itd=new CreateSQL();
+                    String aa = "22";
+//                    CreateSQL itd=new CreateSQL();
                     //boolean flag=itd.insertMX(SQLlist,filename);
                     //导入成功，则删除远程文件
 //				if(flag){
@@ -72,6 +73,7 @@ public class IMPBankFileThread implements Job {
                     //2. 0310-CDOPN开头的是  开卡信息文件
                 } else if (filename.startsWith("0310-CDOPN")) {
                     ArrayList SQLlist = getData.getDataList(localpath + filename, CDOPNSIZE);
+                    String aa = "22";
                     //CreateSQL itd=new CreateSQL();
                     //boolean flag=itd.insertZH(SQLlist,filename);
                     //if(flag){
@@ -81,6 +83,7 @@ public class IMPBankFileThread implements Job {
                 }//3. 0310-CDREP开头的是 换卡文件
                 else if (filename.startsWith("0310-CDREP")) {
                     ArrayList SQLlist = getData.getDataList(localpath + filename, CDREPSIZE);
+                    String aa = "22";
                     //CreateSQL itd=new CreateSQL();
                     //boolean flag=itd.insertHK(SQLlist,filename);
 //				if(flag){
@@ -100,5 +103,9 @@ public class IMPBankFileThread implements Job {
         //if(sucFilesList!=null||sucFilesList.size()>0){
         //   fd.deleteFile(sucFilesList);
         //}
+    }
+
+    public static void main(String[] args) {
+        new IMPBankFileThread().impFile();
     }
 }

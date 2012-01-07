@@ -136,7 +136,7 @@ public class GetData {
 
         int[] CDOPNSIZE = {30, 30, 2, 19, 80, 20, 19, 19, 4, 8, 10, 20, 50, 4};//帐户文件格式
         int[] PURCHSIZE = {8, 6, 4, 4, 2, 2, 8, 11, 11, 11, 6, 21, 1, 12, 10, 4, 8, 15, 40, 3, 12, 6, 2, 1, 65, 50, 4};//
-        ArrayList list = gd.getDataList("./bankinpufile/0310-CDOPN-1000-20080831", CDOPNSIZE);
+        ArrayList list = gd.getDataList(Config.getString("downFilePath") + "0310-CDOPN-1000-20080831", CDOPNSIZE);
         //CreateSQL itd=new CreateSQL();
         //itd.insertZH(list,"0310-CDOPN-1000-20080831");
 

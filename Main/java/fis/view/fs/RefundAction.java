@@ -61,7 +61,7 @@ public class RefundAction {
             }
             setButtonDisabled(false);
         } catch (Exception ex) {
-            logger.error("ªÒ»°ÕÀ∏∂–≈œ¢ ß∞‹£∫ÕÀ∏∂…Í«Î∫≈=" + refundapplcode + "£¨" + ex.getCause().getMessage());
+            logger.error("ªÒ»°ÕÀ∏∂–≈œ¢ ß∞‹£∫ÕÀ∏∂…Í«Î∫≈=" + refundapplcode + "£¨" + ex.getMessage());
             MessageUtil.addError("ªÒ»°ÕÀ∏∂–≈œ¢ ß∞‹£∫ÕÀ∏∂…Í«Î∫≈=" + refundapplcode + "£¨"
                     + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;

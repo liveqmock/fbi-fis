@@ -11,6 +11,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pub.platform.advance.utils.PropertyManager;
 import pub.platform.security.OperatorManager;
 import skyline.service.SystemService;
 
@@ -65,7 +66,7 @@ public class PaymentService {
                 fsPaymentinfo.setCreatedDt(dt);
                 fsPaymentinfo.setCreatedBy(SystemService.getOperatorManager().getOperatorId());
                 fsPaymentinfo.setProcessstatus(ProcessStatus.PROCESS_INIT.getCode());
-                fsPaymentinfo.setAgentbank("8129");
+                fsPaymentinfo.setAgentbank(PropertyManager.getProperty("payagentbank"));
                 fsPaymentinfoMapper.insertSelective(fsPaymentinfo);
             }
             fsPaymentinfoList = fsPaymentinfoMapper.selectPayinfoByPaynotescd(paynotescd, checkcode, bofcode);
@@ -90,7 +91,8 @@ public class PaymentService {
             paramList.add((fsPaymentinfo.getNoteskind() == null ? "" : fsPaymentinfo.getNoteskind().toString()));
             try {
                 List<Map<String, String>> mapList = bizInterService.getBizDatas("FS", bofcode, "receiveNonTaxNotes", paramList);
-                if (mapList != null && mapList.size() > 0 && !StringUtils.isEmpty(mapList.get(0).get("NonTaxNote"))) {
+                if (mapList != null && mapList.size() > 0 && !StringUtils.isEmpty(mapList.get(0).get("NonTaxNote0"))
+                        && mapList.get(0).get("NonTaxNote0").toString().equals(fsPaymentinfo.getPaynotescode())) {
                     updatePaymentinfo(fsPaymentinfo, recfeeflag, processsts, bofcode);
                 } else {
 //                    updatePaymentinfo(fsPaymentinfo, recfeeflag, processsts, bofcode);
@@ -122,7 +124,8 @@ public class PaymentService {
             boolean sendSuc = true;
             try {
                 List<Map<String, String>> mapList = new BizInterService().getBizDatas("FS", bofcode, "confirmNonTaxNotes", paramList);
-                if (mapList != null && mapList.size() > 0 && !StringUtils.isEmpty(mapList.get(0).get("NonTaxNote"))) {
+                if (mapList != null && mapList.size() > 0 && !StringUtils.isEmpty(mapList.get(0).get("NonTaxNote0"))
+                        && mapList.get(0).get("NonTaxNote0").toString().equals(record.getPaynotescode())) {
                     updatePaymentinfo(record, recfeeflag, processsts, bofcode);
                 } else {
 //                    updatePaymentinfo(record, recfeeflag, processsts, bofcode);
@@ -253,7 +256,9 @@ public class PaymentService {
             try {
                 List<Map<String, String>> mapList = new BizInterService().getBizDatas("FS", bofcode, "confirmReturnNonTaxNotes", paramList);
                 if (mapList != null && mapList.size() > 0 && !StringUtils.isEmpty(mapList.get(0).get("REFUNDAPPLYCODE"))
-                        && !StringUtils.isEmpty(mapList.get(0).get("PAYNOTESCODE"))) {
+                        && !StringUtils.isEmpty(mapList.get(0).get("PAYNOTESCODE"))
+                        && mapList.get(0).get("REFUNDAPPLYCODE").toString().equals(record.getRefundapplycode())
+                        && mapList.get(0).get("PAYNOTESCODE").toString().equals(record.getPaynotescode())) {
                     updateRefundinfo(record, refundProcessSts);
                 } else {
 //                    updateRefundinfo(record, refundProcessSts);
