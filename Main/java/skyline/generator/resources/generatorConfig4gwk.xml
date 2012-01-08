@@ -31,7 +31,11 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table schema="fis" tableName="gwk_consumeinfo">
+        <table schema="fis" tableName="gwk_paybackinfo">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
+        <!--<table schema="fis" tableName="gwk_consumeinfo">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
@@ -39,16 +43,11 @@
         <table schema="fis" tableName="gwk_paybackresult">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
+        </table>-->
         <!--<table schema="fis" tableName="gwk_base_bdgagency">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
         </table>
         <table schema="fis" tableName="gwk_cardbaseinfo">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-
-        <table schema="fis" tableName="gwk_paybackinfo">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
