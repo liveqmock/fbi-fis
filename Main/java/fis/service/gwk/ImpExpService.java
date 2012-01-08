@@ -160,7 +160,8 @@ public class ImpExpService {
                 gwkConsumeinfo.setReceivedeptcode(record.get(9).toString());
                 gwkConsumeinfo.setLsh(record.get(10).toString());
                 gwkConsumeinfo.setAccount(record.get(11).toString());
-                double money = Double.parseDouble(record.get(12).toString() + record.get(13).toString());
+                //todo 金额 分为单位
+                double money = Double.parseDouble(record.get(12).toString() + record.get(13).toString())/100;
                 BigDecimal busimoney = BigDecimal.valueOf(Double.parseDouble(df.format(money)));
                 gwkConsumeinfo.setBusimoney(busimoney);                    //消费金额
                 gwkConsumeinfo.setUniontxdate(record.get(14).toString());
