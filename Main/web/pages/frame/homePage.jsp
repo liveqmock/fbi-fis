@@ -54,7 +54,7 @@
 
 <html>
 <head>
-<title>城阳非税管理系统</title>
+<title>国库支付一体化</title>
 <meta content="mshtml 6.00.2800.1106" name="generator">
 <LINK href="<%=contextPath%>/css/diytabbar.css" type="text/css" rel="stylesheet">
 <LINK href="<%=contextPath%>/dhtmlx/codebase/dhtmlxlayout.css" type="text/css" rel="stylesheet">

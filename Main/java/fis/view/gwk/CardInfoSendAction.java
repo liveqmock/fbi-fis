@@ -38,26 +38,27 @@ public class CardInfoSendAction {
         try {
             Map parammap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
             parambofcode = parammap.get("bofcode").toString();
-            gwkCardbaseinfoList = cardInfoService.selectCardinfos(parambofcode,CardSendFlg.SEND_NO.getCode());
+            gwkCardbaseinfoList = cardInfoService.selectCardinfos(parambofcode, CardSendFlg.SEND_NO.getCode());
         } catch (Exception ex) {
-            logger.error("查询未发送卡信息信息失败." + ex.getMessage());
-            MessageUtil.addError("查询未发送卡信息信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            logger.error("查询未发送卡信息失败." + ex.getMessage());
+            MessageUtil.addError("查询未发送卡信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
         }
     }
 
     //发送
     public String onBtnSendClick() {
-        try{
-            //todo 发送卡信息
-            if (gwkCardbaseinfos.length < 1) {
-                MessageUtil.addWarn("请选择至少一条数据");
-                return null;
-            }
-            cardInfoService.sendCardinfos(gwkCardbaseinfos);
+        if (gwkCardbaseinfos.length < 1) {
+            MessageUtil.addWarn("请选择至少一条数据");
+            return null;
+        }
+        try {
+            //发送卡信息
+
+            cardInfoService.sendCardinfos(gwkCardbaseinfos, parambofcode);
         } catch (Exception ex) {
-            logger.error("发送卡信息信息失败:" + ex.getMessage());
-            String msg = ex.getMessage()==null?"":ex.getMessage().replaceAll("\n", "").replaceAll("\r", "");
-            MessageUtil.addError("发送卡信息信息失败:" + msg);
+            logger.error("发送卡信息失败:" + ex.getMessage());
+            String msg = ex.getMessage() == null ? "" : ex.getMessage().replaceAll("\n", "").replaceAll("\r", "");
+            MessageUtil.addError("发送卡信息失败:" + msg);
             return null;
         }
         return null;

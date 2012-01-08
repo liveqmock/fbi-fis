@@ -32,24 +32,33 @@ public class CardInfoService {
     }
 
     //发送卡信息
-    public void sendCardinfos(GwkCardbaseinfo[] gwkCardbaseinfos) throws Exception {
+    public void sendCardinfos(GwkCardbaseinfo[] gwkCardbaseinfos,String bofcode) throws Exception {
+        List cardList = getSendList(gwkCardbaseinfos);
+        try {
+            //todo send
+            //todo update status
+        } catch (Exception ex) {
+            throw new RuntimeException("发送卡信息失败:" + ex.getMessage());
+        }
+    }
+
+    private List getSendList(GwkCardbaseinfo[] gwkCardbaseinfos) {
         List cardList = new ArrayList();       //发送数据
         for (GwkCardbaseinfo record : gwkCardbaseinfos) {
             Map m = new HashMap();
-            String account = record.getAccount().trim();
-            String cardname = record.getCardname().trim();
-            String bdgagency = record.getBdgagency().trim();
-            String GATHERINGBANKACCTNAME = record.getGatheringbankacctname().trim();
-            String GATHERINGBANKNAME = record.getGatheringbankname().trim();
-            String GATHERINGBANKACCTCODE = record.getGatheringbankacctcode().trim();
-            String IDNUMBER = record.getIdnumber().trim();
-            String DIGEST = record.getDigest().trim();
-            String BANK = String.valueOf(record.getBank()).trim();
-            String CREATEDATE = record.getCreatedate().trim();
-            String Startdate = record.getStartdate().trim();
-            String enddate = record.getEnddate().trim();
-            String action = record.getAction().trim();
-
+            String account = record.getAccount()==null?"":record.getAccount();
+            String cardname = record.getCardname()==null?"":record.getCardname();
+            String bdgagency = record.getBdgagency()==null?"":record.getBdgagency();
+            String GATHERINGBANKACCTNAME = record.getGatheringbankacctname()==null?"":record.getGatheringbankacctname();
+            String GATHERINGBANKNAME = record.getGatheringbankname()==null?"":record.getGatheringbankname();
+            String GATHERINGBANKACCTCODE = record.getGatheringbankacctcode()==null?"":record.getGatheringbankacctcode();
+            String IDNUMBER = record.getIdnumber()==null?"":record.getIdnumber();
+            String DIGEST = record.getDigest()==null?"":record.getDigest();
+            String BANK = record.getBank()==null?"":String.valueOf(record.getBank());
+            String CREATEDATE = record.getCreatedate()==null?"":record.getCreatedate();
+            String Startdate = record.getStartdate()==null?"":record.getStartdate();
+            String enddate = record.getEnddate()==null?"":record.getEnddate();
+            String action = record.getAction()==null?"":record.getAction();
             m.put("ACCOUNT", account);
             m.put("CARDNAME", cardname);
             m.put("Bdgagency", bdgagency);
@@ -65,11 +74,6 @@ public class CardInfoService {
             m.put("action", action);
             cardList.add(m);
         }
-        try {
-            //todo send
-            //todo update status
-        } catch (Exception ex) {
-            throw new RuntimeException("发送卡信息失败:" + ex.getMessage());
-        }
+        return cardList;
     }
 }
