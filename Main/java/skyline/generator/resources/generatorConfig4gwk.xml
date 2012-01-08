@@ -35,25 +35,20 @@
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        <!--<table schema="fis" tableName="gwk_consumeinfo">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-
         <table schema="fis" tableName="gwk_paybackresult">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>-->
-        <!--<table schema="fis" tableName="gwk_base_bdgagency">
+        </table>
+        <table schema="fis" tableName="gwk_consumeinfo">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
         <table schema="fis" tableName="gwk_cardbaseinfo">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
-        <table schema="fis" tableName="gwk_refundinfohis">
+        <!--<table schema="fis" tableName="gwk_base_bdgagency">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="historyno" sqlStatement="select decode(max(historyno),null,1,max(historyno)+1) from fs_refundinfohis t where t.refundapplycode=#{refundapplycode,jdbcType=VARCHAR}" identity="false"/>
         </table>
         -->
 

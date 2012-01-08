@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+    <ui:define name="head">
+
+    </ui:define>
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="editForm">
+                <p:menubar style="margin-top:10px;margin-bottom:10px;">
+                    <p:menuitem type="push" value="发送" icon="ui-icon ui-icon-gear"
+                                action="#{cardInfoSendAction.onBtnSendClick}" update="msgs,qrypdt">
+                    </p:menuitem>
+                </p:menubar>
+                <p:dataTable id="qrypdt"
+                             value="#{cardInfoSendAction.gwkCardbaseinfoList}" var="record"
+                             selection="#{cardInfoSendAction.gwkCardbaseinfos}" rowKey="#{record.pkid}"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="bottom"
+                             rowsPerPageTemplate="100,50,30,15,5"
+                             emptyMessage="数据记录为空...">
+                    <p:column selectionMode="multiple"/>
+                    <p:column headerText="卡号" style="text-align:center">
+                        <h:outputText value="#{record.account}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="持卡人" style="text-align:center">
+                        <h:outputText value="#{record.cardname}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="预算单位" style="text-align:center">
+                        <h:outputText value="#{record.bdgagencyname}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="身份证号" style="text-align:center">
+                        <h:outputText value="#{record.idnumber}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="用途">
+                        <h:outputText value="#{record.digest}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="开卡日期" style="text-align:center">
+                        <h:outputText value="#{record.createdate}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="有效起始日期" style="text-align:center">
+                        <h:outputText value="#{record.startdate}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="有效终止日期" style="text-align:center">
+                        <h:outputText value="#{record.enddate}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="是否发送" style="text-align:center">
+                        <h:outputText value="#{cardInfoSendAction.cardSendFlg.aliasEnums[record.sentflag].title}"></h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -122,6 +122,7 @@ public class ImpExpService {
                 gwkPaybackresult.setResponsecode(record.get(10).toString());   //处理结果状态
                 gwkPaybackresult.setExpand(record.get(11).toString());
                 gwkPaybackresult.setFilename(filename);
+                gwkPaybackresult.setAreacode("266001");    //市南区
                 gwkPaybackresultMapper.insertSelective(gwkPaybackresult);
                 //更新还款状态 还款日期
                 GwkPaybackinfo gwkPaybackinfo = new GwkPaybackinfo();
@@ -192,6 +193,7 @@ public class ImpExpService {
                 gwkConsumeinfo.setBranchcode(record.get(26).toString());
                 gwkConsumeinfo.setOperdate(dt);
                 gwkConsumeinfo.setFilename(filename);
+                gwkConsumeinfo.setAreacode("266001");              //市南
                 gwkConsumeinfoMapper.insertSelective(gwkConsumeinfo);
                 count++;
             }
@@ -235,6 +237,8 @@ public class ImpExpService {
                 gwkCardbaseinfo.setExpand(record.get(12).toString());
                 gwkCardbaseinfo.setAction("0");                 //新增
                 gwkCardbaseinfo.setOperdate(dt);
+                gwkCardbaseinfo.setAreacode("266001");          //浦发市南
+                gwkCardbaseinfo.setBank(Long.parseLong(Config.getString("CARDBANK")));    //todo ? 值待定                  //财政银行编号
                 //删除存在数据
                 example.clear();
                 example.createCriteria().andAccountEqualTo(record.get(6).toString());
