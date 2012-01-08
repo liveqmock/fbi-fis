@@ -123,12 +123,22 @@ public class ExportHkmx {
 		return sDateformat.format(myDate).toString();
 	}
 
+    //文件生成后 更新paybackinfo.filesendflag=当前日期
+    public void updatePaybackinfo() {
+        impExpService.updatePaybackinfos();
+    }
+
 
 	public static void main(String[] args){
         ApplicationContext ctx = new FileSystemXmlApplicationContext("D:/svn-fbifis/src/Main/resources/applicationContext.xml");
         ExportHkmx exportHkmx = (ExportHkmx) ctx.getBean("exportHkmx");
-        ArrayList sa=exportHkmx.getResults();
-        exportHkmx.writePLHK(sa);
+        try {
+            ArrayList sa=exportHkmx.getResults();
+            exportHkmx.writePLHK(sa);
+            exportHkmx.updatePaybackinfo();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 	}
 
 }

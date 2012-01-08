@@ -1,5 +1,6 @@
 package fis.service.gwk;
 
+import fis.common.gwk.constant.ConfirmPayFlg;
 import fis.common.gwk.constant.PayStatus;
 import fis.repository.fs.dao.SysJoblogMapper;
 import fis.repository.fs.model.SysJoblog;
@@ -47,7 +48,7 @@ public class ImpExpService {
     private SysJoblogMapper sysJoblogMapper;
 
     /**
-     * 查询还款数据 status=01初始*/
+     * 查询还款数据 status=01初始;filesendflag=0初始;confirmpayflag=1确认还款*/
     public ArrayList<ArrayList> selectPaybackinfos() {
         Date dt = new Date();
         ArrayList<ArrayList> dataList = new ArrayList<ArrayList>();
@@ -76,6 +77,18 @@ public class ImpExpService {
             dataList.add(subDataList);
         }
         return dataList;
+    }
+
+    /*生成文件后更新filesendflag=yyyyMMdd*/
+    @Transactional
+    public void updatePaybackinfos() {
+        Date dt = new Date();
+        GwkPaybackinfoExample example = new GwkPaybackinfoExample();
+        example.createCriteria().andStatusEqualTo(PayStatus.SPDB_INIT.getCode()).andFilesendflagEqualTo("0")
+                .andConfirmpayflagEqualTo(ConfirmPayFlg.CONFIRMPAY_VALID.getCode());
+        GwkPaybackinfo record = new GwkPaybackinfo();
+        record.setFilesendflag(sdf.format(dt));
+        gwkPaybackinfoMapper.updateByExampleSelective(record,example);
     }
 
     /**
