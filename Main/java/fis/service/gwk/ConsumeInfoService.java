@@ -1,16 +1,19 @@
 package fis.service.gwk;
 
+import fis.common.gwk.constant.RtnTagKey;
 import fis.common.gwk.constant.ConsumeInfoSts;
 import fis.repository.gwk.dao.GwkConsumeinfoMapper;
 import fis.repository.gwk.model.GwkConsumeinfo;
 import fis.repository.gwk.model.GwkConsumeinfoExample;
+import gov.mof.fasp.service.BankService;
+import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pub.platform.advance.utils.PropertyManager;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,14 +37,43 @@ public class ConsumeInfoService {
     }
 
     //发送
-    public void sendConsumeinfo(GwkConsumeinfo[] gwkConsumeinfos, String bofcode) throws Exception {
+    public String sendConsumeinfo(GwkConsumeinfo[] gwkConsumeinfos, String bofcode) throws Exception {
         List consumeList = getSendList(gwkConsumeinfos);       //发送数据
+        List rtnlist = new ArrayList();
         try {
-            //todo send
-            //todo update status
+            //send
+            SimpleDateFormat yearsdf = new SimpleDateFormat("yyyy");
+            Date dt = new Date();
+            String nowYear = yearsdf.format(dt);
+            String applicationid = PropertyManager.getProperty("fbifis.sys.bank.code");
+            String branchbankcode = PropertyManager.getProperty("gwk.sub_branchbankcode");
+            String finorgcode = PropertyManager.getProperty("gwk.finorgcode");
+            BankService service = FaspServiceAdapter.getBankService();
+            rtnlist = service.writeConsumeInfo(applicationid, branchbankcode, nowYear, finorgcode, consumeList);
         } catch (Exception ex) {
-            throw new RuntimeException("发送卡信息失败:" + ex.getMessage());
+            throw new RuntimeException("发送消费信息失败:" + ex.getMessage());
         }
+        //返回信息处理
+        if (rtnlist != null && rtnlist.size() > 0) {
+            Map m = (Map)rtnlist.get(0);
+            String msg = m.get(RtnTagKey.MESSAGE).toString();
+            try {
+                if (m.get(RtnTagKey.RESULT).toString().equalsIgnoreCase(RtnTagKey.RESULT_SUCCESS)) {
+                    //返回成功  更新 sendflag＝1
+                    updateSendSuc(gwkConsumeinfos, bofcode);
+                    return RtnTagKey.RESULT_SUCCESS;
+                } else {
+                    //返回失败 更新重复id
+                    if (m.size() > 2) {
+                        updateSameData(rtnlist,bofcode);
+                    }
+                    return msg;
+                }
+            } catch (Exception ex) {
+                throw new RuntimeException("消费信息发送成功后更新本地数据失败:" + ex.getMessage());
+            }
+        }
+        return RtnTagKey.RESULT_SUCCESS.toString();
     }
 
     private List getSendList(GwkConsumeinfo[] gwkConsumeinfos) {
@@ -68,5 +100,33 @@ public class ConsumeInfoService {
             consumeList.add(m);
         }
         return consumeList;
+    }
+
+    @Transactional
+    private void updateSendSuc(GwkConsumeinfo[] gwkConsumeinfos,String bofcode) {
+        if (gwkConsumeinfos.length > 0) {
+            GwkConsumeinfo updata = new GwkConsumeinfo();
+            updata.setStatus(ConsumeInfoSts.SEND_SUC.getCode());
+            updata.setOperdate(new Date());
+            for (GwkConsumeinfo record:gwkConsumeinfos) {
+                GwkConsumeinfoExample example = new GwkConsumeinfoExample();
+                example.clear();
+                example.createCriteria().andAreacodeEqualTo(bofcode).andAccountEqualTo(record.getAccount()).andLshEqualTo(record.getLsh());
+                gwkConsumeinfoMapper.updateByExampleSelective(updata,example);
+            }
+        }
+    }
+    
+    @Transactional
+    private void updateSameData(List<Map> rtnlist,String bofcode) {
+        GwkConsumeinfo updata = new GwkConsumeinfo();
+        updata.setStatus(ConsumeInfoSts.SEND_SUC.getCode());
+        updata.setOperdate(new Date());
+        for (Map record:rtnlist) {
+            GwkConsumeinfoExample example = new GwkConsumeinfoExample();
+            example.clear();
+            example.createCriteria().andAreacodeEqualTo(bofcode).andAccountEqualTo(record.get(RtnTagKey.SAMEACCOUNT).toString()).andLshEqualTo(record.get(RtnTagKey.SAMEID).toString());
+            gwkConsumeinfoMapper.updateByExampleSelective(updata,example);
+        }
     }
 }

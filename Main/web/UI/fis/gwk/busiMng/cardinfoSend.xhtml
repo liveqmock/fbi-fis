@@ -20,9 +20,15 @@
                              value="#{cardInfoSendAction.gwkCardbaseinfoList}" var="record"
                              selection="#{cardInfoSendAction.gwkCardbaseinfos}" rowKey="#{record.pkid}"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                             paginator="true" rows="15" paginatorPosition="bottom"
-                             rowsPerPageTemplate="100,50,30,15,5"
+                             paginator="true" rows="10" paginatorPosition="bottom"
+                             rowsPerPageTemplate="100,50,30,10,5"
                              emptyMessage="数据记录为空...">
+                    <f:facet name="header">
+                        <div style="text-align: right">
+                            <h:outputText value="#{cardInfoSendAction.rcdcount}"/>
+
+                        </div>
+                    </f:facet>
                     <p:column selectionMode="multiple"/>
                     <p:column headerText="卡号" style="text-align:center">
                         <h:outputText value="#{record.account}"></h:outputText>

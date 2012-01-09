@@ -1,6 +1,7 @@
 package fis.view.gwk;
 
 import fis.common.gwk.constant.ConsumeInfoSts;
+import fis.common.gwk.constant.RtnTagKey;
 import fis.repository.gwk.model.GwkConsumeinfo;
 import fis.service.gwk.ConsumeInfoService;
 import org.slf4j.Logger;
@@ -31,6 +32,7 @@ public class ConsumeInfoSendAction {
     private List<GwkConsumeinfo> gwkConsumeinfoList;
     private GwkConsumeinfo[] gwkConsumeinfos;
     private ConsumeInfoSts consumeInfoSts = ConsumeInfoSts.SEND_INIT;
+    private int rcdcount = 0;
     private String parambofcode;
 
     @PostConstruct
@@ -39,6 +41,7 @@ public class ConsumeInfoSendAction {
             Map parammap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
             parambofcode = parammap.get("bofcode").toString();
             gwkConsumeinfoList = consumeInfoService.selectConsumeSendNo(parambofcode);
+            rcdcount = gwkConsumeinfoList.size();
         } catch (Exception ex) {
             logger.error("查询未发送消费信息失败." + ex.getMessage());
             String msg = ex.getMessage() == null ? "" : ex.getMessage().replaceAll("\n", "").replaceAll("\r", "");
@@ -51,16 +54,42 @@ public class ConsumeInfoSendAction {
             MessageUtil.addInfo("请选择至少一条数据");
             return null;
         }
+        String rtnmsg = "";
         try {
-            consumeInfoService.sendConsumeinfo(gwkConsumeinfos,parambofcode);
+            rtnmsg = consumeInfoService.sendConsumeinfo(gwkConsumeinfos,parambofcode);
         } catch (Exception ex) {
             logger.error("发送消费信息失败:" + ex.getMessage());
             String msg = ex.getMessage() == null ? "" : ex.getMessage().replaceAll("\n", "").replaceAll("\r", "");
             MessageUtil.addError("发送消费信息失败:" + msg);
             return null;
         }
+        try {
+            Map parammap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+            parambofcode = parammap.get("bofcode").toString();
+            gwkConsumeinfoList = consumeInfoService.selectConsumeSendNo(parambofcode);
+            rcdcount = gwkConsumeinfoList.size();
+        } catch (Exception ex) {
+            logger.error("查询未发送消费信息失败." + ex.getMessage());
+            String msg = ex.getMessage() == null ? "" : ex.getMessage().replaceAll("\n", "").replaceAll("\r", "");
+            MessageUtil.addError("查询未发送消费信息失败:" + msg);
+            return null;
+        }
+        if (rtnmsg.equals(RtnTagKey.RESULT_SUCCESS)) {
+            MessageUtil.addInfo("发送成功");
+        } else {
+            logger.error("发送消费信息失败:" + rtnmsg);
+            MessageUtil.addInfo("发送消费信息失败：" + rtnmsg);
+        }
 
         return null;
+    }
+
+    public int getRcdcount() {
+        return rcdcount;
+    }
+
+    public void setRcdcount(int rcdcount) {
+        this.rcdcount = rcdcount;
     }
 
     public ConsumeInfoService getConsumeInfoService() {

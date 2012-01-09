@@ -23,6 +23,11 @@
                              paginator="true" rows="15" paginatorPosition="bottom"
                              rowsPerPageTemplate="100,50,30,15,5"
                              emptyMessage="数据记录为空...">
+                    <f:facet name="header">
+                        <div style="text-align: right">
+                            <h:outputText value="#{consumeInfoSendAction.rcdcount}"/>
+                        </div>
+                    </f:facet>
                     <p:column selectionMode="multiple"/>
                     <p:column headerText="流水号" style="text-align:center">
                         <h:outputText value="#{record.lsh}"></h:outputText>

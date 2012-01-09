@@ -230,7 +230,7 @@ public class ImpExpService {
                 gwkCardbaseinfo.setNewaccount(record.get(7).toString());
                 gwkCardbaseinfo.setStartdate("");
                 gwkCardbaseinfo.setEnddate(record.get(8).toString());
-                gwkCardbaseinfo.setCreatedate(record.get(9).toString());
+                gwkCardbaseinfo.setCreatedate(record.get(9).toString());     //todo 转换yyyy-mm-dd
                 double acdtAmt = Double.parseDouble(df.format(Double.parseDouble(record.get(10).toString())));
                 gwkCardbaseinfo.setAccreditamt(BigDecimal.valueOf(acdtAmt));
                 gwkCardbaseinfo.setTitle(record.get(11).toString());
@@ -238,7 +238,10 @@ public class ImpExpService {
                 gwkCardbaseinfo.setAction("0");                 //新增
                 gwkCardbaseinfo.setOperdate(dt);
                 gwkCardbaseinfo.setAreacode("266001");          //浦发市南
-                gwkCardbaseinfo.setBank(Long.parseLong(Config.getString("CARDBANK")));    //todo ? 值待定                  //财政银行编号
+                gwkCardbaseinfo.setBank(Long.parseLong(Config.getString("CARDBANK")));
+                gwkCardbaseinfo.setGatheringbankacctname(Config.getString("GATHERINGBANKACCTNAME"));
+                gwkCardbaseinfo.setGatheringbankacctcode(Config.getString("GATHERINGBANKACCTCODE"));
+                gwkCardbaseinfo.setGatheringbankname(Config.getString("GATHERINGBANKNAME"));
                 //删除存在数据
                 example.clear();
                 example.createCriteria().andAccountEqualTo(record.get(6).toString());
@@ -272,6 +275,7 @@ public class ImpExpService {
                 gwkCardbaseinfo.setAccount(record.get(7).toString());
                 gwkCardbaseinfo.setNewaccount(record.get(7).toString());
                 gwkCardbaseinfo.setCreatedate(record.get(9).toString());
+//                gwkCardbaseinfo.setAction("1");
                 example.clear();
                 example.createCriteria().andAccountEqualTo(record.get(6).toString());
                 gwkCardbaseinfoMapper.updateByExampleSelective(gwkCardbaseinfo, example);

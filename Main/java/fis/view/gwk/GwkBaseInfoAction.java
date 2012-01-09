@@ -51,12 +51,20 @@ public class GwkBaseInfoAction {
     public String onBtnAcceptClick() {
         try{
             gwkBaseInfoService.getAllInfoBdgagency(parambofcode);                   //接口获取
-            gwkBaseBdgagencyList = gwkBaseInfoService.selectBdgagency(parambofcode);//本地查询
         } catch (Exception ex) {
             logger.error("获取预算单位信息失败." + ex.getMessage());
-            MessageUtil.addError("获取预算单位信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            String msg = ex.getMessage() == null ? "" : ex.getMessage().replaceAll("\n", "").replaceAll("\r", "");
+            MessageUtil.addError("获取预算单位信息失败." + msg);
             return null;
         }
+        try {
+            gwkBaseBdgagencyList = gwkBaseInfoService.selectBdgagency(parambofcode);//本地查询
+        } catch (Exception ex) {
+            logger.error("查询预算单位信息失败." + ex.getMessage());
+            MessageUtil.addError("查询预算单位信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
+            return null;
+        }
+        MessageUtil.addInfo("数据已获取.");
         return null;
     }
 
