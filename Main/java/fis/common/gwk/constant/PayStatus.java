@@ -14,10 +14,7 @@ public enum PayStatus {
     SPDB_PAYSUC("00", "还款成功"),
     SPDB_ERR14("14", "卡号错误"),
     SPDB_ERR15("15", "证件号码不匹配"),
-    SPDB_ERR99("99", "其他原因错误"),
-    CCB_INIT("00","初始"),
-    CCB_PAYSUC("01","还款成功"),
-    CCB_PAYFAIL("02","还款失败");
+    SPDB_ERR99("99", "其他原因错误");
     private String code = null;
     private String title = null;
     public static Hashtable<String, PayStatus> aliasEnums;
