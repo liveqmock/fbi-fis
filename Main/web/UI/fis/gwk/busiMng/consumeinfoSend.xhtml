@@ -11,11 +11,19 @@
         <div style="margin:5px;">
             <p:growl id="msgs" showDetail="false"/>
             <h:form id="editForm">
-                <p:menubar style="margin-top:10px;margin-bottom:10px;">
-                    <p:menuitem type="push" value="发送" icon="ui-icon ui-icon-gear"
+                <p:menubar style="margin-top:10px;margin-bottom:0px;">
+                    <p:menuitem type="push" value="发 送" icon="ui-icon ui-icon-gear"
                                 action="#{consumeInfoSendAction.onBtnSendClick}" update="msgs,qrypdt">
                     </p:menuitem>
                 </p:menubar>
+                <p:ajaxStatus style="height:18px;text-align:center">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
                 <p:dataTable id="qrypdt"
                              value="#{consumeInfoSendAction.gwkConsumeinfoList}" var="record"
                              selection="#{consumeInfoSendAction.gwkConsumeinfos}" rowKey="#{record.pkid}"
