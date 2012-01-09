@@ -88,8 +88,8 @@ public class CardInfoService {
             String DIGEST = record.getDigest() == null ? "" : record.getDigest();
             String BANK = record.getBank() == null ? "" : String.valueOf(record.getBank());
             String CREATEDATE = record.getCreatedate() == null ? "" : record.getCreatedate();
-            String Startdate = record.getStartdate() == null ? "" : record.getStartdate();           //可以为空
-            String enddate = record.getEnddate() == null ? "" : record.getEnddate();                 //todo 转换格式 yyyy-mm-dd
+            String Startdate = record.getStartdate() == null ? "" : record.getStartdate();           // 有效截止日期？
+            String enddate = record.getEnddate() == null ? "" : record.getEnddate();                 // 转换格式 yyyy-mm-dd
             if (!StringUtils.isEmpty(enddate)) {
 //                Cal
                 enddate = "2016-09-30";

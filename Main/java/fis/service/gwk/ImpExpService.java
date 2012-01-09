@@ -20,8 +20,10 @@ import skyline.service.SystemService;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -108,12 +110,13 @@ public class ImpExpService {
                 gwkPaybackresult.setBankcode(record.get(0).toString());
                 gwkPaybackresult.setRecoroccurdate(record.get(1).toString());
                 gwkPaybackresult.setGatheringbankacctcode(record.get(2).toString());
-                double amt = Double.parseDouble(record.get(3).toString());
+                double amt = Double.parseDouble(record.get(3).toString())/100;
                 BigDecimal dcmAmt = BigDecimal.valueOf(Double.parseDouble(df.format(amt)));
                 gwkPaybackresult.setAmt(dcmAmt);
                 gwkPaybackresult.setCurcde(record.get(4).toString());
                 gwkPaybackresult.setInacDate(record.get(5).toString());
-                double inamt =Double.parseDouble(record.get(6).toString());
+                //金额 金额单位分->元
+                double inamt =Double.parseDouble(record.get(6).toString())/100;
                 BigDecimal dcmInamt = BigDecimal.valueOf(Double.parseDouble(df.format(inamt)));
                 gwkPaybackresult.setInacAmt(dcmInamt);
                 gwkPaybackresult.setAccount(record.get(7).toString());
@@ -131,9 +134,10 @@ public class ImpExpService {
                 gwkPaybackinfo.setOperdate(dt);
                 GwkPaybackinfoExample paybackinfoExample = new GwkPaybackinfoExample();
                 paybackinfoExample.clear();
-                //todo 金额条件 问题 金额单位 元？分？
+                // 金额条件 问题 金额单位
                 paybackinfoExample.createCriteria().andVoucheridEqualTo(record.get(9).toString())
-                        .andAccountEqualTo(record.get(7).toString());
+                        .andAccountEqualTo(record.get(7).toString())
+                        .andAmtEqualTo(dcmAmt);
                 gwkPaybackinfoMapper.updateByExampleSelective(gwkPaybackinfo,paybackinfoExample);
                 count++;
             }
@@ -174,7 +178,7 @@ public class ImpExpService {
                 gwkConsumeinfo.setReceivedeptcode(record.get(9).toString());
                 gwkConsumeinfo.setLsh(record.get(10).toString());
                 gwkConsumeinfo.setAccount(record.get(11).toString());
-                //todo 金额 分为单位
+                //金额 分转换成元为单位
                 double money = Double.parseDouble(record.get(12).toString() + record.get(13).toString())/100;
                 BigDecimal busimoney = BigDecimal.valueOf(Double.parseDouble(df.format(money)));
                 gwkConsumeinfo.setBusimoney(busimoney);                    //消费金额
@@ -228,9 +232,12 @@ public class ImpExpService {
                 gwkCardbaseinfo.setBdgagency(record.get(5).toString());
                 gwkCardbaseinfo.setAccount(record.get(6).toString());
                 gwkCardbaseinfo.setNewaccount(record.get(7).toString());
-                gwkCardbaseinfo.setStartdate("");
-                gwkCardbaseinfo.setEnddate(record.get(8).toString());
-                gwkCardbaseinfo.setCreatedate(record.get(9).toString());     //todo 转换yyyy-mm-dd
+                gwkCardbaseinfo.setStartdate("");                            //todo           yyyy-mm-dd
+                String enddate10 = getformatdt10(record.get(8).toString());
+                gwkCardbaseinfo.setEnddate(enddate10);        //yymm --> yyyy-mm-dd
+                String createdate8 = record.get(9).toString();
+                String createdate10 = createdate8.substring(0,4) + "-" + createdate8.substring(4,6) + "-" + createdate8.substring(6,8);
+                gwkCardbaseinfo.setCreatedate(createdate10);     //yyyymmdd 转换 yyyy-mm-dd
                 double acdtAmt = Double.parseDouble(df.format(Double.parseDouble(record.get(10).toString())));
                 gwkCardbaseinfo.setAccreditamt(BigDecimal.valueOf(acdtAmt));
                 gwkCardbaseinfo.setTitle(record.get(11).toString());
@@ -259,6 +266,23 @@ public class ImpExpService {
             sysJoblogMapper.insert(sysJoblog);
         }
         return count;
+    }
+    private String getformatdt10(String yymm) {
+        SimpleDateFormat sdf10 = new SimpleDateFormat("yyyy-MM-dd");
+        String yyyymmdd = "20" + yymm + "01";
+        Date tempdt = null;
+        try {
+            tempdt = sdf.parse(yyyymmdd);
+        } catch (ParseException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        Calendar c = Calendar.getInstance();
+        c.clear();
+        c.setTime(tempdt);
+        c.set(Calendar.DATE,1);
+        c.roll(Calendar.DATE,-1);
+        Date endTime=c.getTime();
+        return sdf10.format(endTime);
     }
 
     /**
