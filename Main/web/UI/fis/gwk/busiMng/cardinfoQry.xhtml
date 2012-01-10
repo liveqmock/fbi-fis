@@ -4,18 +4,68 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/templates/ui.xhtml">
-    <ui:define name="head">
 
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                /*padding-left: 80px;*/
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-input {
+                width: 180px;
+            }
+
+            .col-qry1 {
+                width: 50%;
+            }
+        </style>
+        <script language="JavaScript" type="text/JavaScript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id != 'editForm:btnAccept') {
+                        event.keyCode = 9;
+                    }
+                }
+            }
+        </script>
     </ui:define>
+
     <ui:define name="content">
         <div style="margin:5px;">
             <p:growl id="msgs" showDetail="false"/>
             <h:form id="editForm">
-                <p:menubar style="margin-top:10px;">
-                    <p:menuitem type="push" value="发 送" icon="ui-icon ui-icon-gear"
-                                action="#{cardInfoSendAction.onBtnSendClick}" update="msgs,qrypdt">
-                    </p:menuitem>
-                </p:menubar>
+                <p:focus for="txtbdgagency"/>
+                <p:panel header="查询数据">
+                    <h:panelGrid width="100%" cellspacing="0" border="0" columns="2" columnClasses="col-qry1">
+                        <h:panelGroup>
+                            <h:panelGrid cellspacing="0" border="0" columns="5">
+                                <h:outputLabel value="预算单位名:"/>
+                                <h:inputText id="txtbdgagency" autocomplete="off" value="#{cardInfoQryAction.bdgagency}"
+                                             style="width:100px"/>
+                                <p:spacer width="5px"/>
+                                <h:outputLabel value="卡号:"/>
+                                <h:inputText id="txtAcct" value="#{cardInfoQryAction.acct}"
+                                             style="width:120px;">
+                                </h:inputText>
+                            </h:panelGrid>
+                        </h:panelGroup>
+                        <h:panelGrid cellspacing="0" border="0" columns="1">
+                            <h:panelGroup>
+                                <p:commandButton style="width:60px;" ajax="true"
+                                                 id="btnAccept" update="msgs qrydt"
+                                                 value="查 询"
+                                                 action="#{cardInfoQryAction.onBtnQueryClick}"></p:commandButton>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
                 <p:ajaxStatus style="height:18px;text-align:center">
                     <f:facet name="start">
                         <h:graphicImage value="/images/ajaxloadingbar.gif"/>
@@ -24,20 +74,13 @@
                         <h:outputText value=""/>
                     </f:facet>
                 </p:ajaxStatus>
-                <p:dataTable id="qrypdt"
-                             value="#{cardInfoSendAction.gwkCardbaseinfoList}" var="record"
-                             selection="#{cardInfoSendAction.gwkCardbaseinfos}" rowKey="#{record.pkid}"
+                <p:dataTable id="qrydt"
+                             value="#{cardInfoQryAction.gwkCardbaseinfoList}" var="record"
+                             rowKey="#{record.pkid}"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              paginator="true" rows="10" paginatorPosition="bottom"
                              rowsPerPageTemplate="100,50,30,10,5"
                              emptyMessage="数据记录为空...">
-                    <f:facet name="header">
-                        <div style="text-align: right">
-                            <h:outputText value="#{cardInfoSendAction.rcdcount}"/>
-
-                        </div>
-                    </f:facet>
-                    <p:column selectionMode="multiple"/>
                     <p:column headerText="卡号" style="text-align:center">
                         <h:outputText value="#{record.account}"></h:outputText>
                     </p:column>
@@ -64,10 +107,12 @@
                     </p:column>
                     <p:column headerText="是否发送" style="text-align:center">
                         <h:outputText
-                                value="#{cardInfoSendAction.cardSendFlg.aliasEnums[record.sentflag].title}"></h:outputText>
+                                value="#{cardInfoQryAction.cardSendFlg.aliasEnums[record.sentflag].title}"></h:outputText>
                     </p:column>
                 </p:dataTable>
+
             </h:form>
         </div>
     </ui:define>
+
 </ui:composition>

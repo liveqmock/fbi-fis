@@ -26,7 +26,6 @@
                 width: 50%;
             }
         </style>
-        <script type="text/javascript" src="../../../support/pub.js"/>
         <script language="JavaScript" type="text/JavaScript">
             document.onkeydown = function TabReplace() {
                 if (event.keyCode == 13) {
@@ -35,6 +34,12 @@
                     }
                 }
             }
+            $ = jQuery;
+            $(document).ready(function () {
+                $('#editForm\\:voucherid').focus(function () {
+                    $('#editForm\\:voucherid').select();
+                });
+            });
         </script>
     </ui:define>
 
@@ -57,8 +62,9 @@
                         <h:panelGrid cellspacing="0" border="0" columns="1">
                             <h:panelGroup>
                                 <p:commandButton style="width:60px;" ajax="true"
-                                                 id="btnAccept"  update="msgs qrydt btnConfirm"
-                                                 value="获 取" action="#{paybackAction.onBtnAcceptClick}"></p:commandButton>
+                                                 id="btnAccept" update="msgs qrydt btnConfirm"
+                                                 value="获 取"
+                                                 action="#{paybackAction.onBtnAcceptClick}"></p:commandButton>
                             </h:panelGroup>
                         </h:panelGrid>
                     </h:panelGrid>
@@ -89,13 +95,15 @@
                             </h:outputText>
                         </p:column>
                         <p:column headerText="还款状态" style="text-align:center">
-                            <h:outputText value="#{paybackAction.payStatus.aliasEnums[record.status].title}"></h:outputText>
+                            <h:outputText
+                                    value="#{paybackAction.payStatus.aliasEnums[record.status].title}"></h:outputText>
                         </p:column>
                         <p:column headerText="成功还款日期" style="text-align:center">
                             <h:outputText value="#{record.paybackdate}"></h:outputText>
                         </p:column>
                         <p:column headerText="确认还款标志" style="text-align:center">
-                            <h:outputText value="#{paybackAction.confirmPayFlg.aliasEnums[record.confirmpayflag].title}"></h:outputText>
+                            <h:outputText
+                                    value="#{paybackAction.confirmPayFlg.aliasEnums[record.confirmpayflag].title}"></h:outputText>
                         </p:column>
                     </p:dataTable>
                 </p:panel>

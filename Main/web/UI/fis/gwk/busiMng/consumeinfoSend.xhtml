@@ -41,7 +41,8 @@
                         <h:outputText value="#{record.lsh}"></h:outputText>
                     </p:column>
                     <p:column headerText="状态" style="text-align:center">
-                        <h:outputText value="#{consumeInfoSendAction.consumeInfoSts.aliasEnums[record.status].title}"></h:outputText>
+                        <h:outputText
+                                value="#{consumeInfoSendAction.consumeInfoSts.aliasEnums[record.status].title}"></h:outputText>
                     </p:column>
                     <p:column headerText="持卡人" style="text-align:center">
                         <h:outputText value="#{record.cardname}"></h:outputText>
