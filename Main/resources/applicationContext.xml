@@ -61,5 +61,34 @@
                   value="skyline.repository.dao,fis.repository.fs.dao,fis.repository.gwk.dao"/>
     </bean>
 
+    <!--quartz-->
+    <!--自动导入总行文件-->
+    <!--要调用的工作类-->
+    <bean id="autoIMPBankFile" class="gateway.ftp.pfbank.IMPBankFileThread"></bean>
+    <!--定义调用对象和调用对象的方法-->
+    <bean id="autoIMPBankFileJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="autoIMPBankFile"/>
+        </property>
+        <property name="targetMethod">
+            <value>execute</value>
+        </property>
+    </bean>
+    <!--定义触发时间-->
+    <bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="autoIMPBankFileJob"/>
+        <property name="cronExpression" value="0 55 22 * * ?"/>
+    </bean>
+    <!--自动导出还款文件-->
+
+
+    <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
+    <bean id="myscheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="doTime"/>
+            </list>
+        </property>
+    </bean>
 
 </beans>
