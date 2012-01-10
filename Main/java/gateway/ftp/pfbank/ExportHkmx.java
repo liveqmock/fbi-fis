@@ -130,7 +130,7 @@ public class ExportHkmx {
 
 
 	public static void main(String[] args){
-        ApplicationContext ctx = new FileSystemXmlApplicationContext("D:/svn-fbifis/src/Main/resources/applicationContext.xml");
+        ApplicationContext ctx = new FileSystemXmlApplicationContext("D:/svn-fbifis/src2/Main/resources/applicationContext.xml");
         ExportHkmx exportHkmx = (ExportHkmx) ctx.getBean("exportHkmx");
         try {
             ArrayList sa=exportHkmx.getResults();

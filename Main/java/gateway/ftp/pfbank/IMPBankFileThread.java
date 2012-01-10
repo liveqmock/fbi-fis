@@ -93,7 +93,7 @@ public class IMPBankFileThread {
     }
 
     public static void main(String[] args) {
-        ApplicationContext ctx = new FileSystemXmlApplicationContext("D:/svn-fbifis/src/Main/resources/applicationContext.xml");
+        ApplicationContext ctx = new FileSystemXmlApplicationContext("D:/svn-fbifis/src2/Main/resources/applicationContext.xml");
 //        ctx.
 //        new IMPBankFileThread().impFile();
         IMPBankFileThread impBankFileThread = (IMPBankFileThread)ctx.getBean("IMPBankFileThread");
