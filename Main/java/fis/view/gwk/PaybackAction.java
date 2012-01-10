@@ -28,7 +28,7 @@ import java.util.Map;
 @ManagedBean
 @ViewScoped
 public class PaybackAction {
-    private static final Logger logger = LoggerFactory.getLogger(ConsumeInfoSendAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(PaybackAction.class);
     @ManagedProperty(value = "#{paybackService}")
     private PaybackService paybackService;
     private List<GwkPaybackinfo> gwkPaybackinfoList;
