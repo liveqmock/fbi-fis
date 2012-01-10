@@ -37,6 +37,7 @@ import java.util.List;
 @Service
 public class ImpExpService {
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+    private static SimpleDateFormat sdf10 = new SimpleDateFormat("yyyy-MM-dd");
     private static DecimalFormat df = new DecimalFormat("#.##");
     @Resource
     private GwkCardbaseinfoMapper gwkCardbaseinfoMapper;
@@ -67,8 +68,8 @@ public class ImpExpService {
             subDataList.add("");                             //还款日期 空
             subDataList.add(record.getAccount().toString()); //账号
             subDataList.add("00000");                        //强制校验标志
-            subDataList.add(record.getIdtype());
-            subDataList.add(record.getIdnumber());
+            subDataList.add(record.getIdtype()==null?"":record.getIdtype());
+            subDataList.add(record.getIdnumber()==null?"":record.getIdnumber());
             subDataList.add("1");                            //扣款或者存款标志
             subDataList.add("0");                            //使用溢缴款或者透支额度标志
             subDataList.add("0");                            //余额不足时，全额扣款标志
@@ -110,6 +111,7 @@ public class ImpExpService {
                 gwkPaybackresult.setBankcode(record.get(0).toString());
                 gwkPaybackresult.setRecoroccurdate(record.get(1).toString());
                 gwkPaybackresult.setGatheringbankacctcode(record.get(2).toString());
+                //金额 金额单位分->元
                 double amt = Double.parseDouble(record.get(3).toString())/100;
                 BigDecimal dcmAmt = BigDecimal.valueOf(Double.parseDouble(df.format(amt)));
                 gwkPaybackresult.setAmt(dcmAmt);
@@ -131,6 +133,10 @@ public class ImpExpService {
                 GwkPaybackinfo gwkPaybackinfo = new GwkPaybackinfo();
                 gwkPaybackinfo.setStatus(record.get(10).toString());
                 gwkPaybackinfo.setPaybackdate(record.get(5).toString());
+                //如果还款失败 更新filesendflag=0 重新发送
+                if (!record.get(10).toString().equals(PayStatus.SPDB_PAYSUC.getCode())) {
+                    gwkPaybackinfo.setFilesendflag("0");
+                }
                 gwkPaybackinfo.setOperdate(dt);
                 GwkPaybackinfoExample paybackinfoExample = new GwkPaybackinfoExample();
                 paybackinfoExample.clear();
@@ -232,7 +238,7 @@ public class ImpExpService {
                 gwkCardbaseinfo.setBdgagency(record.get(5).toString());
                 gwkCardbaseinfo.setAccount(record.get(6).toString());
                 gwkCardbaseinfo.setNewaccount(record.get(7).toString());
-                gwkCardbaseinfo.setStartdate("");                            //todo           yyyy-mm-dd
+                gwkCardbaseinfo.setStartdate(sdf10.format(dt));                            //导入日期       yyyy-mm-dd
                 String enddate10 = getformatdt10(record.get(8).toString());
                 gwkCardbaseinfo.setEnddate(enddate10);        //yymm --> yyyy-mm-dd
                 String createdate8 = record.get(9).toString();
@@ -242,6 +248,7 @@ public class ImpExpService {
                 gwkCardbaseinfo.setAccreditamt(BigDecimal.valueOf(acdtAmt));
                 gwkCardbaseinfo.setTitle(record.get(11).toString());
                 gwkCardbaseinfo.setExpand(record.get(12).toString());
+                gwkCardbaseinfo.setBranchbankcode(record.get(13).toString());
                 gwkCardbaseinfo.setAction("0");                 //新增
                 gwkCardbaseinfo.setOperdate(dt);
                 gwkCardbaseinfo.setAreacode("266001");          //浦发市南
@@ -299,7 +306,8 @@ public class ImpExpService {
                 gwkCardbaseinfo.setAccount(record.get(7).toString());
                 gwkCardbaseinfo.setNewaccount(record.get(7).toString());
                 gwkCardbaseinfo.setCreatedate(record.get(9).toString());
-//                gwkCardbaseinfo.setAction("1");
+                gwkCardbaseinfo.setAction("1");
+                gwkCardbaseinfo.setSentflag("0"); //为发送
                 example.clear();
                 example.createCriteria().andAccountEqualTo(record.get(6).toString());
                 gwkCardbaseinfoMapper.updateByExampleSelective(gwkCardbaseinfo, example);

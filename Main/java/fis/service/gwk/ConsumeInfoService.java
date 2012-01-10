@@ -7,6 +7,7 @@ import fis.repository.gwk.model.GwkConsumeinfo;
 import fis.repository.gwk.model.GwkConsumeinfoExample;
 import gov.mof.fasp.service.BankService;
 import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pub.platform.advance.utils.PropertyManager;
@@ -86,9 +87,7 @@ public class ConsumeInfoService {
             String busidate = record.getBusidate()==null?"":record.getBusidate();
             Double busimoney = record.getBusimoney().doubleValue();
             String businame = record.getBusiname()==null?"":record.getBusiname();
-            String limitdate = record.getCleardate()==null?"":record.getCleardate();
-            //todo ? 交易处理码
-            String tx_cd = record.getTxCd()==null?"":record.getTxCd();
+            String limitdate = record.getCleardate()==null?"":record.getCleardate();      //todo 修改 核心交易日期的下个月20号
 
             m.put("ID", lsh);
             m.put("ACCOUNT", account);
@@ -128,5 +127,25 @@ public class ConsumeInfoService {
             example.createCriteria().andAreacodeEqualTo(bofcode).andAccountEqualTo(record.get(RtnTagKey.SAMEACCOUNT).toString()).andLshEqualTo(record.get(RtnTagKey.SAMEID).toString());
             gwkConsumeinfoMapper.updateByExampleSelective(updata,example);
         }
+    }
+
+    //按条件查询消费信息
+    public List<GwkConsumeinfo> selectConsumeForQry(String status,String account,String busistartdate,String busienddate,String bofcode) {
+        GwkConsumeinfoExample example = new GwkConsumeinfoExample();
+        GwkConsumeinfoExample.Criteria criteria = example.createCriteria();
+        if (status != null && !StringUtils.isEmpty(status)) {
+            criteria.andStatusEqualTo(status);
+        }
+        if (account != null && !StringUtils.isEmpty(account)) {
+            criteria.andAccountEqualTo(account);
+        }
+        if (busistartdate != null && !StringUtils.isEmpty(busistartdate)) {
+            criteria.andBusidateGreaterThanOrEqualTo(busistartdate);
+        }
+        if (busienddate != null && !StringUtils.isEmpty(busienddate)) {
+            criteria.andBusidateLessThanOrEqualTo(busienddate);
+        }
+        criteria.andAreacodeEqualTo(bofcode);
+        return gwkConsumeinfoMapper.selectByExample(example);
     }
 }

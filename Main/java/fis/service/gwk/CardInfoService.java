@@ -142,4 +142,18 @@ public class CardInfoService {
             gwkCardbaseinfoMapper.updateByExampleSelective(updata, example);
         }
     }
+
+    //按条件查询卡信息
+    public List<GwkCardbaseinfo> selectCardinfoForQry(String bdgagencyname,String account,String bofcode) {
+        GwkCardbaseinfoExample example = new GwkCardbaseinfoExample();
+        GwkCardbaseinfoExample.Criteria criteria = example.createCriteria();
+        if (bdgagencyname != null && !StringUtils.isEmpty(bdgagencyname)) {
+            criteria.andBdgagencynameLike("%" + bdgagencyname + "%");
+        }
+        if (account != null && !StringUtils.isEmpty(account)) {
+            criteria.andAccountEqualTo(account);
+        }
+        criteria.andAreacodeEqualTo(bofcode);
+        return gwkCardbaseinfoMapper.selectByExample(example);
+    }
 }
