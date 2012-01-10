@@ -26,7 +26,6 @@ import javax.servlet.ServletContext;
 import java.io.File;
 import java.util.ArrayList;
 
-@Service
 public class IMPBankFileThread {
     private static final Logger logger = LoggerFactory.getLogger(IMPBankFileThread.class);
     int[] CDOPNSIZE = {30, 30, 2, 19, 80, 20, 19, 19, 4, 8, 10, 20, 50, 4};//帐户文件格式
@@ -36,6 +35,9 @@ public class IMPBankFileThread {
 
     @Resource
     private ImpExpService impExpService;
+    public void execute() {
+        impFile();
+    }
     //导入银行数据
     public void impFile() {
         GetData getData = new GetData();
@@ -93,7 +95,7 @@ public class IMPBankFileThread {
     }
 
     public static void main(String[] args) {
-        ApplicationContext ctx = new FileSystemXmlApplicationContext("D:/svn-fbifis/src2/Main/resources/applicationContext.xml");
+        ApplicationContext ctx = new FileSystemXmlApplicationContext("D:/svn-fbifis/src/Main/resources/applicationContext.xml");
 //        ctx.
 //        new IMPBankFileThread().impFile();
         IMPBankFileThread impBankFileThread = (IMPBankFileThread)ctx.getBean("IMPBankFileThread");
