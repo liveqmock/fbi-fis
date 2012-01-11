@@ -5,6 +5,7 @@ import fis.common.gwk.constant.ConfirmPayFlg;
 import fis.common.gwk.constant.PayStatus;
 import fis.repository.gwk.model.GwkPaybackinfo;
 import fis.service.gwk.PaybackService;
+import org.primefaces.event.CloseEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import skyline.common.utils.MessageUtil;
@@ -14,9 +15,11 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIViewRoot;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +47,7 @@ public class PaybackBatchAction {
     private String vchid;
     private String acct;
     private String payStscode;
+    private String checkacct;
     private String parambofcode;
 
     @PostConstruct
@@ -99,14 +103,15 @@ public class PaybackBatchAction {
         gwkPaybackinfoList = paybackService.selectPaybackForBatch(vchid,acct,paySts,bofcode);
     }
     
-    public void cardisExist(ActionEvent actionEvent) {
-        HtmlInputText txtAcctObj = (HtmlInputText) actionEvent.getComponent();
+    public void cardisExist(AjaxBehaviorEvent event) {
+//        UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
+        HtmlInputText txtAcctObj = (HtmlInputText) event.getComponent();
         String stracct = txtAcctObj.getValue().toString();
         try{
             boolean exists = paybackService.queryCardExists(stracct);
             if (!exists) {
                 MessageUtil.addError("该卡号不存在,请重新输入.");
-                txtAcctObj.setValue("");
+//                txtAcctObj.setValue("");
             }
         } catch (Exception ex) {
             MessageUtil.addError("查询卡号失败.");
@@ -192,5 +197,13 @@ public class PaybackBatchAction {
 
     public void setPayStscode(String payStscode) {
         this.payStscode = payStscode;
+    }
+
+    public String getCheckacct() {
+        return checkacct;
+    }
+
+    public void setCheckacct(String checkacct) {
+        this.checkacct = checkacct;
     }
 }

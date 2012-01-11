@@ -51,12 +51,13 @@ public class ImpExpService {
     private SysJoblogMapper sysJoblogMapper;
 
     /**
-     * 查询还款数据 status=01初始;filesendflag=0初始;confirmpayflag=1确认还款*/
+     * 查询还款数据 status=01初始;filesendflag=0初始;confirmpayflag=1确认还款
+     */
     public ArrayList<ArrayList> selectPaybackinfos() {
         Date dt = new Date();
         ArrayList<ArrayList> dataList = new ArrayList<ArrayList>();
         List<GwkPaybackinfo> paybackinfoList = gwkPaybackinfoMapper.selectPaybackinfo4File();
-        for (GwkPaybackinfo record:paybackinfoList) {
+        for (GwkPaybackinfo record : paybackinfoList) {
             ArrayList<String> subDataList = new ArrayList<String>();
             subDataList.add("0310");    //银行代号
             subDataList.add(Config.getString("Bank_Code"));  //分行代号
@@ -68,8 +69,8 @@ public class ImpExpService {
             subDataList.add("");                             //还款日期 空
             subDataList.add(record.getAccount().toString()); //账号
             subDataList.add("00000");                        //强制校验标志
-            subDataList.add(record.getIdtype()==null?"":record.getIdtype());
-            subDataList.add(record.getIdnumber()==null?"":record.getIdnumber());
+            subDataList.add(record.getIdtype() == null ? "" : record.getIdtype());
+            subDataList.add(record.getIdnumber() == null ? "" : record.getIdnumber());
             subDataList.add("1");                            //扣款或者存款标志
             subDataList.add("0");                            //使用溢缴款或者透支额度标志
             subDataList.add("0");                            //余额不足时，全额扣款标志
@@ -91,14 +92,14 @@ public class ImpExpService {
                 .andConfirmpayflagEqualTo(ConfirmPayFlg.CONFIRMPAY_VALID.getCode());
         GwkPaybackinfo record = new GwkPaybackinfo();
         record.setFilesendflag(sdf.format(dt));
-        gwkPaybackinfoMapper.updateByExampleSelective(record,example);
+        gwkPaybackinfoMapper.updateByExampleSelective(record, example);
     }
 
     /**
      * 扣款结果导入
      */
     @Transactional
-    public int importPaybackresult(ArrayList<ArrayList> impVar,String filename) {
+    public int importPaybackresult(ArrayList<ArrayList> impVar, String filename) {
         int count = 0;
         if (impVar != null && impVar.size() > 0) {
             Date dt = new Date();
@@ -106,19 +107,19 @@ public class ImpExpService {
             GwkPaybackresultExample example = new GwkPaybackresultExample();
             example.createCriteria().andFilenameEqualTo(filename);
             gwkPaybackresultMapper.deleteByExample(example);
-            for (ArrayList record:impVar) {
+            for (ArrayList record : impVar) {
                 GwkPaybackresult gwkPaybackresult = new GwkPaybackresult();
                 gwkPaybackresult.setBankcode(record.get(0).toString());
                 gwkPaybackresult.setRecoroccurdate(record.get(1).toString());
                 gwkPaybackresult.setGatheringbankacctcode(record.get(2).toString());
                 //金额 金额单位分->元
-                double amt = Double.parseDouble(record.get(3).toString())/100;
+                double amt = Double.parseDouble(record.get(3).toString()) / 100;
                 BigDecimal dcmAmt = BigDecimal.valueOf(Double.parseDouble(df.format(amt)));
                 gwkPaybackresult.setAmt(dcmAmt);
                 gwkPaybackresult.setCurcde(record.get(4).toString());
                 gwkPaybackresult.setInacDate(record.get(5).toString());
                 //金额 金额单位分->元
-                double inamt =Double.parseDouble(record.get(6).toString())/100;
+                double inamt = Double.parseDouble(record.get(6).toString()) / 100;
                 BigDecimal dcmInamt = BigDecimal.valueOf(Double.parseDouble(df.format(inamt)));
                 gwkPaybackresult.setInacAmt(dcmInamt);
                 gwkPaybackresult.setAccount(record.get(7).toString());
@@ -144,7 +145,7 @@ public class ImpExpService {
                 paybackinfoExample.createCriteria().andVoucheridEqualTo(record.get(9).toString())
                         .andAccountEqualTo(record.get(7).toString())
                         .andAmtEqualTo(dcmAmt);
-                gwkPaybackinfoMapper.updateByExampleSelective(gwkPaybackinfo,paybackinfoExample);
+                gwkPaybackinfoMapper.updateByExampleSelective(gwkPaybackinfo, paybackinfoExample);
                 count++;
             }
             //日志表插入
@@ -163,9 +164,10 @@ public class ImpExpService {
      * 消费信息导入
      */
     @Transactional
-    public int importConsumeinfo(ArrayList<ArrayList> impVar,String filename) {
+    public int importConsumeinfo(ArrayList<ArrayList> impVar, String filename) throws ParseException {
         int count = 0;
         if (impVar != null && impVar.size() > 0) {
+            SimpleDateFormat sdf6 = new SimpleDateFormat("yyyyMM");
             Date dt = new Date();
             GwkConsumeinfoExample example = new GwkConsumeinfoExample();
             example.createCriteria().andFilenameEqualTo(filename);
@@ -185,7 +187,7 @@ public class ImpExpService {
                 gwkConsumeinfo.setLsh(record.get(10).toString());
                 gwkConsumeinfo.setAccount(record.get(11).toString());
                 //金额 分转换成元为单位
-                double money = Double.parseDouble(record.get(12).toString() + record.get(13).toString())/100;
+                double money = Double.parseDouble(record.get(12).toString() + record.get(13).toString()) / 100;
                 BigDecimal busimoney = BigDecimal.valueOf(Double.parseDouble(df.format(money)));
                 gwkConsumeinfo.setBusimoney(busimoney);                    //消费金额
                 gwkConsumeinfo.setUniontxdate(record.get(14).toString());
@@ -204,6 +206,14 @@ public class ImpExpService {
                 gwkConsumeinfo.setOperdate(dt);
                 gwkConsumeinfo.setFilename(filename);
                 gwkConsumeinfo.setAreacode("266001");              //市南
+                //设置最迟还款日期 busidate的下月20日
+                Calendar c = Calendar.getInstance();
+                c.clear();
+                c.setTime(sdf.parse(record.get(0).toString()));
+                c.add(Calendar.MONTH, 1);
+                Date endTime = c.getTime();
+                String limitdate = sdf6.format(endTime) + "20";
+                gwkConsumeinfo.setLimitdate(limitdate);
                 gwkConsumeinfoMapper.insertSelective(gwkConsumeinfo);
                 count++;
             }
@@ -242,7 +252,7 @@ public class ImpExpService {
                 String enddate10 = getformatdt10(record.get(8).toString());
                 gwkCardbaseinfo.setEnddate(enddate10);        //yymm --> yyyy-mm-dd
                 String createdate8 = record.get(9).toString();
-                String createdate10 = createdate8.substring(0,4) + "-" + createdate8.substring(4,6) + "-" + createdate8.substring(6,8);
+                String createdate10 = createdate8.substring(0, 4) + "-" + createdate8.substring(4, 6) + "-" + createdate8.substring(6, 8);
                 gwkCardbaseinfo.setCreatedate(createdate10);     //yyyymmdd 转换 yyyy-mm-dd
                 double acdtAmt = Double.parseDouble(df.format(Double.parseDouble(record.get(10).toString())));
                 gwkCardbaseinfo.setAccreditamt(BigDecimal.valueOf(acdtAmt));
@@ -252,7 +262,7 @@ public class ImpExpService {
                 gwkCardbaseinfo.setAction("0");                 //新增
                 gwkCardbaseinfo.setOperdate(dt);
                 gwkCardbaseinfo.setAreacode("266001");          //浦发市南
-                gwkCardbaseinfo.setBank(Long.parseLong(Config.getString("CARDBANK")));
+                gwkCardbaseinfo.setBank(Config.getString("CARDBANK"));
                 gwkCardbaseinfo.setGatheringbankacctname(Config.getString("GATHERINGBANKACCTNAME"));
                 gwkCardbaseinfo.setGatheringbankacctcode(Config.getString("GATHERINGBANKACCTCODE"));
                 gwkCardbaseinfo.setGatheringbankname(Config.getString("GATHERINGBANKNAME"));
@@ -274,6 +284,7 @@ public class ImpExpService {
         }
         return count;
     }
+
     private String getformatdt10(String yymm) {
         SimpleDateFormat sdf10 = new SimpleDateFormat("yyyy-MM-dd");
         String yyyymmdd = "20" + yymm + "01";
@@ -286,9 +297,9 @@ public class ImpExpService {
         Calendar c = Calendar.getInstance();
         c.clear();
         c.setTime(tempdt);
-        c.set(Calendar.DATE,1);
-        c.roll(Calendar.DATE,-1);
-        Date endTime=c.getTime();
+        c.set(Calendar.DATE, 1);
+        c.roll(Calendar.DATE, -1);
+        Date endTime = c.getTime();
         return sdf10.format(endTime);
     }
 

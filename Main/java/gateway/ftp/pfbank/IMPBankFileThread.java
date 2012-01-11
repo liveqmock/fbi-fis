@@ -24,9 +24,11 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import java.io.File;
+import java.text.ParseException;
 import java.util.ArrayList;
 
-public class IMPBankFileThread {
+@Service
+public class IMPBankFileThread implements IMPBankFile{
     private static final Logger logger = LoggerFactory.getLogger(IMPBankFileThread.class);
     int[] CDOPNSIZE = {30, 30, 2, 19, 80, 20, 19, 19, 4, 8, 10, 20, 50, 4};//帐户文件格式
     int[] PURCHSIZE = {8, 6, 4, 4, 2, 2, 8, 11, 11, 11, 6, 21, 1, 12, 10, 4, 8, 15, 40, 3, 12, 6, 2, 1, 65, 50, 4};//消费明细
@@ -35,9 +37,6 @@ public class IMPBankFileThread {
 
     @Resource
     private ImpExpService impExpService;
-    public void execute() {
-        impFile();
-    }
     //导入银行数据
     public void impFile() {
         GetData getData = new GetData();
@@ -65,7 +64,11 @@ public class IMPBankFileThread {
                 if (filename.startsWith("0310-PURCH")) {
                     //开始存入数据库
                     ArrayList dataList = getData.getDataList(localpath + filename, PURCHSIZE);
-                    opCount = impExpService.importConsumeinfo(dataList,filename);
+                    try {
+                        opCount = impExpService.importConsumeinfo(dataList,filename);
+                    } catch (ParseException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    }
                     logger.info( "文件:" + filename + ";消费信息插入条数=" + opCount);
 
 
@@ -95,10 +98,11 @@ public class IMPBankFileThread {
     }
 
     public static void main(String[] args) {
-        ApplicationContext ctx = new FileSystemXmlApplicationContext("D:/svn-fbifis/src/Main/resources/applicationContext.xml");
+        ApplicationContext ctx = new FileSystemXmlApplicationContext("D:/svn-fbifis/src2/Main/resources/applicationContext.xml");
 //        ctx.
 //        new IMPBankFileThread().impFile();
         IMPBankFileThread impBankFileThread = (IMPBankFileThread)ctx.getBean("IMPBankFileThread");
         impBankFileThread.impFile();
+
     }
 }

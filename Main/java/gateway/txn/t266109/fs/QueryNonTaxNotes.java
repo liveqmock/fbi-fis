@@ -87,8 +87,8 @@ public class QueryNonTaxNotes extends AbstractFSTxnBizProcessor {
 
     public static void main(String[] args) {
         List<String> paramList = new ArrayList<String>();
-        paramList.add("150000000005");
-        paramList.add("DZXL5R");
+        paramList.add("999900000020");
+        paramList.add("HPMVBE");
         try {
             List<Map<String, String>> dataList = new BizInterService().getBizDatas("FS", "266109", "queryNonTaxNotes", paramList);
             System.out.println("Total ±ÊÊý : " + dataList.size());

@@ -7,20 +7,36 @@ import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class MyTest {
 
     private static final Log logger = LogFactory.getLog(MyTest.class);
 
     public static void main(String argv[]) {
-
-        MyTest test = new MyTest();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat sdf10 = new SimpleDateFormat("yyyy-MM-dd");
+        String yyyymmdd = "201609" + "01";
+        Date tempdt = null;
         try {
-            test.getAllElementInfo();
+            tempdt = sdf.parse(yyyymmdd);
+        } catch (ParseException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        Calendar c = Calendar.getInstance();
+        c.clear();
+        c.setTime(tempdt);
+        c.set(Calendar.DATE,1);
+        c.roll(Calendar.DATE,-1);
+        Date endTime=c.getTime();
+        String startdate = sdf10.format(endTime);
+        System.out.println(startdate);
+
+//        MyTest test = new MyTest();
+        try {
+//            test.getAllElementInfo();
             //test.queryElementVersion();
             //test.syncElementCode();
             //test.writeOfficeCardInfo();

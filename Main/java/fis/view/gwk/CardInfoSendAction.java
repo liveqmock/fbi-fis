@@ -75,8 +75,8 @@ public class CardInfoSendAction {
         if (rtnmsg.equals(RtnTagKey.RESULT_SUCCESS)) {
             MessageUtil.addInfo("发送成功");
         } else {
-            logger.error("发送卡信息失败:" + rtnmsg);
-            MessageUtil.addInfo("发送失败卡信息：" + rtnmsg);
+            logger.error("发送卡信息返回失败信息:" + rtnmsg);
+            MessageUtil.addInfo("发送卡信息返回失败信息:" + rtnmsg);
         }
         return null;
     }

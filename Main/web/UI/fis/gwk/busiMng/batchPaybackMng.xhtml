@@ -92,7 +92,8 @@
                         <p:column headerText="卡号" style="text-align:center">
                             <p:inplace cancelLabel="true" style="background-color:#dcdcdc;">
                                 <h:inputText value="#{record.account}" id="coltxtacct">
-                                    <!--<p:ajax event="blur" listener="#{paybackBatchAction.cardisExist}" update="msgs"/>-->
+                                    <p:ajax event="blur" listener="#{paybackBatchAction.cardisExist}" update="msgs">
+                                    </p:ajax>
                                 </h:inputText>
                             </p:inplace>
                         </p:column>

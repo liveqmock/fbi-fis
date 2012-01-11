@@ -62,9 +62,9 @@
     </bean>
 
     <!--quartz-->
-    <!--自动导入总行文件-->
+    <!-- 1 自动导入总行文件-->
     <!--要调用的工作类-->
-    <bean id="autoIMPBankFile" class="gateway.ftp.pfbank.IMPBankFileThread"></bean>
+    <bean id="autoIMPBankFile" class="gateway.ftp.pfbank.DoTimeAutoIMPHandler"></bean>
     <!--定义调用对象和调用对象的方法-->
     <bean id="autoIMPBankFileJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject">
@@ -75,20 +75,51 @@
         </property>
     </bean>
     <!--定义触发时间-->
-    <bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <bean id="doTimeForIMP" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="autoIMPBankFileJob"/>
-        <property name="cronExpression" value="0 55 22 * * ?"/>
+        <property name="cronExpression" value="0 48 15 * * ?"/>
     </bean>
-    <!--自动导出还款文件-->
 
+    <!--2 自动导出还款文件-->
+    <bean id="autoEXPBankFile" class="gateway.ftp.pfbank.DoTimeAutoEXPHandler"/>
+    <bean id="autoEXPBankFileJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="autoEXPBankFile"/>
+        </property>
+        <property name="targetMethod">
+            <value>execute</value>
+        </property>
+    </bean>
+    <bean id="doTimeForEXP" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="autoEXPBankFileJob"/>
+        <property name="cronExpression" value="0 15 16 * * ?"/>
+    </bean>
+
+    <!--3 自动发送卡\消费信息至财政-->
+    <bean id="autoSendToFinorg" class="fis.batch.autosend.SendHandler"/>
+    <bean id="autoSendToFinorgJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="autoSendToFinorg"/>
+        </property>
+        <property name="targetMethod">
+            <value>execute</value>
+        </property>
+    </bean>
+    <bean id="doTimeForSendToFinorg" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="autoSendToFinorgJob"/>
+        <property name="cronExpression" value="0 40 17 * * ?"/>
+    </bean>
 
     <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
     <bean id="myscheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
-                <ref bean="doTime"/>
+                <ref bean="doTimeForIMP"/>
+                <ref bean="doTimeForEXP"/>
+                <ref bean="doTimeForSendToFinorg"/>
             </list>
         </property>
+
     </bean>
 
 </beans>

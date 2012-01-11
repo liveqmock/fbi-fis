@@ -108,7 +108,7 @@ public class PaybackService {
         GwkPaybackinfoExample.Criteria criteria = example.createCriteria();
         criteria.andStatusNotEqualTo(PayStatus.SPDB_PAYSUC.getCode());       //还款成功除外
         criteria.andConfirmpayflagEqualTo(ConfirmPayFlg.CONFIRMPAY_VALID.getCode()); //已确认还款的
-        criteria.andFilesendflagEqualTo("0");                                         //已生成文件的数据除外
+        criteria.andFilesendflagEqualTo("0");                                         //todo 已生成文件的数据除外 待确认
         if (vchid != null && !StringUtils.isEmpty(vchid)) {
             criteria.andVoucheridEqualTo(vchid);
         }
