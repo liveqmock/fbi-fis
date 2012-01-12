@@ -31,7 +31,9 @@ public class ExportHkmx implements EXPBankFile{
 
     public void expFile() {
         try {
+            logger.info("开始导出总行文件......");
             ArrayList sa = getResults();
+            logger.info("开始生成文件...");
             writePLHK(sa);
             updatePaybackinfo();
         } catch (Exception ex) {
@@ -45,7 +47,13 @@ public class ExportHkmx implements EXPBankFile{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String date = sdf.format(new Date());
         //发送状态status=01初始状态的数据提取出来
-        ArrayList<ArrayList> pay_sumList4 = impExpService.selectPaybackinfos();
+        ArrayList<ArrayList> pay_sumList4 = null;
+        try {
+            pay_sumList4 = impExpService.selectPaybackinfos();
+        } catch (Exception e) {
+            logger.error("数据库查询导出记录错误:" + e.getMessage());
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
         ArrayList resultList = new ArrayList();
         for (int k = 0; k < pay_sumList4.size(); k++) {
             String carderStr1 = "";
@@ -70,6 +78,7 @@ public class ExportHkmx implements EXPBankFile{
             System.out.println("formatted hkje:" + pay_sumList23.get(4));
             //将每行记录按指定格式长度补空格
             carderStr1 = weaveResult(pay_sumList23, cardStrArrlen);
+            logger.info("记录:" + carderStr1);
             resultList.add(carderStr1);
         }
         logger.info("导出批量还款记录条数:" + String.valueOf(resultList.size()));
@@ -102,8 +111,10 @@ public class ExportHkmx implements EXPBankFile{
 
             writeFile(file.getAbsolutePath(), message);
         } catch (Exception e) {
+            logger.info("生成文件错误:" + e.getMessage());
             e.printStackTrace();
         }
+        logger.info("成功生成文件.");
         return fileName;
     }
 

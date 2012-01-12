@@ -77,7 +77,7 @@
     <!--定义触发时间-->
     <bean id="doTimeForIMP" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="autoIMPBankFileJob"/>
-        <property name="cronExpression" value="0 48 15 * * ?"/>
+        <property name="cronExpression" value="0 40 14 * * ?"/>
     </bean>
 
     <!--2 自动导出还款文件-->
@@ -92,7 +92,7 @@
     </bean>
     <bean id="doTimeForEXP" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="autoEXPBankFileJob"/>
-        <property name="cronExpression" value="0 15 16 * * ?"/>
+        <property name="cronExpression" value="0 45 14 * * ?"/>
     </bean>
 
     <!--3 自动发送卡\消费信息至财政-->
@@ -107,7 +107,7 @@
     </bean>
     <bean id="doTimeForSendToFinorg" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="autoSendToFinorgJob"/>
-        <property name="cronExpression" value="0 40 17 * * ?"/>
+        <property name="cronExpression" value="0 08 14 * * ?"/>
     </bean>
 
     <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->

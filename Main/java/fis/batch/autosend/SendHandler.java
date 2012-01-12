@@ -48,7 +48,7 @@ public class SendHandler {
         if (rtnmsg1.equals(RtnTagKey.RESULT_SUCCESS)) {
             logger.info("发送成功");
         } else {
-            logger.error("发送消费信息返回失败信息:" + rtnmsg);
+            logger.error("发送消费信息返回失败信息:" + rtnmsg1);
         }
     }
 }

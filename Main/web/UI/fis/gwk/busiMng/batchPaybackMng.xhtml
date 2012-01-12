@@ -89,7 +89,7 @@
                         <p:column headerText="支付凭证" style="text-align:center">
                             <h:outputText value="#{record.voucherid}"></h:outputText>
                         </p:column>
-                        <p:column headerText="卡号" style="text-align:center">
+                        <p:column headerText="卡号(单击可修改)" style="text-align:center">
                             <p:inplace cancelLabel="true" style="background-color:#dcdcdc;">
                                 <h:inputText value="#{record.account}" id="coltxtacct">
                                     <p:ajax event="blur" listener="#{paybackBatchAction.cardisExist}" update="msgs">

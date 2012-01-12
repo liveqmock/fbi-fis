@@ -2,6 +2,8 @@ package fis.service.gwk;
 
 import fis.common.gwk.constant.ConfirmPayFlg;
 import fis.common.gwk.constant.PayStatus;
+import fis.repository.fs.dao.SysJoblogMapper;
+import fis.repository.fs.model.SysJoblog;
 import fis.repository.gwk.dao.GwkCardbaseinfoMapper;
 import fis.repository.gwk.dao.GwkPaybackinfoMapper;
 import fis.repository.gwk.model.GwkCardbaseinfo;
@@ -34,6 +36,8 @@ public class PaybackService {
     private GwkPaybackinfoMapper gwkPaybackinfoMapper;
     @Resource
     private GwkCardbaseinfoMapper gwkCardbaseinfoMapper;
+    @Resource
+    private SysJoblogMapper sysJoblogMapper;
 
     //获取数据
     public List<GwkPaybackinfo> getPaybackinfoByVch(String bofcode, String vchid) throws Exception {
@@ -74,6 +78,15 @@ public class PaybackService {
         GwkPaybackinfo record = new GwkPaybackinfo();
         record.setConfirmpayflag(ConfirmPayFlg.CONFIRMPAY_VALID.getCode());
         gwkPaybackinfoMapper.updateByExampleSelective(record,example);
+        //日志表插入
+        SysJoblog sysJoblog = new SysJoblog();
+        sysJoblog.setTablename("gwk_paybackinfo");
+        sysJoblog.setRowpkid(vchid);
+        sysJoblog.setJobname("更新");
+        sysJoblog.setJobdesc("更新支付令确认支付标志vchid=" + vchid);
+        sysJoblog.setJobtime(new Date());
+        //插入日志
+        sysJoblogMapper.insertSelective(sysJoblog);
     }
 
     @Transactional
@@ -99,6 +112,16 @@ public class PaybackService {
             insertdata.setYear(strdt.substring(0,4));
             insertdata.setAreacode(bofcode);
             gwkPaybackinfoMapper.insertSelective(insertdata);
+            //日志表插入
+            SysJoblog sysJoblog = new SysJoblog();
+            sysJoblog.setTablename("gwk_paybackinfo");
+//            sysJoblog.setRowpkid(record.);
+            sysJoblog.setJobname("插入");
+            sysJoblog.setJobdesc("请求支付令");
+            sysJoblog.setJobtime(dt);
+            //插入日志
+            sysJoblogMapper.insertSelective(sysJoblog);
+
         }
     }
 
@@ -125,6 +148,7 @@ public class PaybackService {
     //批量更新还款数据(卡号 status=01初始 filesendflag=0初始;)
     @Transactional
     public void updatePaybackBatch(GwkPaybackinfo[] gwkPaybackinfos) {
+        Date dt = new Date();
         for (GwkPaybackinfo record:gwkPaybackinfos) {
             GwkPaybackinfo updata = new GwkPaybackinfo();
             updata.setAccount(record.getAccount());
@@ -134,6 +158,15 @@ public class PaybackService {
             example.clear();
             example.createCriteria().andPkidEqualTo(record.getPkid());
             gwkPaybackinfoMapper.updateByExampleSelective(updata,example);
+            //日志表插入
+            SysJoblog sysJoblog = new SysJoblog();
+            sysJoblog.setTablename("gwk_paybackinfo");
+            sysJoblog.setRowpkid(record.getPkid());
+            sysJoblog.setJobname("更新");
+            sysJoblog.setJobdesc("批量还款处理更新支付令");
+            sysJoblog.setJobtime(dt);
+            //插入日志
+            sysJoblogMapper.insertSelective(sysJoblog);
         }
     }
     

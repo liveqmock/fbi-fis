@@ -2,6 +2,8 @@ package fis.service.gwk;
 
 import fis.common.gwk.constant.RtnTagKey;
 import fis.common.gwk.constant.CardSendFlg;
+import fis.repository.fs.dao.SysJoblogMapper;
+import fis.repository.fs.model.SysJoblog;
 import fis.repository.gwk.dao.GwkCardbaseinfoMapper;
 import fis.repository.gwk.model.GwkCardbaseinfo;
 import fis.repository.gwk.model.GwkCardbaseinfoExample;
@@ -31,7 +33,8 @@ public class CardInfoService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Resource
     private GwkCardbaseinfoMapper gwkCardbaseinfoMapper;
-
+    @Resource
+    private SysJoblogMapper sysJoblogMapper;
 
     //待发送卡信息查询
     public List<GwkCardbaseinfo> selectCardinfos(String bofcode, String sendflag) {
@@ -84,6 +87,9 @@ public class CardInfoService {
         GwkCardbaseinfoExample example = new GwkCardbaseinfoExample();
         example.createCriteria().andAreacodeEqualTo(bofcode).andSentflagEqualTo(CardSendFlg.SEND_NO.getCode()).andStatusEqualTo("1");
         List<GwkCardbaseinfo> gwkCardbaseinfos = gwkCardbaseinfoMapper.selectByExample(example);
+        if (gwkCardbaseinfos.size() < 1) {
+            return RtnTagKey.RESULT_SUCCESS;
+        }
         List cardList = getSendList(gwkCardbaseinfos);
         List rtnlist = new ArrayList();
         try {
@@ -94,7 +100,8 @@ public class CardInfoService {
             String branchbankcode = PropertyManager.getProperty("gwk.branchbankcode");
             String finorgcode = PropertyManager.getProperty("gwk.finorgcode");
             BankService service = FaspServiceAdapter.getBankService();
-//            rtnlist = service.writeOfficeCard(applicationid, branchbankcode, nowYear, finorgcode, cardList);
+            //todo 测试
+            rtnlist = service.writeOfficeCard(applicationid, branchbankcode, nowYear, finorgcode, cardList);
         } catch (Exception ex) {
             throw new RuntimeException("发送卡信息失败:" + ex.getMessage());
         }
@@ -202,6 +209,7 @@ public class CardInfoService {
     @Transactional
     private void updateSendSuc(GwkCardbaseinfo[] gwkCardbaseinfos, String bofcode) {
         if (gwkCardbaseinfos.length > 0) {
+            Date dt = new Date();
             GwkCardbaseinfo updata = new GwkCardbaseinfo();
             updata.setSentflag(CardSendFlg.SEND_YES.getCode());
             updata.setOperdate(new Date());
@@ -211,6 +219,15 @@ public class CardInfoService {
                 example.createCriteria().andAccountEqualTo(record.getAccount()).andIdnumberEqualTo(record.getIdnumber())
                         .andAreacodeEqualTo(bofcode);
                 gwkCardbaseinfoMapper.updateByExampleSelective(updata, example);
+                //日志表插入
+                SysJoblog sysJoblog = new SysJoblog();
+                sysJoblog.setTablename("gwk_cardbaseinfo");
+                sysJoblog.setRowpkid(record.getPkid());
+                sysJoblog.setJobname("更新");
+                sysJoblog.setJobdesc("发送后更新:发送状态=" + updata.getSentflag());
+                sysJoblog.setJobtime(dt);
+                //插入日志
+                sysJoblogMapper.insert(sysJoblog);
             }
         }
     }
@@ -218,6 +235,7 @@ public class CardInfoService {
     @Transactional
     private void updateSendSuc(List<GwkCardbaseinfo> gwkCardbaseinfos, String bofcode) {
         if (gwkCardbaseinfos.size() > 0) {
+            Date dt = new Date();
             GwkCardbaseinfo updata = new GwkCardbaseinfo();
             updata.setSentflag(CardSendFlg.SEND_YES.getCode());
             updata.setOperdate(new Date());
@@ -227,21 +245,40 @@ public class CardInfoService {
                 example.createCriteria().andAccountEqualTo(record.getAccount()).andIdnumberEqualTo(record.getIdnumber())
                         .andAreacodeEqualTo(bofcode);
                 gwkCardbaseinfoMapper.updateByExampleSelective(updata, example);
+                //日志表插入
+                SysJoblog sysJoblog = new SysJoblog();
+                sysJoblog.setTablename("gwk_cardbaseinfo");
+                sysJoblog.setRowpkid(record.getPkid());
+                sysJoblog.setJobname("更新");
+                sysJoblog.setJobdesc("发送后更新:发送状态=" + updata.getSentflag());
+                sysJoblog.setJobtime(dt);
+                //插入日志
+                sysJoblogMapper.insert(sysJoblog);
             }
         }
     }
 
     @Transactional
     private void updateSameData(List<Map> rtnlist, String bofcode) {
+        Date dt = new Date();
         GwkCardbaseinfo updata = new GwkCardbaseinfo();
         updata.setSentflag(CardSendFlg.SEND_YES.getCode());
-        updata.setOperdate(new Date());
+        updata.setOperdate(dt);
         for (Map record : rtnlist) {
             GwkCardbaseinfoExample example = new GwkCardbaseinfoExample();
             example.clear();
             example.createCriteria().andAccountEqualTo(record.get(RtnTagKey.SAMEACCOUNT).toString())
                     .andIdnumberEqualTo(record.get(RtnTagKey.SAMEIDNUM).toString()).andAreacodeEqualTo(bofcode);
             gwkCardbaseinfoMapper.updateByExampleSelective(updata, example);
+            //日志表插入
+            SysJoblog sysJoblog = new SysJoblog();
+            sysJoblog.setTablename("gwk_cardbaseinfo");
+            sysJoblog.setRowpkid(record.get(RtnTagKey.SAMEACCOUNT).toString());
+            sysJoblog.setJobname("更新重复发送");
+            sysJoblog.setJobdesc("发送后更新:发送状态=" + updata.getSentflag());
+            sysJoblog.setJobtime(dt);
+            //插入日志
+            sysJoblogMapper.insert(sysJoblog);
         }
     }
 

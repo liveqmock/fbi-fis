@@ -14,6 +14,7 @@ import org.apache.ecs.html.Big;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pub.platform.advance.utils.PropertyManager;
 import pub.platform.security.OperatorManager;
 import skyline.service.SystemService;
 
@@ -53,7 +54,7 @@ public class ImpExpService {
     /**
      * 查询还款数据 status=01初始;filesendflag=0初始;confirmpayflag=1确认还款
      */
-    public ArrayList<ArrayList> selectPaybackinfos() {
+    public ArrayList<ArrayList> selectPaybackinfos() throws Exception {
         Date dt = new Date();
         ArrayList<ArrayList> dataList = new ArrayList<ArrayList>();
         List<GwkPaybackinfo> paybackinfoList = gwkPaybackinfoMapper.selectPaybackinfo4File();
@@ -99,7 +100,7 @@ public class ImpExpService {
      * 扣款结果导入
      */
     @Transactional
-    public int importPaybackresult(ArrayList<ArrayList> impVar, String filename) {
+    public int importPaybackresult(ArrayList<ArrayList> impVar, String filename) throws Exception {
         int count = 0;
         if (impVar != null && impVar.size() > 0) {
             Date dt = new Date();
@@ -128,7 +129,7 @@ public class ImpExpService {
                 gwkPaybackresult.setResponsecode(record.get(10).toString());   //处理结果状态
                 gwkPaybackresult.setExpand(record.get(11).toString());
                 gwkPaybackresult.setFilename(filename);
-                gwkPaybackresult.setAreacode("266001");    //市南区
+                gwkPaybackresult.setAreacode(PropertyManager.getProperty("gwk.areacode"));    //市南区
                 gwkPaybackresultMapper.insertSelective(gwkPaybackresult);
                 //更新还款状态 还款日期
                 GwkPaybackinfo gwkPaybackinfo = new GwkPaybackinfo();
@@ -164,7 +165,7 @@ public class ImpExpService {
      * 消费信息导入
      */
     @Transactional
-    public int importConsumeinfo(ArrayList<ArrayList> impVar, String filename) throws ParseException {
+    public int importConsumeinfo(ArrayList<ArrayList> impVar, String filename) throws Exception {
         int count = 0;
         if (impVar != null && impVar.size() > 0) {
             SimpleDateFormat sdf6 = new SimpleDateFormat("yyyyMM");
@@ -185,7 +186,8 @@ public class ImpExpService {
                 gwkConsumeinfo.setTransmitdeptcode(record.get(8).toString());
                 gwkConsumeinfo.setReceivedeptcode(record.get(9).toString());
                 gwkConsumeinfo.setLsh(record.get(10).toString());
-                gwkConsumeinfo.setAccount(record.get(11).toString());
+                gwkConsumeinfo.setAccount(record.get(11).toString().substring(2));      //删除前两位
+                gwkConsumeinfo.setCardname(queryCardname(record.get(11).toString().substring(2)));//插入卡人
                 //金额 分转换成元为单位
                 double money = Double.parseDouble(record.get(12).toString() + record.get(13).toString()) / 100;
                 BigDecimal busimoney = BigDecimal.valueOf(Double.parseDouble(df.format(money)));
@@ -205,7 +207,7 @@ public class ImpExpService {
                 gwkConsumeinfo.setBranchcode(record.get(26).toString());
                 gwkConsumeinfo.setOperdate(dt);
                 gwkConsumeinfo.setFilename(filename);
-                gwkConsumeinfo.setAreacode("266001");              //市南
+                gwkConsumeinfo.setAreacode(PropertyManager.getProperty("gwk.areacode"));              //市南
                 //设置最迟还款日期 busidate的下月20日
                 Calendar c = Calendar.getInstance();
                 c.clear();
@@ -229,11 +231,24 @@ public class ImpExpService {
         return count;
     }
 
+    //根据卡号查找持卡人 导入消费信息时用
+    private String queryCardname(String account) {
+        GwkCardbaseinfoExample example = new GwkCardbaseinfoExample();
+        example.clear();
+        example.createCriteria().andAccountEqualTo(account);
+        List<GwkCardbaseinfo> gwkCardbaseinfoList = gwkCardbaseinfoMapper.selectByExample(example);
+        if (gwkCardbaseinfoList.size() < 1) {
+            return "";
+        } else {
+            return gwkCardbaseinfoList.get(0).getCardname();
+        }
+    }
+
     /**
      * 开卡信息导入
      */
     @Transactional
-    public int importCardOpen(ArrayList<ArrayList> impVar) {
+    public int importCardOpen(ArrayList<ArrayList> impVar) throws Exception {
         int count = 0;
         if (impVar != null && impVar.size() > 0) {
             Date dt = new Date();
@@ -261,7 +276,7 @@ public class ImpExpService {
                 gwkCardbaseinfo.setBranchbankcode(record.get(13).toString());
                 gwkCardbaseinfo.setAction("0");                 //新增
                 gwkCardbaseinfo.setOperdate(dt);
-                gwkCardbaseinfo.setAreacode("266001");          //浦发市南
+                gwkCardbaseinfo.setAreacode(PropertyManager.getProperty("gwk.areacode"));          //浦发市南
                 gwkCardbaseinfo.setBank(Config.getString("CARDBANK"));
                 gwkCardbaseinfo.setGatheringbankacctname(Config.getString("GATHERINGBANKACCTNAME"));
                 gwkCardbaseinfo.setGatheringbankacctcode(Config.getString("GATHERINGBANKACCTCODE"));
@@ -307,7 +322,7 @@ public class ImpExpService {
      * 换卡信息更新响应卡号
      */
     @Transactional
-    public int importCardRep(ArrayList<ArrayList> impVar) {
+    public int importCardRep(ArrayList<ArrayList> impVar) throws Exception {
         int count = 0;
         if (impVar != null && impVar.size() > 0) {
             Date dt = new Date();

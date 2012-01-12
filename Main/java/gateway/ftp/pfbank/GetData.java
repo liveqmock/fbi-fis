@@ -40,8 +40,8 @@ public class GetData {
             while (rline != null) {
                 ArrayList dirList = new ArrayList();
                 //if(rline.getBytes().length<25){
-
-                System.out.println("文件标记记录数 " + rline + "  读到记录数：" + t);
+                logger.info("文件标记记录数 " + rline + "  读到记录数：" + t);
+//                System.out.println("文件标记记录数 " + rline + "  读到记录数：" + t);
                 //如果文件标记记录数等于读到记录数，则继续，否则直接返回空List
 //	        		if(Integer.valueOf(rline)==t){
 //	        			return totalList;        			
@@ -59,7 +59,7 @@ public class GetData {
             }
         } catch (Exception ex) {
 //			/tranlog.println(ex, ex.getMessage());
-            logger.error(ex);
+            logger.error("文件转换错误:" + ex.getMessage());
         }
         return totalList;
     }

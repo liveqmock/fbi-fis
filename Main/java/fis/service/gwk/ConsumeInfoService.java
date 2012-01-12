@@ -2,6 +2,8 @@ package fis.service.gwk;
 
 import fis.common.gwk.constant.RtnTagKey;
 import fis.common.gwk.constant.ConsumeInfoSts;
+import fis.repository.fs.dao.SysJoblogMapper;
+import fis.repository.fs.model.SysJoblog;
 import fis.repository.gwk.dao.GwkConsumeinfoMapper;
 import fis.repository.gwk.model.GwkConsumeinfo;
 import fis.repository.gwk.model.GwkConsumeinfoExample;
@@ -31,6 +33,8 @@ public class ConsumeInfoService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Resource
     private GwkConsumeinfoMapper gwkConsumeinfoMapper;
+    @Resource
+    private SysJoblogMapper sysJoblogMapper;
 
     //获取待发消费信息
     public List<GwkConsumeinfo> selectConsumeSendNo(String bofcode) {
@@ -86,6 +90,9 @@ public class ConsumeInfoService {
         GwkConsumeinfoExample example = new GwkConsumeinfoExample();
         example.createCriteria().andAreacodeEqualTo(bofcode).andStatusNotEqualTo(status);
         List<GwkConsumeinfo> gwkConsumeinfos = gwkConsumeinfoMapper.selectByExample(example);
+        if (gwkConsumeinfos.size() < 1) {
+            return RtnTagKey.RESULT_SUCCESS;
+        }
         List consumeList = getSendList(gwkConsumeinfos);       //发送数据
         List rtnlist = new ArrayList();
         try {
@@ -97,7 +104,8 @@ public class ConsumeInfoService {
             String branchbankcode = PropertyManager.getProperty("gwk.sub_branchbankcode");
             String finorgcode = PropertyManager.getProperty("gwk.finorgcode");
             BankService service = FaspServiceAdapter.getBankService();
-//            rtnlist = service.writeConsumeInfo(applicationid, branchbankcode, nowYear, finorgcode, consumeList);
+            // 测试
+            rtnlist = service.writeConsumeInfo(applicationid, branchbankcode, nowYear, finorgcode, consumeList);
         } catch (Exception ex) {
             throw new RuntimeException("发送消费信息失败:" + ex.getMessage());
         }
@@ -183,6 +191,7 @@ public class ConsumeInfoService {
     @Transactional
     private void updateSendSuc(GwkConsumeinfo[] gwkConsumeinfos, String bofcode) {
         if (gwkConsumeinfos.length > 0) {
+            Date dt = new Date();
             GwkConsumeinfo updata = new GwkConsumeinfo();
             updata.setStatus(ConsumeInfoSts.SEND_SUC.getCode());
             updata.setOperdate(new Date());
@@ -191,6 +200,15 @@ public class ConsumeInfoService {
                 example.clear();
                 example.createCriteria().andAreacodeEqualTo(bofcode).andAccountEqualTo(record.getAccount()).andLshEqualTo(record.getLsh());
                 gwkConsumeinfoMapper.updateByExampleSelective(updata, example);
+                //日志表插入
+                SysJoblog sysJoblog = new SysJoblog();
+                sysJoblog.setTablename("gwk_consumeinfo");
+                sysJoblog.setRowpkid(record.getPkid());
+                sysJoblog.setJobname("更新");
+                sysJoblog.setJobdesc("发送后更新:发送状态=" + updata.getStatus());
+                sysJoblog.setJobtime(dt);
+                //插入日志
+                sysJoblogMapper.insert(sysJoblog);
             }
         }
     }
@@ -198,6 +216,7 @@ public class ConsumeInfoService {
     @Transactional
     private void updateSendSuc(List<GwkConsumeinfo> gwkConsumeinfos, String bofcode) {
         if (gwkConsumeinfos.size() > 0) {
+            Date dt = new Date();
             GwkConsumeinfo updata = new GwkConsumeinfo();
             updata.setStatus(ConsumeInfoSts.SEND_SUC.getCode());
             updata.setOperdate(new Date());
@@ -206,20 +225,39 @@ public class ConsumeInfoService {
                 example.clear();
                 example.createCriteria().andAreacodeEqualTo(bofcode).andAccountEqualTo(record.getAccount()).andLshEqualTo(record.getLsh());
                 gwkConsumeinfoMapper.updateByExampleSelective(updata, example);
+                //日志表插入
+                SysJoblog sysJoblog = new SysJoblog();
+                sysJoblog.setTablename("gwk_consumeinfo");
+                sysJoblog.setRowpkid(record.getPkid());
+                sysJoblog.setJobname("更新");
+                sysJoblog.setJobdesc("发送后更新:发送状态=" + updata.getStatus());
+                sysJoblog.setJobtime(dt);
+                //插入日志
+                sysJoblogMapper.insert(sysJoblog);
             }
         }
     }
 
     @Transactional
     private void updateSameData(List<Map> rtnlist, String bofcode) {
+        Date dt = new Date();
         GwkConsumeinfo updata = new GwkConsumeinfo();
         updata.setStatus(ConsumeInfoSts.SEND_SUC.getCode());
-        updata.setOperdate(new Date());
+        updata.setOperdate(dt);
         for (Map record : rtnlist) {
             GwkConsumeinfoExample example = new GwkConsumeinfoExample();
             example.clear();
             example.createCriteria().andAreacodeEqualTo(bofcode).andAccountEqualTo(record.get(RtnTagKey.SAMEACCOUNT).toString()).andLshEqualTo(record.get(RtnTagKey.SAMEID).toString());
             gwkConsumeinfoMapper.updateByExampleSelective(updata, example);
+            //日志表插入
+            SysJoblog sysJoblog = new SysJoblog();
+            sysJoblog.setTablename("gwk_consumeinfo");
+            sysJoblog.setRowpkid(record.get(RtnTagKey.SAMEACCOUNT).toString());
+            sysJoblog.setJobname("更新重复发送");
+            sysJoblog.setJobdesc("发送后更新:发送状态=" + updata.getStatus());
+            sysJoblog.setJobtime(dt);
+            //插入日志
+            sysJoblogMapper.insert(sysJoblog);
         }
     }
 
