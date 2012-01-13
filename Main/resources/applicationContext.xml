@@ -122,4 +122,17 @@
 
     </bean>
 
+    <bean id="gwk266001elementService" class="org.springframework.remoting.caucho.BurlapProxyFactoryBean">
+        <property name="serviceUrl" value="${fbifis.endpoint.url.gwk.266001.elementservice}"/>
+        <property name="serviceInterface" value="gateway.txn.t266001.gwk.ElementService"/>
+    </bean>
+    <bean id="gwk266001bankService" class="org.springframework.remoting.caucho.BurlapProxyFactoryBean">
+        <property name="serviceUrl" value="${fbifis.endpoint.url.gwk.266001.bankservice}"/>
+        <property name="serviceInterface" value="gateway.txn.t266001.gwk.BankService"/>
+    </bean>
+    <bean id="gwk266001commonQueryService" class="org.springframework.remoting.caucho.BurlapProxyFactoryBean">
+        <property name="serviceUrl" value="${fbifis.endpoint.url.gwk.266001.commonqueryservice}"/>
+        <property name="serviceInterface" value="gateway.txn.t266001.gwk.CommonQueryService"/>
+    </bean>
+
 </beans>
