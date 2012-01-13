@@ -22,7 +22,9 @@ public class BeanCopy {
         Object[] objvals = new Object[fieldsName.length];
         int i = 0;
         for (String fdname : fieldsName) {
-            fdname = fdname.toUpperCase();
+            //自写接口 修改
+//            fdname = fdname.toUpperCase();
+            fdname = fdname.toLowerCase();
             objvals[i] = map.get(fdname);
             i++;
         }

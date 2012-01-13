@@ -4,8 +4,7 @@ import fis.common.BeanCopy;
 import fis.repository.gwk.dao.GwkBaseBdgagencyMapper;
 import fis.repository.gwk.model.GwkBaseBdgagency;
 import fis.repository.gwk.model.GwkBaseBdgagencyExample;
-import gov.mof.fasp.service.ElementService;
-import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
+import gateway.txn.GwkServiceFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pub.platform.advance.utils.PropertyManager;
@@ -29,6 +28,8 @@ public class GwkBaseInfoService {
     protected static String applicationid = PropertyManager.getProperty("fbifis.sys.bank.code");
     @Resource
     private GwkBaseBdgagencyMapper gwkBaseBdgagencyMapper;
+    @Resource
+    private GwkServiceFactory factory;
 
     /*本地查询信息*/
     public List<GwkBaseBdgagency> selectBdgagency(String bofcode) {
@@ -45,8 +46,10 @@ public class GwkBaseInfoService {
         int nowYear = Integer.parseInt(yearsdf.format(dt));
         List rtnlist = new ArrayList<Map>();
         try {
-            ElementService service = FaspServiceAdapter.getElementService();
-            rtnlist = service.queryAllElementCode(applicationid, "BDGAGENCY", nowYear);
+            // 自写接口
+            gateway.txn.t266001.gwk.ElementService service = factory.getElementServiceForArea(bofcode);
+//            ElementService service = FaspServiceAdapter.getElementService();
+            rtnlist = service.queryAllElementCode(applicationid,"BDGAGENCY",nowYear);
         } catch (Exception e) {
             rtnlist.size();
             throw new RuntimeException("返回数据异常:" + e.getMessage());
@@ -54,7 +57,7 @@ public class GwkBaseInfoService {
         int rtnlistCount = rtnlist.size() - 1;
         Map maplast = (Map) rtnlist.get(rtnlistCount);
         String version = "";
-        version = (String) maplast.get("version");
+        version = maplast.get("version").toString();
         //获取数据 先删除所有数据
         GwkBaseBdgagencyExample example = new GwkBaseBdgagencyExample();
         gwkBaseBdgagencyMapper.deleteByExample(example);

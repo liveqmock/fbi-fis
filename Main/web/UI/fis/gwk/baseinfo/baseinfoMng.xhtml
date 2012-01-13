@@ -16,6 +16,14 @@
                                 action="#{gwkBaseInfoAction.onBtnAcceptClick}" update="msgs,qrydata">
                     </p:menuitem>
                 </p:menubar>
+                <p:ajaxStatus style="height:18px;text-align:center">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
                 <p:dataTable id="qrydata" dynamic="true" value="#{gwkBaseInfoAction.gwkBaseBdgagencyList}" var="record"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              paginator="true" rows="15" paginatorPosition="bottom"

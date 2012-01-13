@@ -8,14 +8,17 @@ package fis.common.gwk.constant;
  * To change this template use File | Settings | File Templates.
  */
 public class RtnTagKey {
-    public static final String RESULT = "result";
-    public static final String MESSAGE = "message";
+    //自写接口 变大写
+    public static final String RESULT = "RESULT";
+    public static final String MESSAGE = "MESSAGE";
+
     public static final String SAMEIDNUM = "sameidnumber";
     public static final String SAMEID = "sameid";
     public static final String SAMEACCOUNT = "sameaccount";
-    public static final String RESULT_SUCCESS = "success";
-    public static final String RESULT_FAIL = "fail";
-    public static final String RESULT_SAME = "same";
+    //自写接口 变大写
+    public static final String RESULT_SUCCESS = "SUCCESS";
+    public static final String RESULT_FAIL = "FAIL";
+    public static final String RESULT_SAME = "SAME";
     public static final String EMPTY_STR = "";
     public static final String SEND_SUCCESS = "20";  // 发送成功
     public static final String SEND_FAIL = "12";  // 发送失败

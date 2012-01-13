@@ -7,6 +7,7 @@ import fis.repository.fs.model.SysJoblog;
 import fis.repository.gwk.dao.GwkConsumeinfoMapper;
 import fis.repository.gwk.model.GwkConsumeinfo;
 import fis.repository.gwk.model.GwkConsumeinfoExample;
+import gateway.txn.GwkServiceFactory;
 import gov.mof.fasp.service.BankService;
 import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
 import org.apache.commons.lang.StringUtils;
@@ -35,6 +36,8 @@ public class ConsumeInfoService {
     private GwkConsumeinfoMapper gwkConsumeinfoMapper;
     @Resource
     private SysJoblogMapper sysJoblogMapper;
+    @Resource
+    private GwkServiceFactory factory;
 
     //获取待发消费信息
     public List<GwkConsumeinfo> selectConsumeSendNo(String bofcode) {
@@ -56,7 +59,9 @@ public class ConsumeInfoService {
             String applicationid = PropertyManager.getProperty("fbifis.sys.bank.code");
             String branchbankcode = PropertyManager.getProperty("gwk.sub_branchbankcode");
             String finorgcode = PropertyManager.getProperty("gwk.finorgcode");
-            BankService service = FaspServiceAdapter.getBankService();
+            //自写接口
+            gateway.txn.t266001.gwk.BankService service = factory.getBankServiceForArea(bofcode);
+//            BankService service = FaspServiceAdapter.getBankService();
             rtnlist = service.writeConsumeInfo(applicationid, branchbankcode, nowYear, finorgcode, consumeList);
         } catch (Exception ex) {
             throw new RuntimeException("发送消费信息失败:" + ex);
@@ -103,8 +108,9 @@ public class ConsumeInfoService {
             String applicationid = PropertyManager.getProperty("fbifis.sys.bank.code");
             String branchbankcode = PropertyManager.getProperty("gwk.sub_branchbankcode");
             String finorgcode = PropertyManager.getProperty("gwk.finorgcode");
-            BankService service = FaspServiceAdapter.getBankService();
-            // 测试
+            //自写接口
+            gateway.txn.t266001.gwk.BankService service = factory.getBankServiceForArea(bofcode);
+//            BankService service = FaspServiceAdapter.getBankService();
             rtnlist = service.writeConsumeInfo(applicationid, branchbankcode, nowYear, finorgcode, consumeList);
         } catch (Exception ex) {
             throw new RuntimeException("发送消费信息失败:" + ex);

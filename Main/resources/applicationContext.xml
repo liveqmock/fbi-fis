@@ -77,7 +77,7 @@
     <!--定义触发时间-->
     <bean id="doTimeForIMP" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="autoIMPBankFileJob"/>
-        <property name="cronExpression" value="0 40 14 * * ?"/>
+        <property name="cronExpression" value="0 30 9 * * ?"/>
     </bean>
 
     <!--2 自动导出还款文件-->
@@ -92,7 +92,7 @@
     </bean>
     <bean id="doTimeForEXP" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="autoEXPBankFileJob"/>
-        <property name="cronExpression" value="0 45 14 * * ?"/>
+        <property name="cronExpression" value="0 30 16 * * ?"/>
     </bean>
 
     <!--3 自动发送卡\消费信息至财政-->
@@ -105,9 +105,10 @@
             <value>execute</value>
         </property>
     </bean>
+
     <bean id="doTimeForSendToFinorg" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="autoSendToFinorgJob"/>
-        <property name="cronExpression" value="0 08 14 * * ?"/>
+        <property name="cronExpression" value="0 0/5 10 * * ?"/>
     </bean>
 
     <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
@@ -135,4 +136,8 @@
         <property name="serviceInterface" value="gateway.txn.t266001.gwk.CommonQueryService"/>
     </bean>
 
+    <bean id="gwk266061elementService" class="org.springframework.remoting.caucho.BurlapProxyFactoryBean">
+        <property name="serviceUrl" value="${fbifis.endpoint.url.gwk.266061.elementservice}"/>
+        <property name="serviceInterface" value="gateway.txn.t266001.gwk.ElementService"/>
+    </bean>
 </beans>

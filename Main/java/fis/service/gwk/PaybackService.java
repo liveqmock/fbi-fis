@@ -10,6 +10,7 @@ import fis.repository.gwk.model.GwkCardbaseinfo;
 import fis.repository.gwk.model.GwkCardbaseinfoExample;
 import fis.repository.gwk.model.GwkPaybackinfo;
 import fis.repository.gwk.model.GwkPaybackinfoExample;
+import gateway.txn.GwkServiceFactory;
 import gov.mof.fasp.service.CommonQueryService;
 import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
 import org.apache.commons.lang.StringUtils;
@@ -38,6 +39,8 @@ public class PaybackService {
     private GwkCardbaseinfoMapper gwkCardbaseinfoMapper;
     @Resource
     private SysJoblogMapper sysJoblogMapper;
+    @Resource
+    private GwkServiceFactory factory;
 
     //获取数据
     public List<GwkPaybackinfo> getPaybackinfoByVch(String bofcode, String vchid) throws Exception {
@@ -55,7 +58,9 @@ public class PaybackService {
                 Map m = new HashMap();
                 m.put("VOUCHERID", vchid);
                 //获取
-                CommonQueryService service = FaspServiceAdapter.getCommonQueryService();
+                //todo 自写接口测试
+                gateway.txn.t266001.gwk.CommonQueryService service = factory.getCommonQueryServiceForArea(bofcode);
+//                CommonQueryService service = FaspServiceAdapter.getCommonQueryService();
                 rtnlist = service.getQueryListBySql(applicationid, "queryConsumeInfo", m, nowYear);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
