@@ -58,13 +58,13 @@ public class PaybackService {
                 CommonQueryService service = FaspServiceAdapter.getCommonQueryService();
                 rtnlist = service.getQueryListBySql(applicationid, "queryConsumeInfo", m, nowYear);
             } catch (Exception ex) {
-                throw new RuntimeException(ex.getMessage());
+                throw new RuntimeException(ex);
             }
             try {
                 insertVchinfo(rtnlist,bofcode);
                 dataList = gwkPaybackinfoMapper.selectByExample(example);
             } catch (Exception ex) {
-                throw new RuntimeException("获取支付凭证信息成功,但插入本地数据库失败:" + ex.getMessage());
+                throw new RuntimeException("获取支付凭证信息成功,但插入本地数据库失败:" + ex);
             }
         }
         return dataList;

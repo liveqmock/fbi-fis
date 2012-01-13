@@ -59,7 +59,7 @@ public class ConsumeInfoService {
             BankService service = FaspServiceAdapter.getBankService();
             rtnlist = service.writeConsumeInfo(applicationid, branchbankcode, nowYear, finorgcode, consumeList);
         } catch (Exception ex) {
-            throw new RuntimeException("发送消费信息失败:" + ex.getMessage());
+            throw new RuntimeException("发送消费信息失败:" + ex);
         }
         //返回信息处理
         if (rtnlist != null && rtnlist.size() > 0) {
@@ -78,7 +78,7 @@ public class ConsumeInfoService {
                     return msg;
                 }
             } catch (Exception ex) {
-                throw new RuntimeException("消费信息发送成功后更新本地数据失败:" + ex.getMessage());
+                throw new RuntimeException("消费信息发送成功后更新本地数据失败:" + ex);
             }
         }
         return RtnTagKey.RESULT_SUCCESS.toString();
@@ -107,7 +107,7 @@ public class ConsumeInfoService {
             // 测试
             rtnlist = service.writeConsumeInfo(applicationid, branchbankcode, nowYear, finorgcode, consumeList);
         } catch (Exception ex) {
-            throw new RuntimeException("发送消费信息失败:" + ex.getMessage());
+            throw new RuntimeException("发送消费信息失败:" + ex);
         }
         //返回信息处理
         if (rtnlist != null && rtnlist.size() > 0) {
@@ -126,7 +126,7 @@ public class ConsumeInfoService {
                     return msg;
                 }
             } catch (Exception ex) {
-                throw new RuntimeException("消费信息发送成功后更新本地数据失败:" + ex.getMessage());
+                throw new RuntimeException("消费信息发送成功后更新本地数据失败:" + ex);
             }
         }
         return RtnTagKey.RESULT_SUCCESS.toString();

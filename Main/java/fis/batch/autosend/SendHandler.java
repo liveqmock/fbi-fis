@@ -6,6 +6,7 @@ import fis.service.gwk.CardInfoService;
 import fis.service.gwk.ConsumeInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pub.platform.advance.utils.PropertyManager;
 import skyline.common.utils.MessageUtil;
 
 import javax.annotation.Resource;
@@ -30,7 +31,7 @@ public class SendHandler {
         String rtnmsg = "";
         try {
             //发送卡信息
-            rtnmsg = cardInfoService.sendAllCardinfos("266001");
+            rtnmsg = cardInfoService.sendAllCardinfos(PropertyManager.getProperty("gwk.areacode"));
         } catch (Exception ex) {
             logger.error("发送卡信息失败:" + ex.getMessage());
         }
@@ -41,7 +42,7 @@ public class SendHandler {
         }
         String rtnmsg1 = "";
         try {
-            rtnmsg1 = consumeInfoService.sendAllConsumeinfos("266001");
+            rtnmsg1 = consumeInfoService.sendAllConsumeinfos(PropertyManager.getProperty("gwk.areacode"));
         } catch (Exception ex) {
             logger.error("发送消费信息失败:" + ex.getMessage());
         }

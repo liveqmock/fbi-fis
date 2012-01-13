@@ -57,7 +57,7 @@ public class CardInfoService {
             BankService service = FaspServiceAdapter.getBankService();
             rtnlist = service.writeOfficeCard(applicationid, branchbankcode, nowYear, finorgcode, cardList);
         } catch (Exception ex) {
-            throw new RuntimeException("发送卡信息失败:" + ex.getMessage());
+            throw new RuntimeException("发送卡信息失败:" + ex);
         }
         //返回信息处理
         if (rtnlist != null && rtnlist.size() > 0) {
@@ -76,7 +76,7 @@ public class CardInfoService {
                     return msg;
                 }
             } catch (Exception ex) {
-                throw new RuntimeException("卡信息发送成功后更新本地数据失败:" + ex.getMessage());
+                throw new RuntimeException("卡信息发送成功后更新本地数据失败:" + ex);
             }
         }
         return RtnTagKey.RESULT_SUCCESS.toString();
@@ -103,7 +103,7 @@ public class CardInfoService {
             //todo 测试
             rtnlist = service.writeOfficeCard(applicationid, branchbankcode, nowYear, finorgcode, cardList);
         } catch (Exception ex) {
-            throw new RuntimeException("发送卡信息失败:" + ex.getMessage());
+            throw new RuntimeException("发送卡信息失败:" + ex);
         }
         //返回信息处理
         if (rtnlist != null && rtnlist.size() > 0) {
@@ -122,7 +122,7 @@ public class CardInfoService {
                     return msg;
                 }
             } catch (Exception ex) {
-                throw new RuntimeException("卡信息发送成功后更新本地数据失败:" + ex.getMessage());
+                throw new RuntimeException("卡信息发送成功后更新本地数据失败:" + ex);
             }
         }
         return RtnTagKey.RESULT_SUCCESS.toString();
