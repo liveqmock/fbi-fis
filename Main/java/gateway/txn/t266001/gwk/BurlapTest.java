@@ -69,7 +69,7 @@ public class BurlapTest {
         ElementService service = (ElementService) beanFactory.getBean("elementService");
         System.out.println("================返回最新版本数据===============");
         HashMap versionMap = new HashMap();
-        // TODO 可先查询当前版本号
+        // 可先查询当前版本号
         int version = 1;
         versionMap.put("BDGAGENCY", version);
         List rtnlist = service.syncElementCode("BANK.CCB", 2010, versionMap);

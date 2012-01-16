@@ -58,7 +58,7 @@ public class PaybackService {
                 Map m = new HashMap();
                 m.put("VOUCHERID", vchid);
                 //获取
-                //todo 自写接口测试
+                //自写接口测试
                 gateway.txn.t266001.gwk.CommonQueryService service = factory.getCommonQueryServiceForArea(bofcode);
 //                CommonQueryService service = FaspServiceAdapter.getCommonQueryService();
                 rtnlist = service.getQueryListBySql(applicationid, "queryConsumeInfo", m, nowYear);
@@ -107,7 +107,9 @@ public class PaybackService {
             insertdata.setVoucherid(record.get("VOUCHERID").toString());
             insertdata.setAccount(record.get("ACCOUNT").toString());
             insertdata.setCardname(record.get("CARDNAME").toString());
-            Double dbAmt = Double.parseDouble(record.get("Amt").toString());
+            // 自写接口 变大写
+            Double dbAmt = Double.parseDouble(record.get("AMT").toString());
+//            Double dbAmt = Double.parseDouble(record.get("Amt").toString());
             BigDecimal amt = BigDecimal.valueOf(dbAmt);
             insertdata.setAmt(amt);
             insertdata.setQuerydate(strdt);
