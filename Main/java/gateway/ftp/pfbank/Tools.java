@@ -225,9 +225,9 @@ public class Tools {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, -1);
-        //todo 临时
-//        String text1 = sdf.format(c.getTime());
-        String text1 = "20120110";   //临时
+        // 临时
+        String text1 = sdf.format(c.getTime());
+//        String text1 = "20120110";   //临时
         curlist.add("0310-CDOPN-" + Config.getString("Bank_Code") + "-" + text1);//帐户
         curlist.add("0310-CDREP-" + Config.getString("Bank_Code") + "-" + text1);//换卡
         curlist.add("0310-PURCH-" + Config.getString("Bank_Code") + "-" + text1);//消费明细

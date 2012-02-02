@@ -36,7 +36,9 @@ public class ImportAction {
             impBankFileThread.impFileForsingle(filepath);
         } catch (Exception ex) {
             MessageUtil.addError("导入失败.");
+            return null;
         }
+        MessageUtil.addError("导入成功.");
         return null;
     }
 
