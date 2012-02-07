@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                padding-left: 80px;
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-input {
+                width: 120px;
+            }
+
+            .col-qry1 {
+                width: 40%;
+            }
+        </style>
+        <script type="text/javascript" src="#{request.contextPath}/UI/support/pub.js"/>
+        <script type="text/javascript">
+            $=jQuery;
+            function openDetl(obj) {
+                var guid = $(obj).parent().parent().parent().find('td').eq(0).children().html();
+                var sfeature = "dialogwidth:850px; dialogheight:550px;center:yes;help:yes;resizable:no;scroll:yes;status:no";
+                var arg = new Object();
+                arg.doType = "select";
+                arg.guid = guid;
+                var rtn = dialog("common/payVoucherDetl.xhtml?doType=select&amp;guid=" + guid, arg, sfeature);
+            }
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id == 'tabView1:editForm:printid') {
+                        document.getElementById("tabView1:editForm:btnAccept").click();
+                    }
+                }
+            }
+            $(document).ready(function() {
+                $('#tabView1\\:editForm\\:printid').focus(function() {
+                    $('#tabView1\\:editForm\\:printid').select();
+                });
+            });
+        </script>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px">
+            <p:tabView id="tabView1" style="font-weight:normal;font-style:normal" cache="false" dynamic="true">
+                <p:tab title="直接支付退款处理">
+                    <p:growl id="msgs" showDetail="false"/>
+                    <h:form id="editForm">
+                        <p:focus for="printid"/>
+                        <p:panel header="获取数据">
+                            <h:panelGrid width="100%" cellspacing="0" border="0" columns="2" columnClasses="col-qry1">
+                                <h:panelGroup>
+                                    <h:panelGrid id="qryGrid" cellspacing="0" border="0" columns="3">
+                                        <h:outputLabel value="凭证编号:"/>
+                                        <h:inputText id="printid" autocomplete="off" required="true"
+                                                     requiredMessage="请输入凭证号"
+                                                     style="width:200px" value="#{payRefundAction.printid}"/>
+                                        <h:message for="printid" style="color:red;"/>
+                                    </h:panelGrid>
+                                </h:panelGroup>
+                                <h:panelGrid cellspacing="0" border="0" columns="1"
+                                             width="100%">
+                                    <h:panelGroup>
+                                        <p:commandButton style="width:60px;" ajax="true"
+                                                         action="#{payRefundAction.onBtnAcceptClick}"
+                                                         id="btnAccept" update="tabView1:msgs,qryGrid,detailPanel1,operGrid"
+                                                         value="获 取">
+                                            <f:param name="paytype" value="1"/>
+                                        </p:commandButton>
+                                        <p:spacer width="10px"/>
+                                        <p:commandButton style="width:60px;" type="reset" value="重 置"></p:commandButton>
+                                    </h:panelGroup>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:fieldset legend="凭证信息">
+                            <ui:include src="common/payVoucherForm.xhtml">
+                                <ui:param name="backBean" value="#{payRefundAction}"/>
+                            </ui:include>
+                        </p:fieldset>
+                        <p:fieldset legend="操作">
+                            <h:panelGrid id="operGrid" columns="1" cellpadding="2" border="0" style="width:700px;text-align:center;">
+                                <h:panelGroup>
+                                    <p:spacer width="10px"/>
+                                    <p:commandButton id="btnRefund" ajax="true" value="退款" update="detailPanel1,qryGrid,tabView1:msgs,operGrid"
+                                                     action="#{payRefundAction.btnRefundClick}"
+                                                     style="width:90px">
+                                    </p:commandButton>
+                                </h:panelGroup>
+                            </h:panelGrid>
+                        </p:fieldset>
+                    </h:form>
+                </p:tab>
+                <p:tab title="本日退款记录清单">
+                    <div id="table">
+                        <h:form id="form">
+                            <p:dataTable id="pdt" dynamic="true"
+                                         value="#{payRefundAction.payPayvoucherList}" var="record"
+                                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         paginator="true" rows="15" paginatorPosition="bottom"
+                                         rowsPerPageTemplate="100,50,30,15,5"
+                                         emptyMessage="数据记录为空...">
+                                <p:column headerText="guid" style="display:none;">
+                                    <h:outputText value="#{record.guid}"/>
+                                </p:column>
+                                <ui:include src="common/payVoucherList.xhtml">
+                                    <ui:param name="backBean" value="#{payRefundAction}"/>
+                                </ui:include>
+                            </p:dataTable>
+                        </h:form>
+                    </div>
+                </p:tab>
+            </p:tabView>
+        </div>
+    </ui:define>
+
+</ui:composition>

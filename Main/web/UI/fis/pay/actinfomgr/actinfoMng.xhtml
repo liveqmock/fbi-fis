@@ -1,0 +1,201 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <script type="text/javascript" src="#{request.contextPath}/UI/support/pub.js"/>
+        <script type="text/javascript">
+            function actAdd() {
+                var sfeature = "dialogwidth:800px; dialogheight:320px;center:yes;help:yes;resizable:yes;scroll:yes;status:yes";
+                var arg = new Object();
+                arg.doType = "add";
+                var rtn = dialog("common/actinfoDetl.xhtml?doType=add", arg, sfeature);
+                if (rtn == "1") {
+                    document.getElementById("qryform:btnQuery").click();
+                }
+            }
+
+            function actSelect(obj) {
+                var pkid = obj.parentNode.parentNode.children[1].innerHTML;
+                var sfeature = "dialogwidth:800px; dialogheight:520px;center:yes;help:yes;resizable:no;scroll:yes;status:no";
+                var arg = new Object();
+                arg.doType = "select";
+                arg.pkid = pkid;
+                var rtn = dialog("common/actinfoDetl.xhtml?doType=select&amp;pkid="+pkid, arg, sfeature);
+            }
+
+            function actEdit(obj) {
+                var pkid = obj.parentNode.parentNode.children[1].innerHTML;
+                var sfeature = "dialogwidth:800px; dialogheight:520px;center:yes;help:yes;resizable:yes;scroll:yes;status:yes";
+                var arg = new Object();
+                arg.doType = "edit";
+                arg.pkid = pkid;
+                var rtn = dialog("common/actinfoDetl.xhtml?doType=edit&amp;pkid="+pkid, arg, sfeature);
+                if (rtn == "1") {
+                    document.getElementById("qryform:btnQuery").click();
+                }
+            }
+        </script>
+        <style type="text/css">
+            .col-label {
+                width: 70px;
+            }
+
+            .col-input {
+                width: 120px;
+            }
+
+            .col-input-200 {
+                width: 300px;
+            }
+
+
+        </style>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px">
+            <p:tabView style="font-weight:normal;font-style:normal">
+                <p:tab title="新增账户基础信息">
+                    <p:growl id="qrymsgs" showDetail="false"/>
+
+                    <div id="qrytable">
+                        <h:form id="qryform">
+                            <p:commandButton id="btnQuery" update="qrypdt" style="display:none" action="#{actinfoMngAction.init}"/>
+                            <p:menubar>
+                                <p:menuitem type="push" value="新增账户" icon="ui-icon ui-icon-gear"
+                                            update="qrymsgs, qrypdt" ajax="true" onclick="actAdd()"/>
+                                <p:menuitem type="push" value="批量删除账户" icon="ui-icon ui-icon-gear"
+                                            action="#{actinfoMngAction.onDeleteMulti}" update="qrymsgs, qrypdt"
+                                            ajax="false"/>
+                            </p:menubar>
+                            <p:ajaxStatus style="height:18px;text-align:center">
+                                <f:facet name="start">
+                                    <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                                </f:facet>
+                                <f:facet name="complete">
+                                    <h:outputText value=""/>
+                                </f:facet>
+                            </p:ajaxStatus>
+                            <p:dataTable id="qrypdt" dynamic="true"
+                                         value="#{actinfoMngAction.actinfoList}" var="record"
+                                         selection="#{actinfoMngAction.selectedRecords}"
+                                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         paginator="true" rows="15" paginatorPosition="bottom"
+                                         rowsPerPageTemplate="100,50,30,15,5"
+                                         emptyMessage="数据记录为空...">
+                                <p:column selectionMode="multiple"/>
+                                <p:column headerText="pkid" style="display:none">
+                                    <h:outputText value="#{record.pkid}"/>
+                                </p:column>
+                                <p:column style="text-align:center" sortBy="#{record.actname}" filterBy="#{record.actname}"
+                                          filterMatchMode="contains">
+                                    <f:facet name="header">
+                                        <h:outputText  value="账户名称"/>
+                                    </f:facet>
+                                    <h:outputText value="#{record.actname}"/>
+                                </p:column>
+                                <p:column style="text-align:center" sortBy="#{record.actno}" filterBy="#{record.actno}"
+                                          filterMatchMode="contains">
+                                    <f:facet name="header">
+                                        <h:outputText  value="账号"/>
+                                    </f:facet>
+                                    <h:outputText value="#{record.actno}"/>
+                                </p:column>
+                                <p:column style="text-align:center" sortBy="#{record.acttype}">
+                                    <f:facet name="header">
+                                        <h:outputText value="账户类型"/>
+                                    </f:facet>
+                                    <h:outputText value="#{actinfoMngAction.actType.aliasEnums[record.acttype].title}"/>
+                                </p:column>
+                                <p:column style="text-align:center">
+                                    <f:facet name="header">
+                                        <h:outputText value="备注"/>
+                                    </f:facet>
+                                    <h:outputText value="#{record.remark}"/>
+                                </p:column>
+                                <p:column headerText="创建人" style="text-align:center">
+                                    <h:outputText value="#{record.createdBy}"/>
+                                </p:column>
+                                <p:column headerText="创建时间" style="text-align:center">
+                                    <h:outputText value="#{record.createdDate}">
+                                        <f:convertDateTime pattern="yyyy-mm-dd"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="详细" style="width:50px;text-align:center">
+                                    <p:commandLink style="color:blue;" value="详细" onclick="actSelect(this)">
+                                    </p:commandLink>
+                                </p:column>
+                                <p:column headerText="修改" style="width:50px;text-align:center">
+                                    <p:commandLink style="color:blue;" value="修改" onclick="actEdit(this)">
+                                    </p:commandLink>
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                    </div>
+                </p:tab>
+                <p:tab title="已删除记录清单">
+                    <p:growl id="msgs" showDetail="false"/>
+
+                    <div id="table">
+                        <h:form id="form">
+                            <p:menubar>
+                                <p:menuitem type="push" value="导出记录" icon="ui-icon ui-icon-gear"
+                                            action="#{actinfoMngAction.onPrintDeletedRecord}" update="msgs, pdt"/>
+                            </p:menubar>
+                            <p:ajaxStatus style="height:18px;text-align:center">
+                                <f:facet name="start">
+                                    <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                                </f:facet>
+                                <f:facet name="complete">
+                                    <h:outputText value=""/>
+                                </f:facet>
+                            </p:ajaxStatus>
+                            <p:dataTable id="pdt" dynamic="true"
+                                         value="#{actinfoMngAction.deletedActinfoList}" var="record"
+                                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         paginator="true" rows="15" paginatorPosition="bottom"
+                                         rowsPerPageTemplate="100,50,30,15,5"
+                                         emptyMessage="数据记录为空...">
+                                <p:column headerText="账户名称" sortBy="#{record.actname}" filterBy="#{record.actname}"
+                                          filterMatchMode="contains">
+                                    <h:outputText value="#{record.actname}"/>
+                                </p:column>
+                                <p:column headerText="pkid" style="display:none">
+                                    <h:outputText value="#{record.pkid}"/>
+                                </p:column>
+                                <p:column headerText="账号" sortBy="#{record.actno}" filterBy="#{record.actno}"
+                                          filterMatchMode="contains">
+                                    <h:outputText value="#{record.actno}"/>
+                                </p:column>
+                                <p:column headerText="账户类型" sortBy="#{record.acttype}">
+                                    <h:outputText value="#{record.acttype}"/>
+                                </p:column>
+                                <p:column headerText="备注">
+                                    <h:outputText value="#{record.remark}"/>
+                                </p:column>
+                                <p:column headerText="创建人">
+                                    <h:outputText value="#{record.createdBy}"/>
+                                </p:column>
+                                <p:column headerText="创建时间">
+                                    <h:outputText value="#{record.createdDate}">
+                                        <f:convertDateTime pattern="yyyy-mm-dd"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="详细" style="width:50px;text-align:center">
+                                    <p:commandLink style="color:blue;" value="详细" onclick="actSelect(this)">
+                                    </p:commandLink>
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                    </div>
+                </p:tab>
+            </p:tabView>
+        </div>
+    </ui:define>
+
+</ui:composition>

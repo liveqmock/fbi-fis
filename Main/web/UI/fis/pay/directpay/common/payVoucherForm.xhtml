@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE  html  PUBLIC  "-//W3C//DTD  XHTML  1.0  Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<f:view contentType="text/html">
+    <head>
+        <title></title>
+    </head>
+    <body>
+    <ui:composition>
+        <h:panelGrid id="detailPanel1" columns="1">
+            <h:panelGrid columns="4" cellpadding="2"
+                         columnClasses="col-label,col-input,col-label2,col-input">
+                <h:outputLabel value="处理状态:"/>
+                <h:outputLabel value="#{backBean.processFlag.aliasEnums[backBean.payPayvoucher.processflag].title}"/>
+            </h:panelGrid>
+            <h:panelGrid columns="4" cellpadding="2"
+                         columnClasses="col-label,col-input,col-label2,col-input">
+                <h:outputLabel value="金额:"/>
+                    <h:inputText value="#{backBean.payPayvoucher.amt}">
+                        <f:convertNumber pattern="###,##0.00"/>
+                    </h:inputText>
+                <h:outputLabel value="收款人账号:"/>
+                    <h:inputText value="#{backBean.payPayvoucher.payeebankaccount}"/>
+                <h:outputLabel value="收款人全称:"/>
+                    <h:inputText value="#{backBean.payPayvoucher.payee}"/>
+                <h:outputLabel value="收款人开户银行:"/>
+                    <h:inputText value="#{backBean.payPayvoucher.payeebank}"/>
+            </h:panelGrid>
+            <h:panelGrid columns="4" cellpadding="2"
+                         columnClasses="col-label,col-input,col-label2,col-input">
+                <h:outputLabel value="凭证编号:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.printid}"/>
+                <h:outputLabel value="凭证类型:"/>
+                <h:outputLabel value="#{backBean.voucherType.aliasEnums[backBean.payPayvoucher.vouchertype].title}"/>
+                <h:outputLabel value="凭证日期:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.createdate}"/>
+                <h:outputLabel value="国库代码:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.clearbank}"/>
+                <h:outputLabel value="资金用途:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.remark}"/>
+            </h:panelGrid>
+            <h:panelGrid columns="4" style="margin-top: -5px;" cellpadding="2"
+                         columnClasses="col-label,col-input,col-label2,col-input">
+                <h:outputLabel value="付款人账号:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.paybankaccount}"/>
+                <h:outputLabel value="付款人全称:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.pay}"/>
+                <h:outputLabel value="付款人开户银行:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.paybank}"/>
+                <h:outputLabel value="付款方式:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.settlemode}"/>
+            </h:panelGrid>
+
+            <h:panelGrid columns="4" cellpadding="2" style="margin-top: -5px;"
+                         columnClasses="col-label,col-input,col-label2,col-input">
+                <h:outputLabel value="一级预算单位编码:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.department}"/>
+                <h:outputLabel value="一级预算单位名称:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.departmentname}"/>
+                <h:outputLabel value="基层预算单位编码"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.bdgagency}"/>
+                <h:outputLabel value="基层预算单位名称:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.bdgagencyname}"/>
+                <h:outputLabel value="资金性质编码:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.fundtype}"/>
+                <h:outputLabel value="资金性质名称:"/>
+                <h:outputLabel/>
+                <h:outputLabel value="归口处室编码:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.bdgmanagedivision}"/>
+                <h:outputLabel value="归口处室名称:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.bdgmanagedivname}"/>
+                <h:outputLabel value="支出功能分类编码:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.expfunc}"/>
+                <h:outputLabel value="支出功能分类名称:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.expfuncname}"/>
+                <h:outputLabel value="支出经济分类编码:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.expeco}"/>
+                <h:outputLabel value="支出经济分类名称:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.expeconame}"/>
+                <h:outputLabel value="支付方式编码:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.paytype}"/>
+                <h:outputLabel value="支付方式名称:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.paytypename}"/>
+                <h:outputLabel value="支付类型:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.paykind}"/>
+                <h:outputLabel value="支付类型名称:"/>
+                <h:outputLabel value="#{backBean.payPayvoucher.paykindname}"/>
+            </h:panelGrid>
+        </h:panelGrid>
+
+    </ui:composition>
+    </body>
+</f:view>
+</html>
