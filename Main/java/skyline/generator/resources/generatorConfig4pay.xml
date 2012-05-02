@@ -31,11 +31,7 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table schema="fis" tableName="pay_actinfo">
-            <property name="ignoreQualifiersAtRuntime" value="true" />
-            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <!--<table schema="fis" tableName="pay_basic_bdgagency">
+        <table schema="fis" tableName="pay_basic_bdgagency">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
@@ -95,10 +91,17 @@
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
         </table>
+
+        <table schema="fis" tableName="pay_actinfo">
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
+        </table>
         <table schema="fis" tableName="pay_payvoucherhis">
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="historyno" sqlStatement="select decode(max(historyno),null,1,max(historyno)+1) from pay_payvoucherhis t where t.printid=#{printid,jdbcType=VARCHAR}" identity="false"/>
-        </table>-->
+        </table>
+
+
     </context>
 
 </generatorConfiguration>
