@@ -64,7 +64,7 @@ public class PaybackAction {
             }
             setButtonDisabled(false);
         } catch (Exception ex) {
-            logger.error("获取支付凭证信息失败:凭证号=" + vchid + ";" + ex.getMessage());
+            logger.error("获取支付凭证信息失败:凭证号=" + vchid + ";" + ex.getMessage(), ex);
             String msg = ex.getMessage() == null ? "" : ex.getMessage().replaceAll("\n", "").replaceAll("\r", "");
             MessageUtil.addError("获取支付凭证信息失败:" + msg);
             return null;
