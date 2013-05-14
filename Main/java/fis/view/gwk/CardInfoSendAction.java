@@ -6,6 +6,7 @@ import fis.repository.gwk.model.GwkCardbaseinfo;
 import fis.service.gwk.CardInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pub.platform.advance.utils.PropertyManager;
 import skyline.common.utils.MessageUtil;
 
 import javax.annotation.PostConstruct;
@@ -34,16 +35,18 @@ public class CardInfoSendAction {
     private CardSendFlg cardSendFlg = CardSendFlg.SEND_NO;
     private int rcdcount = 0;
     private String parambofcode;
+    private String strFinanceName;
 
     @PostConstruct
     public void init() {
         try {
             Map parammap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
             parambofcode = parammap.get("bofcode").toString();
+            strFinanceName = PropertyManager.getProperty("gwk.finance.name." + parambofcode);
             gwkCardbaseinfoList = cardInfoService.selectCardinfos(parambofcode, CardSendFlg.SEND_NO.getCode());
             rcdcount = gwkCardbaseinfoList.size();
         } catch (Exception ex) {
-            logger.error("²éÑ¯Î´·¢ËÍ¿¨ÐÅÏ¢Ê§°Ü." + ex.getMessage());
+            logger.error("²éÑ¯"+strFinanceName+"Î´·¢ËÍ¿¨ÐÅÏ¢Ê§°Ü." + ex.getMessage());
             MessageUtil.addError("²éÑ¯Î´·¢ËÍ¿¨ÐÅÏ¢Ê§°Ü." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
         }
     }
@@ -59,7 +62,7 @@ public class CardInfoSendAction {
             //·¢ËÍ¿¨ÐÅÏ¢
             rtnmsg = cardInfoService.sendCardinfos(gwkCardbaseinfos, parambofcode);
         } catch (Exception ex) {
-            logger.error("·¢ËÍ¿¨ÐÅÏ¢Ê§°Ü:" + ex.getMessage());
+            logger.error("·¢ËÍ"+strFinanceName+"¿¨ÐÅÏ¢Ê§°Ü:" + ex.getMessage());
             String msg = ex.getMessage() == null ? "" : ex.getMessage().replaceAll("\n", "").replaceAll("\r", "");
             MessageUtil.addError("·¢ËÍ¿¨ÐÅÏ¢Ê§°Ü:" + msg);
             return null;
@@ -68,14 +71,14 @@ public class CardInfoSendAction {
             gwkCardbaseinfoList = cardInfoService.selectCardinfos(parambofcode, CardSendFlg.SEND_NO.getCode());
             rcdcount = gwkCardbaseinfoList.size();
         } catch (Exception ex) {
-            logger.error("²éÑ¯Î´·¢ËÍ¿¨ÐÅÏ¢Ê§°Ü." + ex.getMessage());
+            logger.error("²éÑ¯"+strFinanceName+"Î´·¢ËÍ¿¨ÐÅÏ¢Ê§°Ü." + ex.getMessage());
             MessageUtil.addError("²éÑ¯Î´·¢ËÍ¿¨ÐÅÏ¢Ê§°Ü." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }
         if (rtnmsg.equals(RtnTagKey.RESULT_SUCCESS)) {
             MessageUtil.addInfo("·¢ËÍ³É¹¦");
         } else {
-            logger.error("·¢ËÍ¿¨ÐÅÏ¢·µ»ØÊ§°ÜÐÅÏ¢:" + rtnmsg);
+            logger.error("·¢ËÍ"+strFinanceName+"¿¨ÐÅÏ¢·µ»ØÊ§°ÜÐÅÏ¢:" + rtnmsg);
             MessageUtil.addInfo("·¢ËÍ¿¨ÐÅÏ¢·µ»ØÊ§°ÜÐÅÏ¢:" + rtnmsg);
         }
         return null;

@@ -5,6 +5,7 @@ import fis.repository.gwk.model.GwkCardbaseinfo;
 import fis.service.gwk.CardInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pub.platform.advance.utils.PropertyManager;
 import skyline.common.utils.MessageUtil;
 
 import javax.annotation.PostConstruct;
@@ -33,15 +34,17 @@ public class CardInfoQryAction {
     private String bdgagency;
     private String acct;
     private String parambofcode;
+    private String strFinanceName;
 
     @PostConstruct
     public void init() {
         try {
             Map parammap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
             parambofcode = parammap.get("bofcode").toString();
+            strFinanceName = PropertyManager.getProperty("gwk.finance.name." + parambofcode);
             query(bdgagency, acct, parambofcode);
         } catch (Exception ex) {
-            logger.error("²éÑ¯¿¨ÐÅÏ¢Ê§°Ü." + ex.getMessage());
+            logger.error("²éÑ¯"+strFinanceName+"¿¨ÐÅÏ¢Ê§°Ü." + ex.getMessage());
             MessageUtil.addError("²éÑ¯¿¨ÐÅÏ¢Ê§°Ü." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
         }
     }
@@ -50,7 +53,7 @@ public class CardInfoQryAction {
         try {
             query(bdgagency, acct, parambofcode);
         } catch (Exception ex) {
-            logger.error("²éÑ¯¿¨ÐÅÏ¢Ê§°Ü." + ex.getMessage());
+            logger.error("²éÑ¯"+strFinanceName+"¿¨ÐÅÏ¢Ê§°Ü." + ex.getMessage());
             MessageUtil.addError("²éÑ¯¿¨ÐÅÏ¢Ê§°Ü." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
         }
         return null;

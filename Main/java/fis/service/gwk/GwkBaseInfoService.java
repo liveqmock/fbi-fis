@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @Service
 public class GwkBaseInfoService {
-    protected static String applicationid = PropertyManager.getProperty("fbifis.sys.bank.code");
+//    protected static String applicationid = PropertyManager.getProperty("fbifis.sys.bank.code");
     @Resource
     private GwkBaseBdgagencyMapper gwkBaseBdgagencyMapper;
     @Resource
@@ -46,10 +46,13 @@ public class GwkBaseInfoService {
         int nowYear = Integer.parseInt(yearsdf.format(dt));
         List rtnlist = new ArrayList<Map>();
         try {
+            //2012-12-06
+            String applicationid = PropertyManager.getProperty("gwk.application.id."+bofcode);
             // 自写接口
             gateway.txn.t266001.gwk.ElementService service = factory.getElementServiceForArea(bofcode);
 //            ElementService service = FaspServiceAdapter.getElementService();
             rtnlist = service.queryAllElementCode(applicationid,"BDGAGENCY",nowYear);
+            System.out.println(String.valueOf(rtnlist.size()));
         } catch (Exception e) {
             rtnlist.size();
             throw new RuntimeException("返回数据异常:" + e.getMessage());

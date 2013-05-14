@@ -6,6 +6,7 @@ import fis.repository.gwk.model.GwkPaybackinfo;
 import fis.service.gwk.PaybackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pub.platform.advance.utils.PropertyManager;
 import skyline.common.utils.MessageUtil;
 
 import javax.annotation.PostConstruct;
@@ -36,12 +37,14 @@ public class PaybackAction {
     private ConfirmPayFlg confirmPayFlg = ConfirmPayFlg.CONFIRMPAY_INIT;
     private String vchid;
     private String parambofcode;
+    private String strFinanceName;
 
     @PostConstruct
     public void init() {
         try {
             Map parammap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
             parambofcode = parammap.get("bofcode").toString();
+            strFinanceName = PropertyManager.getProperty("gwk.finance.name." + parambofcode);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -64,7 +67,7 @@ public class PaybackAction {
             }
             setButtonDisabled(false);
         } catch (Exception ex) {
-            logger.error("获取支付凭证信息失败:凭证号=" + vchid + ";" + ex.getMessage(), ex);
+            logger.error("获取"+strFinanceName+"支付凭证信息失败:凭证号=" + vchid + ";" + ex.getMessage());
             String msg = ex.getMessage() == null ? "" : ex.getMessage().replaceAll("\n", "").replaceAll("\r", "");
             MessageUtil.addError("获取支付凭证信息失败:" + msg);
             return null;
@@ -78,7 +81,7 @@ public class PaybackAction {
             paybackService.updatePaybackinfoByVch(parambofcode,vchid);
             setButtonDisabled(true);
         } catch (Exception ex) {
-            logger.error("更新确认收款失败:凭证号=" + vchid + ";" + ex.getMessage());
+            logger.error("更新"+strFinanceName+"确认收款失败:凭证号=" + vchid + ";" + ex.getMessage());
             String msg = ex.getMessage() == null ? "" : ex.getMessage().replaceAll("\n", "").replaceAll("\r", "");
             MessageUtil.addError("更新确认收款失败:" + msg);
             return null;
@@ -86,7 +89,7 @@ public class PaybackAction {
         try {
             gwkPaybackinfoList = paybackService.getPaybackinfoByVch(parambofcode,vchid);
         } catch (Exception ex) {
-            logger.error("确认成功后查询失败。");
+            logger.error(strFinanceName+"确认成功后查询失败。");
             return null;
         }
         MessageUtil.addInfo("收款确认成功。");

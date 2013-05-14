@@ -5,6 +5,7 @@ import fis.repository.gwk.model.GwkConsumeinfo;
 import fis.service.gwk.ConsumeInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pub.platform.advance.utils.PropertyManager;
 import skyline.common.utils.MessageUtil;
 import skyline.service.ToolsService;
 
@@ -40,16 +41,18 @@ public class ConsumeInfoQryAction {
     private String qryConsumeSts;
     private List<SelectItem> consumeStsList;
     private String parambofcode;
+    private String strFinanceName;
 
     @PostConstruct
     public void init() {
         try {
             Map parammap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
             parambofcode = parammap.get("bofcode").toString();
+            strFinanceName = PropertyManager.getProperty("gwk.finance.name." + parambofcode);
             query(qryConsumeSts, acct, busistartdate, busienddate, parambofcode);
             consumeStsList = toolsService.getEnuSelectItemList("COUSUMESTS",true,false);
         } catch (Exception ex) {
-            logger.error("查询消费信息失败." + ex.getMessage());
+            logger.error("查询"+strFinanceName+"消费信息失败." + ex.getMessage());
             MessageUtil.addError("查询消费信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
         }
     }
@@ -58,7 +61,7 @@ public class ConsumeInfoQryAction {
         try {
             query(qryConsumeSts, acct, busistartdate, busienddate, parambofcode);
         } catch (Exception ex) {
-            logger.error("查询消费信息失败." + ex.getMessage());
+            logger.error("查询"+strFinanceName+"消费信息失败." + ex.getMessage());
             MessageUtil.addError("查询消费信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
         }
         return null;

@@ -6,6 +6,7 @@ import fis.repository.gwk.model.GwkPaybackinfo;
 import fis.service.gwk.PaybackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pub.platform.advance.utils.PropertyManager;
 import skyline.common.utils.MessageUtil;
 import skyline.service.ToolsService;
 
@@ -13,9 +14,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import java.util.List;
 import java.util.Map;
@@ -44,16 +43,18 @@ public class PaybackQryAction {
     private String acct;
     private String payStscode;
     private String parambofcode;
+    private String strFinanceName;
 
     @PostConstruct
     public void init() {
         try {
             Map parammap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
             parambofcode = parammap.get("bofcode").toString();
+            strFinanceName = PropertyManager.getProperty("gwk.finance.name." + parambofcode);
             payStsList = toolsService.getEnuSelectItemList("PAYBACKSTS",true,false);
             query(vchid,acct,payStscode,parambofcode);
         } catch (Exception ex) {
-            logger.error("查询还款错误数据失败." + ex.getMessage());
+            logger.error("查询"+strFinanceName+"还款错误数据失败." + ex.getMessage());
             MessageUtil.addError("查询还款错误数据失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
         }
     }
@@ -63,7 +64,7 @@ public class PaybackQryAction {
         try{
             query(vchid,acct,payStscode,parambofcode);
         } catch (Exception ex) {
-            logger.error("查询还款错误数据失败." + ex.getMessage());
+            logger.error("查询"+strFinanceName+"还款错误数据失败." + ex.getMessage());
             MessageUtil.addError("查询还款错误数据失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }

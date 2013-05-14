@@ -97,6 +97,7 @@
     </bean>
 
     <!--3 自动发送卡\消费信息至财政-->
+    <!--
     <bean id="autoSendToFinorg" class="fis.batch.autosend.SendHandler"/>
     <bean id="autoSendToFinorgJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject">
@@ -111,8 +112,10 @@
         <property name="jobDetail" ref="autoSendToFinorgJob"/>
         <property name="cronExpression" value="0 0/5 10 * * ?"/>
     </bean>
+    -->
 
     <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
+    <!--
     <bean id="myscheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
@@ -123,7 +126,7 @@
         </property>
 
     </bean>
-
+    -->
     <bean id="gwk266001elementService" class="org.springframework.remoting.caucho.BurlapProxyFactoryBean">
         <property name="serviceUrl" value="${fbifis.endpoint.url.gwk.266001.elementservice}"/>
         <property name="serviceInterface" value="gateway.txn.t266001.gwk.ElementService"/>

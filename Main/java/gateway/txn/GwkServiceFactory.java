@@ -1,11 +1,13 @@
 package gateway.txn;
 
+import com.caucho.burlap.client.BurlapProxyFactory;
 import gateway.txn.t266001.gwk.BankService;
 import gateway.txn.t266001.gwk.CommonQueryService;
 import gateway.txn.t266001.gwk.ElementService;
 import org.springframework.stereotype.Component;
+import pub.platform.advance.utils.PropertyManager;
 
-import javax.annotation.Resource;
+import java.net.MalformedURLException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,6 +18,41 @@ import javax.annotation.Resource;
  */
 @Component
 public class GwkServiceFactory {
+    /*为方便以后添加其它财政局公务卡操作，特修改。2012-12-06  linyong*/
+    private static GwkServiceFactory instance = new GwkServiceFactory();
+    private static BurlapProxyFactory burlapProxyFactory = new BurlapProxyFactory();
+
+    public static GwkServiceFactory getInstance() {
+        if (instance == null) {
+            instance = new GwkServiceFactory();
+        }
+        if (burlapProxyFactory == null) {
+            burlapProxyFactory = new BurlapProxyFactory();
+        }
+        return instance;
+    }
+
+    private GwkServiceFactory() {
+    }
+
+    public ElementService getElementServiceForArea(String areaCode) throws MalformedURLException {
+        String url = PropertyManager.getProperty("fbifis.endpoint.url.gwk." + areaCode + ".elementservice");
+        ElementService elementService = (ElementService) burlapProxyFactory.create(ElementService.class, url);
+        return elementService;
+    }
+
+    public BankService getBankServiceForArea(String areaCode) throws MalformedURLException {
+        String url = PropertyManager.getProperty("fbifis.endpoint.url.gwk." + areaCode + ".bankservice");
+        BankService bankservice = (BankService) burlapProxyFactory.create(BankService.class, url);
+        return bankservice;
+    }
+
+    public CommonQueryService getCommonQueryServiceForArea(String areaCode) throws MalformedURLException {
+        String url = PropertyManager.getProperty("fbifis.endpoint.url.gwk." + areaCode + ".commonqueryservice");
+        CommonQueryService commonQueryService = (CommonQueryService) burlapProxyFactory.create(CommonQueryService.class, url);
+        return commonQueryService;
+    }
+    /*
     @Resource(name = "gwk266001elementService")
     private ElementService elementService266001;
     @Resource(name = "gwk266061elementService")
@@ -47,4 +84,6 @@ public class GwkServiceFactory {
         }
         throw new IllegalArgumentException("Invalid file type");
     }
+    */
+
 }

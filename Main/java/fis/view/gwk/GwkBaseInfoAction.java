@@ -1,23 +1,17 @@
 package fis.view.gwk;
 
-import fis.common.BeanCopy;
-import fis.repository.gwk.dao.GwkBaseBdgagencyMapper;
 import fis.repository.gwk.model.GwkBaseBdgagency;
-import fis.repository.gwk.model.GwkBaseBdgagencyExample;
 import fis.service.gwk.GwkBaseInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
+import pub.platform.advance.utils.PropertyManager;
 import skyline.common.utils.MessageUtil;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,14 +30,16 @@ public class GwkBaseInfoAction {
     private GwkBaseInfoService gwkBaseInfoService;
     private List<GwkBaseBdgagency> gwkBaseBdgagencyList;
     private String parambofcode;
+    private String strFinanceName;
     @PostConstruct
     public void init() {
         try{
             Map parammap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
             parambofcode = parammap.get("bofcode").toString();
+            strFinanceName = PropertyManager.getProperty("gwk.finance.name."+parambofcode);
             gwkBaseBdgagencyList = gwkBaseInfoService.selectBdgagency(parambofcode);
         } catch (Exception ex) {
-            logger.error("查询预算单位信息失败." + ex.getMessage());
+            logger.error("查询"+strFinanceName+"预算单位信息失败." + ex.getMessage());
             MessageUtil.addError("查询预算单位信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
         }
     }
@@ -52,7 +48,7 @@ public class GwkBaseInfoAction {
         try{
             gwkBaseInfoService.getAllInfoBdgagency(parambofcode);                   //接口获取
         } catch (Exception ex) {
-            logger.error("获取预算单位信息失败." + ex.getMessage());
+            logger.error("获取"+strFinanceName+"预算单位信息失败." + ex.getMessage());
             String msg = ex.getMessage() == null ? "" : ex.getMessage().replaceAll("\n", "").replaceAll("\r", "");
             MessageUtil.addError("获取预算单位信息失败." + msg);
             return null;
@@ -60,7 +56,7 @@ public class GwkBaseInfoAction {
         try {
             gwkBaseBdgagencyList = gwkBaseInfoService.selectBdgagency(parambofcode);//本地查询
         } catch (Exception ex) {
-            logger.error("查询预算单位信息失败." + ex.getMessage());
+            logger.error("查询"+strFinanceName+"预算单位信息失败." + ex.getMessage());
             MessageUtil.addError("查询预算单位信息失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }

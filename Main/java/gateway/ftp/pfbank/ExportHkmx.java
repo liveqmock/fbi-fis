@@ -11,7 +11,6 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -153,7 +152,7 @@ public class ExportHkmx implements EXPBankFile{
 
 
     public static void main(String[] args) {
-        ApplicationContext ctx = new FileSystemXmlApplicationContext("D:/svn-fbifis/src2/Main/resources/applicationContext.xml");
+        ApplicationContext ctx = new FileSystemXmlApplicationContext("D:\\WorkSpace\\fbi-fbifis\\fbifis\\Main\\resources\\applicationContext.xml");
         ExportHkmx exportHkmx = (ExportHkmx) ctx.getBean("exportHkmx");
         try {
             ArrayList sa = exportHkmx.getResults();

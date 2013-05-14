@@ -1,3 +1,96 @@
+<!DOCTYPE ui:composition [
+        <!ELEMENT ui:composition (ui:define)*>
+        <!ATTLIST ui:composition
+                xmlns CDATA #REQUIRED
+                xmlns:h CDATA #REQUIRED
+                xmlns:f CDATA #REQUIRED
+                xmlns:ui CDATA #REQUIRED
+                xmlns:p CDATA #REQUIRED
+                template CDATA #REQUIRED>
+        <!ELEMENT ui:define (script|style|div)*>
+        <!ATTLIST ui:define
+                name CDATA #REQUIRED>
+        <!ELEMENT script (#PCDATA)>
+        <!ATTLIST script
+                src CDATA #IMPLIED
+                type CDATA #REQUIRED>
+        <!ELEMENT style (#PCDATA)>
+        <!ATTLIST style
+                type CDATA #REQUIRED>
+        <!ELEMENT div (p:tabView|h:form)*>
+        <!ATTLIST div
+                id CDATA #IMPLIED
+                style CDATA #IMPLIED>
+        <!ELEMENT p:tabView (p:tab)*>
+        <!ATTLIST p:tabView
+                style CDATA #REQUIRED>
+        <!ELEMENT p:tab (p:growl|div)*>
+        <!ATTLIST p:tab
+                title CDATA #REQUIRED>
+        <!ELEMENT p:growl (#PCDATA)>
+        <!ATTLIST p:growl
+                id CDATA #REQUIRED
+                showDetail CDATA #REQUIRED>
+        <!ELEMENT h:form (p:commandButton|p:menubar|p:ajaxStatus|p:dataTable)*>
+        <!ATTLIST h:form
+                id CDATA #REQUIRED>
+        <!ELEMENT p:commandButton (#PCDATA)>
+        <!ATTLIST p:commandButton
+                id CDATA #REQUIRED
+                update CDATA #REQUIRED
+                style CDATA #REQUIRED
+                action CDATA #REQUIRED>
+        <!ELEMENT p:menubar (p:menuitem)*>
+        <!ELEMENT p:menuitem (#PCDATA)>
+        <!ATTLIST p:menuitem
+                action CDATA #IMPLIED
+                ajax CDATA #IMPLIED
+                icon CDATA #REQUIRED
+                onclick CDATA #IMPLIED
+                type CDATA #REQUIRED
+                update CDATA #REQUIRED
+                value CDATA #REQUIRED>
+        <!ELEMENT p:ajaxStatus (f:facet)*>
+        <!ATTLIST p:ajaxStatus
+                style CDATA #REQUIRED>
+        <!ELEMENT f:facet (h:graphicImage|h:outputText)*>
+        <!ATTLIST f:facet
+                name CDATA #REQUIRED>
+        <!ELEMENT h:graphicImage (#PCDATA)>
+        <!ATTLIST h:graphicImage
+                value CDATA #REQUIRED>
+        <!ELEMENT h:outputText (f:convertDateTime)*>
+        <!ATTLIST h:outputText
+                value CDATA #REQUIRED>
+        <!ELEMENT p:dataTable (p:column)*>
+        <!ATTLIST p:dataTable
+                dynamic CDATA #REQUIRED
+                emptyMessage CDATA #REQUIRED
+                id CDATA #REQUIRED
+                paginator CDATA #REQUIRED
+                paginatorPosition CDATA #REQUIRED
+                paginatorTemplate CDATA #REQUIRED
+                rows CDATA #REQUIRED
+                rowsPerPageTemplate CDATA #REQUIRED
+                selection CDATA #IMPLIED
+                value CDATA #REQUIRED
+                var CDATA #REQUIRED>
+        <!ELEMENT p:column (h:outputText|f:facet|p:commandLink)*>
+        <!ATTLIST p:column
+                filterBy CDATA #IMPLIED
+                filterMatchMode CDATA #IMPLIED
+                headerText CDATA #IMPLIED
+                sortBy CDATA #IMPLIED
+                style CDATA #IMPLIED>
+        <!ELEMENT f:convertDateTime (#PCDATA)>
+        <!ATTLIST f:convertDateTime
+                pattern CDATA #REQUIRED>
+        <!ELEMENT p:commandLink (#PCDATA)>
+        <!ATTLIST p:commandLink
+                onclick CDATA #REQUIRED
+                style CDATA #REQUIRED
+                value CDATA #REQUIRED>
+        ]>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
@@ -19,7 +112,7 @@
             }
 
             function actSelect(obj) {
-                var pkid = obj.parentNode.parentNode.children[1].innerHTML;
+                var pkid = obj.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].innerHTML;
                 var sfeature = "dialogwidth:800px; dialogheight:520px;center:yes;help:yes;resizable:no;scroll:yes;status:no";
                 var arg = new Object();
                 arg.doType = "select";
@@ -28,7 +121,7 @@
             }
 
             function actEdit(obj) {
-                var pkid = obj.parentNode.parentNode.children[1].innerHTML;
+                var pkid = obj.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].innerHTML;
                 var sfeature = "dialogwidth:800px; dialogheight:520px;center:yes;help:yes;resizable:yes;scroll:yes;status:yes";
                 var arg = new Object();
                 arg.doType = "edit";
@@ -88,7 +181,6 @@
                                          paginator="true" rows="15" paginatorPosition="bottom"
                                          rowsPerPageTemplate="100,50,30,15,5"
                                          emptyMessage="数据记录为空...">
-                                <p:column selectionMode="multiple"/>
                                 <p:column headerText="pkid" style="display:none">
                                     <h:outputText value="#{record.pkid}"/>
                                 </p:column>
@@ -99,6 +191,7 @@
                                     </f:facet>
                                     <h:outputText value="#{record.actname}"/>
                                 </p:column>
+
                                 <p:column style="text-align:center" sortBy="#{record.actno}" filterBy="#{record.actno}"
                                           filterMatchMode="contains">
                                     <f:facet name="header">
@@ -188,7 +281,7 @@
                                 </p:column>
                                 <p:column headerText="详细" style="width:50px;text-align:center">
                                     <p:commandLink style="color:blue;" value="详细" onclick="actSelect(this)">
-                                    </p:commandLink>
+                                          </p:commandLink>
                                 </p:column>
                             </p:dataTable>
                         </h:form>

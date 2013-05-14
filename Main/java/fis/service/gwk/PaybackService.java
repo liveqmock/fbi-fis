@@ -6,13 +6,10 @@ import fis.repository.fs.dao.SysJoblogMapper;
 import fis.repository.fs.model.SysJoblog;
 import fis.repository.gwk.dao.GwkCardbaseinfoMapper;
 import fis.repository.gwk.dao.GwkPaybackinfoMapper;
-import fis.repository.gwk.model.GwkCardbaseinfo;
 import fis.repository.gwk.model.GwkCardbaseinfoExample;
 import fis.repository.gwk.model.GwkPaybackinfo;
 import fis.repository.gwk.model.GwkPaybackinfoExample;
 import gateway.txn.GwkServiceFactory;
-import gov.mof.fasp.service.CommonQueryService;
-import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,29 +47,77 @@ public class PaybackService {
         dataList = gwkPaybackinfoMapper.selectByExample(example);
         if (dataList == null || dataList.size() < 1) {
             List rtnlist = new ArrayList();
+            String applicationid = "";
+            String branchbankcode = "";
+            String finorgcode = "";
+            String longtuVer = "";
+            String admdivCode = "";
             try {
                 SimpleDateFormat yearsdf = new SimpleDateFormat("yyyy");
                 Date dt = new Date();
                 String nowYear = yearsdf.format(dt);
-                String applicationid = PropertyManager.getProperty("fbifis.sys.bank.code");
-                Map m = new HashMap();
-                m.put("VOUCHERID", vchid);
+//                String applicationid = PropertyManager.getProperty("fbifis.sys.bank.code");
+                //2012-12-06
+                applicationid = PropertyManager.getProperty("gwk.application.id."+bofcode);
+                branchbankcode = PropertyManager.getProperty("gwk.branch.bank.code."+bofcode);
+                finorgcode = PropertyManager.getProperty("gwk.fin.org.code."+bofcode);
+                //新增变量longtuver（龙图接口版本号），admdivCode（行政区划编码） 2012-12-06
+                longtuVer = PropertyManager.getProperty("gwk.longtu.version."+bofcode);
+                admdivCode = PropertyManager.getProperty("gwk.admdiv.code."+bofcode);
                 //获取
                 //自写接口测试
                 gateway.txn.t266001.gwk.CommonQueryService service = factory.getCommonQueryServiceForArea(bofcode);
+                gateway.txn.t266001.gwk.BankService bankService = factory.getBankServiceForArea(bofcode);
 //                CommonQueryService service = FaspServiceAdapter.getCommonQueryService();
-                rtnlist = service.getQueryListBySql(applicationid, "queryConsumeInfo", m, nowYear);
+                //根据接口版本号，调用不同的接口 2012-12-06
+                if("v1".equals(longtuVer)){
+                    Map m = new HashMap();
+                    m.put("VOUCHERID", vchid);
+                    rtnlist = service.getQueryListBySql(applicationid, "queryConsumeInfo", m, nowYear);
+                }else{
+                    rtnlist = bankService.queryVoucherByBillCode(applicationid,branchbankcode,nowYear,admdivCode,finorgcode,"5",vchid);
+                    rtnlist = convertToPayBackInfo(vchid,rtnlist);
+                }
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
             try {
-                insertVchinfo(rtnlist,bofcode);
+                if("v1".equals(longtuVer)){
+                    insertVchinfo(rtnlist,bofcode);
+                }else{
+                    insertVchinfoV2(rtnlist,bofcode);
+                }
                 dataList = gwkPaybackinfoMapper.selectByExample(example);
             } catch (Exception ex) {
                 throw new RuntimeException("获取支付凭证信息成功,但插入本地数据库失败:" + ex);
             }
         }
         return dataList;
+    }
+
+    //由于新接口中返回报文与原有的有冲突，需要将新报文重新组合返给银行柜台 2012-10-29
+    private List convertToPayBackInfo(String voucherid,List oldList){
+        List listBank = new ArrayList();
+        List listDetails = new ArrayList();
+        Map m1 = new HashMap();
+        if (oldList.size()>1){
+            m1 = (Map)oldList.get(1);
+        }  else {
+            m1 = (Map)oldList.get(0);
+        }
+        String result = (String) m1.get("result");
+        if ("success".equalsIgnoreCase(result)){
+            m1.clear();
+            m1 = (Map)oldList.get(0);
+            listDetails = (List)m1.get("details");
+            for(int i=0;i<listDetails.size();i++){
+                Map m2 = new HashMap();
+                m2 = (Map)listDetails.get(i);
+                m2.put("voucherid",voucherid);
+                listBank.add(m2);
+            }
+        }
+        return listBank;
     }
 
     //更新确认支付标志
@@ -109,6 +154,48 @@ public class PaybackService {
             insertdata.setCardname(record.get("CARDNAME").toString());
             // 自写接口 变大写
             Double dbAmt = Double.parseDouble(record.get("AMT").toString());
+//            Double dbAmt = Double.parseDouble(record.get("Amt").toString());
+            BigDecimal amt = BigDecimal.valueOf(dbAmt);
+            insertdata.setAmt(amt);
+            insertdata.setQuerydate(strdt);
+            insertdata.setOperid(operid);
+            insertdata.setOperdate(dt);
+            insertdata.setStatus(PayStatus.SPDB_INIT.getCode());
+            insertdata.setYear(strdt.substring(0,4));
+            insertdata.setAreacode(bofcode);
+            gwkPaybackinfoMapper.insertSelective(insertdata);
+            //日志表插入
+            SysJoblog sysJoblog = new SysJoblog();
+            sysJoblog.setTablename("gwk_paybackinfo");
+//            sysJoblog.setRowpkid(record.);
+            sysJoblog.setJobname("插入");
+            sysJoblog.setJobdesc("请求支付令");
+            sysJoblog.setJobtime(dt);
+            //插入日志
+            sysJoblogMapper.insertSelective(sysJoblog);
+        }
+    }
+
+    @Transactional
+    private void insertVchinfoV2(List<Map> rtnlist,String bofcode) {
+        Date dt = new Date();
+        SimpleDateFormat sdf10 = new SimpleDateFormat("yyyy-MM-dd");
+        String strdt = sdf10.format(dt);
+        String operid = SystemService.getOperatorManager().getOperatorId();
+        for (Map record:rtnlist) {
+            GwkPaybackinfo insertdata = new GwkPaybackinfo();
+            GwkPaybackinfoExample example = new GwkPaybackinfoExample();
+            example.clear();
+//            insertdata.setVoucherid(record.get("VOUCHERID").toString());
+//            insertdata.setAccount(record.get("ACCOUNT").toString());
+//            insertdata.setCardname(record.get("CARDNAME").toString());
+//            // 自写接口 变大写
+//            Double dbAmt = Double.parseDouble(record.get("AMT").toString());
+            insertdata.setVoucherid(record.get("voucherid").toString());
+            insertdata.setAccount(record.get("account").toString());
+            insertdata.setCardname(record.get("cardname").toString());
+            // 自写接口 变大写
+            Double dbAmt = Double.parseDouble(record.get("amt").toString());
 //            Double dbAmt = Double.parseDouble(record.get("Amt").toString());
             BigDecimal amt = BigDecimal.valueOf(dbAmt);
             insertdata.setAmt(amt);

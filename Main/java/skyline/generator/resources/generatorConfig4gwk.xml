@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
 <generatorConfiguration>
-    <classPathEntry location="/svn-fbifis/ref/ojdbc6.jar"/>
+    <classPathEntry location="D:/WorkSpace/fbi-fbifis/lib/ojdbc6.jar"/>
 
     <!--信息-->
     <context id="AllInfo" targetRuntime="MyBatis3">
@@ -31,22 +31,27 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table schema="fis" tableName="gwk_paybackinfo">
+        <table schema="fis" tableName="gwk_areacode_map">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
+            <!--<generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>-->
         </table>
-        <table schema="fis" tableName="gwk_paybackresult">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="fis" tableName="gwk_consumeinfo">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
-        <table schema="fis" tableName="gwk_cardbaseinfo">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>
-        </table>
+
+        <!--<table schema="fis" tableName="gwk_paybackinfo">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+            <!--<generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>-->
+        <!--</table>-->
+        <!--<table schema="fis" tableName="gwk_paybackresult">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+            <!--<generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>-->
+        <!--</table>-->
+        <!--<table schema="fis" tableName="gwk_consumeinfo">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+            <!--<generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>-->
+        <!--</table>-->
+        <!--<table schema="fis" tableName="gwk_cardbaseinfo">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+            <!--<generatedKey column="pkid" sqlStatement="select sys_guid() from dual" identity="false"/>-->
+        <!--</table>-->
         <!--<table schema="fis" tableName="gwk_base_bdgagency">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
         </table>

@@ -1,13 +1,12 @@
 package fis.view.gwk;
 
-import antlr.debug.MessageAdapter;
 import fis.common.gwk.constant.ConfirmPayFlg;
 import fis.common.gwk.constant.PayStatus;
 import fis.repository.gwk.model.GwkPaybackinfo;
 import fis.service.gwk.PaybackService;
-import org.primefaces.event.CloseEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pub.platform.advance.utils.PropertyManager;
 import skyline.common.utils.MessageUtil;
 import skyline.service.ToolsService;
 
@@ -15,10 +14,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.component.UIViewRoot;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import java.util.List;
@@ -49,16 +46,18 @@ public class PaybackBatchAction {
     private String payStscode;
     private String checkacct;
     private String parambofcode;
+    private String strFinanceName;
 
     @PostConstruct
     public void init() {
         try {
             Map parammap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
             parambofcode = parammap.get("bofcode").toString();
+            strFinanceName = PropertyManager.getProperty("gwk.finance.name." + parambofcode);
             payStsList = toolsService.getEnuSelectItemList("PAYBACKSTSFAIL",true,false);
             query(vchid,acct,payStscode,parambofcode);
         } catch (Exception ex) {
-            logger.error("查询还款错误数据失败." + ex.getMessage());
+            logger.error("查询"+strFinanceName+"还款错误数据失败." + ex.getMessage());
             MessageUtil.addError("查询还款错误数据失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
         }
     }
@@ -68,7 +67,7 @@ public class PaybackBatchAction {
         try{
             query(vchid,acct,payStscode,parambofcode);
         } catch (Exception ex) {
-            logger.error("查询还款错误数据失败." + ex.getMessage());
+            logger.error("查询"+strFinanceName+"还款错误数据失败." + ex.getMessage());
             MessageUtil.addError("查询还款错误数据失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }
@@ -83,7 +82,7 @@ public class PaybackBatchAction {
         try{
             paybackService.updatePaybackBatch(gwkPaybackinfos);
         } catch (Exception ex) {
-            logger.error("批量修改还款数据失败:" + ex.getMessage());
+            logger.error("批量修改"+strFinanceName+"还款数据失败:" + ex.getMessage());
             String msg = ex.getMessage() == null ? "" : ex.getMessage().replaceAll("\n", "").replaceAll("\r", "");
             MessageUtil.addError("批量修改还款数据失败:" + msg);
             return null;
@@ -91,7 +90,7 @@ public class PaybackBatchAction {
         try{
             query(vchid,acct,payStscode,parambofcode);
         } catch (Exception ex) {
-            logger.error("查询还款错误数据失败." + ex.getMessage());
+            logger.error("查询"+strFinanceName+"还款错误数据失败." + ex.getMessage());
             MessageUtil.addError("查询还款错误数据失败." + ex.getMessage().replaceAll("\n", "").replaceAll("\r", ""));
             return null;
         }
@@ -110,7 +109,7 @@ public class PaybackBatchAction {
         try{
             boolean exists = paybackService.queryCardExists(stracct);
             if (!exists) {
-                MessageUtil.addError("该卡号不存在,请重新输入.");
+                MessageUtil.addError(strFinanceName+"该卡号不存在,请重新输入.");
 //                txtAcctObj.setValue("");
             }
         } catch (Exception ex) {

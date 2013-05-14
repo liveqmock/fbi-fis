@@ -22,7 +22,7 @@ public class Ibator {
     public static void main(String[] argv) {
         Ibator ibator = new Ibator();
 
-        ibator.run("resources/generatorConfig4pay.xml");
+        ibator.run("resources/generatorConfig4gwk.xml");
 
     }
 

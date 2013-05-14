@@ -86,7 +86,8 @@ public class PropertyManager {
           if(props == null)
                return null;
           try {
-               props = new String(props.getBytes("ISO-8859-1"));
+//               props = new String(props.getBytes("ISO-8859-1"));
+              props = new String(props.getBytes());
           } catch(Exception e) {
 
           }

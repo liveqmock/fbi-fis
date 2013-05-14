@@ -6,6 +6,7 @@ import fis.repository.gwk.model.GwkConsumeinfo;
 import fis.service.gwk.ConsumeInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pub.platform.advance.utils.PropertyManager;
 import skyline.common.utils.MessageUtil;
 
 import javax.annotation.PostConstruct;
@@ -34,16 +35,18 @@ public class ConsumeInfoSendAction {
     private ConsumeInfoSts consumeInfoSts = ConsumeInfoSts.SEND_INIT;
     private int rcdcount = 0;
     private String parambofcode;
+    private String strFinanceName;
 
     @PostConstruct
     public void init() {
         try {
             Map parammap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
             parambofcode = parammap.get("bofcode").toString();
+            strFinanceName = PropertyManager.getProperty("gwk.finance.name." + parambofcode);
             gwkConsumeinfoList = consumeInfoService.selectConsumeSendNo(parambofcode);
             rcdcount = gwkConsumeinfoList.size();
         } catch (Exception ex) {
-            logger.error("查询未发送消费信息失败." + ex.getMessage());
+            logger.error("查询"+strFinanceName+"未发送消费信息失败." + ex.getMessage());
             String msg = ex.getMessage() == null ? "" : ex.getMessage().replaceAll("\n", "").replaceAll("\r", "");
             MessageUtil.addError("查询未发送消费信息失败:" + msg);
         }
@@ -58,7 +61,7 @@ public class ConsumeInfoSendAction {
         try {
             rtnmsg = consumeInfoService.sendConsumeinfo(gwkConsumeinfos,parambofcode);
         } catch (Exception ex) {
-            logger.error("发送消费信息失败:" + ex.getMessage());
+            logger.error("发送"+strFinanceName+"消费信息失败:" + ex.getMessage());
             String msg = ex.getMessage() == null ? "" : ex.getMessage().replaceAll("\n", "").replaceAll("\r", "");
             MessageUtil.addError("发送消费信息失败:" + msg);
             return null;
@@ -69,7 +72,7 @@ public class ConsumeInfoSendAction {
             gwkConsumeinfoList = consumeInfoService.selectConsumeSendNo(parambofcode);
             rcdcount = gwkConsumeinfoList.size();
         } catch (Exception ex) {
-            logger.error("查询未发送消费信息失败." + ex.getMessage());
+            logger.error("查询"+strFinanceName+"未发送消费信息失败." + ex.getMessage());
             String msg = ex.getMessage() == null ? "" : ex.getMessage().replaceAll("\n", "").replaceAll("\r", "");
             MessageUtil.addError("查询未发送消费信息失败:" + msg);
             return null;
@@ -77,7 +80,7 @@ public class ConsumeInfoSendAction {
         if (rtnmsg.equals(RtnTagKey.RESULT_SUCCESS)) {
             MessageUtil.addInfo("发送成功");
         } else {
-            logger.error("发送消费信息返回失败信息:" + rtnmsg);
+            logger.error("发送"+strFinanceName+"消费信息返回失败信息:" + rtnmsg);
             MessageUtil.addInfo("发送消费信息返回失败信息:" + rtnmsg);
         }
 
