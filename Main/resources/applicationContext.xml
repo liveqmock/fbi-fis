@@ -52,6 +52,7 @@
                 <value>classpath:skyline/repository/mapper/**/*.xml</value>
                 <value>classpath:fis/repository/gwk/mapper/**/*.xml</value>
                 <value>classpath:fis/repository/pay/mapper/**/*.xml</value>
+                <value>classpath:fis/repository/qdf/mapper/**/*.xml</value>
             </list>
         </property>
     </bean>
@@ -59,7 +60,7 @@
     <!-- scan for mappers and let them be autowired -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage"
-                  value="skyline.repository.dao,fis.repository.fs.dao,fis.repository.gwk.dao,fis.repository.pay.dao"/>
+                  value="skyline.repository.dao,fis.repository.fs.dao,fis.repository.gwk.dao,fis.repository.pay.dao,fis.repository.qdf.dao"/>
     </bean>
 
     <!--quartz-->

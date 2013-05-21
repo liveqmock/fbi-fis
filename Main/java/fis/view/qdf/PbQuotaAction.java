@@ -7,5 +7,5 @@ package fis.view.qdf;
  * Time: обнГ9:46
  * To change this template use File | Settings | File Templates.
  */
-public class PBSewageAction {
+public class PbQuotaAction {
 }

@@ -1,7 +1,7 @@
 package fis.view.qdf;
 
-import fis.repository.qdf.model.FsQdfPaymentDetail;
 import fis.repository.qdf.model.FsQdfPaymentInfo;
+import fis.repository.qdf.model.FsQdfPaymentItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import skyline.common.utils.MessageUtil;
@@ -9,6 +9,8 @@ import skyline.common.utils.MessageUtil;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,19 +21,20 @@ import javax.faces.bean.ViewScoped;
  */
 @ManagedBean
 @ViewScoped
-public class PBStandardAction {
-    private static final Logger logger = LoggerFactory.getLogger(PBStandardAction.class);
+public class PbStandardAction {
+    private static final Logger logger = LoggerFactory.getLogger(PbStandardAction.class);
 
     private FsQdfPaymentInfo fsQdfPaymentInfo;
-    private FsQdfPaymentDetail fsQdfPaymentDetail;
+    private List<FsQdfPaymentItem> fsQdfPaymentItemList;
+
 
     private String pjzl; //票据种类
     private String jksbh;//缴款书编号
 
     @PostConstruct
     public void init() {
+        pjzl = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("pjzl").toString();
         fsQdfPaymentInfo = new FsQdfPaymentInfo();
-        fsQdfPaymentDetail = new FsQdfPaymentDetail();
     }
 
     public String onBtnAccept() {
@@ -57,14 +60,6 @@ public class PBStandardAction {
         this.fsQdfPaymentInfo = fsQdfPaymentInfo;
     }
 
-    public FsQdfPaymentDetail getFsQdfPaymentDetail() {
-        return fsQdfPaymentDetail;
-    }
-
-    public void setFsQdfPaymentDetail(FsQdfPaymentDetail fsQdfPaymentDetail) {
-        this.fsQdfPaymentDetail = fsQdfPaymentDetail;
-    }
-
     public String getPjzl() {
         return pjzl;
     }
@@ -79,5 +74,13 @@ public class PBStandardAction {
 
     public void setJksbh(String jksbh) {
         this.jksbh = jksbh;
+    }
+
+    public List<FsQdfPaymentItem> getFsQdfPaymentItemList() {
+        return fsQdfPaymentItemList;
+    }
+
+    public void setFsQdfPaymentItemList(List<FsQdfPaymentItem> fsQdfPaymentItemList) {
+        this.fsQdfPaymentItemList = fsQdfPaymentItemList;
     }
 }
