@@ -11,8 +11,9 @@ import java.security.NoSuchAlgorithmException;
  * To change this template use File | Settings | File Templates.
  */
 public class MD5Helper {
-    final static char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+    final static char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
     private static MessageDigest messagedigest = null;
+
     static {
         try {
             messagedigest = MessageDigest.getInstance("MD5");
@@ -30,6 +31,7 @@ public class MD5Helper {
         messagedigest.update(bytes);
         return bufferToHex(messagedigest.digest());
     }
+
     private static String bufferToHex(byte bytes[]) {
         return bufferToHex(bytes, 0, bytes.length);
     }
@@ -52,8 +54,8 @@ public class MD5Helper {
         stringbuffer.append(c1);
     }
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         String md5 = MD5Helper.getMD5String("1111");
-        System.out.println("md5:" + md5 );
+        System.out.println("md5:" + md5);
     }
 }
