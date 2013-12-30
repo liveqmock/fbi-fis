@@ -23,15 +23,19 @@ public class BeanCopy {
         int i = 0;
         for (String fdname : fieldsName) {
             //自写接口 修改
-//            fdname = fdname.toUpperCase();
-            fdname = fdname.toLowerCase();
-            objvals[i] = map.get(fdname);
+            Object val = map.get(fdname.toUpperCase());
+            if (val == null) {
+                objvals[i] = map.get(fdname.toLowerCase());
+            } else {
+                objvals[i] = val;
+            }
             i++;
         }
         reflectUtil.copyValuesFromArray(objvals);
         Object obj = reflectUtil.getObj();
         return obj;
     }
+
     //bean属性copy
     public static Object copyObject(String className, ListOrderedMap map) {
         ReflectUtil reflectUtil = new ReflectUtil(className);
@@ -50,9 +54,9 @@ public class BeanCopy {
     }
 
     //两bean间的copy
-    public static Object copayObject(Object pasteBean,Object copyBean) throws InvocationTargetException, IllegalAccessException {
+    public static Object copayObject(Object pasteBean, Object copyBean) throws InvocationTargetException, IllegalAccessException {
         ReflectUtil reflectUtil = new ReflectUtil();
-        return reflectUtil.getPastBean(pasteBean,copyBean);
+        return reflectUtil.getPastBean(pasteBean, copyBean);
     }
 }
 
