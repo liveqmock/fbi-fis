@@ -1,0 +1,162 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                /*padding-left: 80px;*/
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-input {
+                width: 180px;
+            }
+
+            .col-qry1 {
+                width: 50%;
+            }
+        </style>
+        <script type="text/javascript" src="../../../support/pub.js"/>
+        <script language="JavaScript" type="text/JavaScript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    if (event.srcElement.id != 'editForm:btnAccept') {
+                        event.keyCode = 9;
+                    }
+                }
+            }
+            $ = jQuery;
+            $(document).ready(function() {
+                $('#editForm\\:refundapplcode').focus(function() {
+                    $('#editForm\\:refundapplcode').select();
+                });
+                $('#editForm\\:performdept').focus(function() {
+                    $('#editForm\\:performdept').select();
+                });
+            });
+            function refundClick() {
+                var banksign = document.getElementById("editForm:banksign").value;
+                if (banksign == "BANK.CMBC") {
+                    return true;
+                } else {
+                    var sfeature = "dialogwidth:350px; dialogheight:180px;center:yes;help:yes;resizable:no;scroll:yes;status:no";
+                    var arg = new Object();
+                    arg.doType = "refund";
+                    var rtn = dialog("common/validation.xhtml?doType=refund", arg, sfeature);
+                    if (rtn == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="editForm">
+                <h:inputHidden id="banksign" value="#{refundAction.banksign}"/>
+                <p:focus for="refundapplcode"/>
+                <p:panel header="获取数据">
+                    <h:panelGrid width="100%" cellspacing="0" border="0" columns="2" columnClasses="col-qry1">
+                        <h:panelGroup>
+                            <h:panelGrid cellspacing="0" border="0" columns="5">
+                                <h:outputLabel value="申请书编号:"/>
+                                <h:inputText id="refundapplcode" autocomplete="off" required="true"
+                                             requiredMessage="请输入凭证号" value="#{refundAction.refundapplcode}"
+                                             style="width:100px"/>
+                                <p:spacer width="5px"/>
+                                <h:outputLabel value="执收单位编号:"/>
+                                <h:inputText id="performdept" autocomplete="off" required="true"
+                                             requiredMessage="请输入单位编号" value="#{refundAction.performdept}"
+                                             style="width:100px"/>
+                            </h:panelGrid>
+                        </h:panelGroup>
+                        <h:panelGrid cellspacing="0" border="0" columns="1">
+                            <h:panelGroup>
+                                <p:commandButton style="width:60px;" ajax="false"
+                                                 id="btnAccept" action="#{refundAction.onBtnAcceptClick}"
+                                                 value="获 取"></p:commandButton>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+                <p:ajaxStatus style="height:18px;text-align:center">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+                <p:panel>
+                    <p:dataTable style="width:100%" value="#{refundAction.fsRefundinfoList}" var="record" id="refundtb"
+                                 emptyMessage="数据记录为空...">
+                        <p:column headerText="申请书编号" style="text-align:center">
+                            <h:outputText value="#{record.refundapplycode}"></h:outputText>
+                        </p:column>
+                        <p:column headerText="原缴款书编号" style="text-align:center">
+                            <h:outputText value="#{record.paynotescode}"></h:outputText>
+                        </p:column>
+                        <p:column headerText="执收单位编号" style="text-align:center">
+                            <h:outputText value="#{record.performdept}"></h:outputText>
+                        </p:column>
+                        <p:column headerText="执收单位名称" style="text-align:center">
+                            <h:outputText value="#{record.prfrmdeptname}"></h:outputText>
+                        </p:column>
+                        <p:column headerText="领款人名称" style="text-align:center">
+                            <h:outputText value="#{record.recusername}"></h:outputText>
+                        </p:column>
+                        <p:column headerText="领款人开户行" style="text-align:center">
+                            <h:outputText value="#{record.recuserbank}"></h:outputText>
+                        </p:column>
+                        <p:column headerText="领款人账号" style="text-align:center">
+                            <h:outputText value="#{record.recuserbankaccount}"></h:outputText>
+                        </p:column>
+                        <p:column headerText="退付原因" style="text-align:center">
+                            <h:outputText value="#{record.refundreason}"></h:outputText>
+                        </p:column>
+                        <p:column headerText="审核金额" style="text-align:center">
+                            <h:outputText value="#{record.auditamt}">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="总金额" style="text-align:center">
+                            <h:outputText value="#{record.totalamt}">
+                                <f:convertNumber pattern="###,##0.00"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="处理状态" style="text-align:center">
+                            <h:outputText
+                                    value="#{refundAction.refundProcessSts.aliasEnums[record.processstatus].title}"></h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+                <p:panel>
+                    <h:panelGrid columns="1" cellpadding="2" border="0" style="width:100%;text-align:center;">
+                        <h:panelGroup>
+                            <h:commandButton id="btnRefund" onclick="return refundClick();"
+                                             action="#{refundAction.onBtnRefundClick}"
+                                             value="退付"
+                                             style="width:90px">
+                            </h:commandButton>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+    <ui:define name="head">
+
+    </ui:define>
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="editForm">
+                <p:menubar style="margin-top:10px;margin-bottom:0px;">
+                    <p:menuitem type="push" value="发 送" icon="ui-icon ui-icon-gear"
+                                action="#{consumeInfoSendAction.onBtnSendClick}" update="msgs,qrypdt">
+                    </p:menuitem>
+                </p:menubar>
+                <p:ajaxStatus style="height:18px;text-align:center">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+                <p:dataTable id="qrypdt"
+                             value="#{consumeInfoSendAction.gwkConsumeinfoList}" var="record"
+                             selection="#{consumeInfoSendAction.gwkConsumeinfos}" rowKey="#{record.pkid}"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="bottom"
+                             rowsPerPageTemplate="100,50,30,15,5"
+                             emptyMessage="数据记录为空...">
+                    <f:facet name="header">
+                        <div style="text-align: right">
+                            <h:outputText value="#{consumeInfoSendAction.rcdcount}"/>
+                        </div>
+                    </f:facet>
+                    <p:column selectionMode="multiple"/>
+                    <p:column headerText="流水号" style="text-align:center">
+                        <h:outputText value="#{record.lsh}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="状态" style="text-align:center">
+                        <h:outputText
+                                value="#{consumeInfoSendAction.consumeInfoSts.aliasEnums[record.status].title}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="持卡人" style="text-align:center">
+                        <h:outputText value="#{record.cardname}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="卡号" style="text-align:center">
+                        <h:outputText value="#{record.account}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="消费日期">
+                        <h:outputText value="#{record.busidate}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="消费金额" style="text-align:center">
+                        <h:outputText value="#{record.busimoney}">
+                            <f:convertNumber pattern="###,##0.00"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="消费地点" style="text-align:center">
+                        <h:outputText value="#{record.businame}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="最迟还款日" style="text-align:center">
+                        <h:outputText value="#{record.limitdate}"></h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

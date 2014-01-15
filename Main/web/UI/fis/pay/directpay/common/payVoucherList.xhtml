@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE  html  PUBLIC  "-//W3C//DTD  XHTML  1.0  Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<f:view contentType="text/html">
+    <head>
+        <title></title>
+
+    </head>
+    <body>
+    <ui:composition>
+        <p:column headerText="凭证编号" style="text-align: center">
+            <h:outputText value="#{record.printid}"/>
+        </p:column>
+        <p:column headerText="处理状态" style="text-align: center">
+            <h:outputText value="#{backBean.processFlag.aliasEnums[record.processflag].title}"/>
+        </p:column>
+        <p:column headerText="预算单位" style="text-align: center">
+            <h:outputText value="#{record.bdgagencyname}"/>
+        </p:column>
+        <p:column headerText="金额(元)">
+            <h:outputText value="#{record.amt}" style="float: right"/>
+        </p:column>
+        <p:column headerText="支付方式" style="text-align: center">
+            <h:outputText value="#{backBean.payType.aliasEnums[record.paytype].title}"/>
+        </p:column>
+        <p:column headerText="凭证类型" style="text-align: center">
+            <h:outputText value="#{backBean.voucherType.aliasEnums[record.vouchertype].title}"/>
+        </p:column>
+
+        <p:column headerText="操作" style="width:50px;text-align:center">
+            <p:commandLink style="color:blue;" value="详细" ajax="true" onclick="openDetl(this);">
+            </p:commandLink>
+        </p:column>
+
+    </ui:composition>
+    </body>
+</f:view>
+</html>

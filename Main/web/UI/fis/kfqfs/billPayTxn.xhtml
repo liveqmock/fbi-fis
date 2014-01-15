@@ -1,0 +1,178 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+            .col-95 {
+                width: 95%;
+            }
+
+            .col-5 {
+                width: 5%;
+            }
+
+            .col-label {
+                width: 150px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                /*padding-left: 80px;*/
+                width: 150px;
+                text-align: right;
+            }
+
+            .col-input {
+                /*width: 180px;*/
+                /*text-align: left;*/
+            }
+
+            .col-qry1 {
+                width: 80%;
+            }
+        </style>
+        <script language="JavaScript" type="text/JavaScript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    event.keyCode = 9;
+                }
+            }
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <div style="margin:5px">
+            <h:form id="form">
+                <p:focus for="typeCode"/>
+                <p:growl id="msgs" showDetail="true"/>
+                <p:panel id="qryfields">
+                    <h:panelGrid columns="2" cellspacing="5">
+                        <h:panelGrid id="inputVchTxn" columns="4" cellspacing="5" cellpadding="0"
+                                     columnClasses="col-label,col-input,col-label,col-input">
+                            <h:outputLabel value="缴款书样式码:" style="text-align: right;"/>
+                            <p:inputText id="typeCode" value="#{billPayAction.billTypeCode}" style="width: 150px;"/>
+
+                            <h:outputLabel value="编号:" style="text-align: right;"/>
+                            <p:inputText id="voucherSn" value="#{billPayAction.billNo}" style="width: 150px;"
+                                         required="true" requiredMessage="请输入缴款书编号！"/>
+                            <h:outputLabel value="校验码:" style="text-align: right;"/>
+                            <p:inputText value="#{billPayAction.verifyNo}" style="width: 150px;"/>
+                            <h:outputLabel value="收款金额:" style="text-align: right;"/>
+                            <p:inputText value="#{billPayAction.billMoney}" style="width: 150px;">
+                                <f:convertNumber pattern="###,###,#0.00"/>
+                            </p:inputText>
+                            <h:outputLabel value="年度:"/>
+                            <p:inputText id="setYear" value="#{billPayAction.setYear}" style="width: 150px;"/>
+                            <h:outputLabel value="缴款方式:" style="text-align: right;"/>
+                            <p:selectOneMenu value="#{billPayAction.payType}" style="width: 155px;">
+                                <f:selectItems value="#{billPayAction.payMethodOptions}"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                        <h:panelGrid columns="1" cellspacing="5" cellpadding="0" style="margin-left: 300px;"
+                                     width="10%">
+                            <p:commandButton id="getbtn" style="width:100px;" value="查询"
+                                             action="#{billPayAction.onQuery}"
+                                             ajax="true"
+                                             update="actbtn,msgs,dataPanel">
+                            </p:commandButton>
+                            <p:commandButton id="actbtn" style="width:100px;" value="缴款"
+                                             disabled="#{!billPayAction.checkPassed}"
+                                             action="#{billPayAction.onPay}"
+                                             ajax="true" update="actbtn,msgs">
+                            </p:commandButton>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+                <p:ajaxStatus style="height:18px;text-align:center">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+                <p:panel>
+                    <h:panelGrid id="dataPanel" columns="1" style="width: 100%;">
+                        <h:panelGrid columns="6" cellpadding="0" cellspacing="5" border="0" style="width:100%;"
+                                     columnClasses="col-label, col-input, col-label, col-input, col-label, col-input">
+                            <h:outputLabel value="缴款书ID:"/>
+                            <h:outputText value="#{billPayAction.billInfo.chr_id}"/>
+                            <h:outputLabel value="样式编码:"/>
+                            <h:outputText value="#{billPayAction.billInfo.billtype_code}"/>
+                            <h:outputLabel value="样式名称:"/>
+                            <h:outputText value="#{billPayAction.billInfo.billtype_name}"/>
+                            <h:outputLabel value="票号:"/>
+                            <h:outputText value="#{billPayAction.billInfo.bill_no}"/>
+                            <h:outputLabel value="开票日期:"/>
+                            <h:outputText value="#{billPayAction.billInfo.makedate}"/>
+                            <h:outputLabel value="执收单位业务码:"/>
+                            <h:outputText value="#{billPayAction.billInfo.ien_code}"/>
+                            <h:outputLabel value="执收单位名称:"/>
+                            <h:outputText value="#{billPayAction.billInfo.ien_name}"/>
+                            <h:outputLabel value="委托单位业务码:"/>
+                            <h:outputText value="#{billPayAction.billInfo.consign_ien_code}"/>
+                            <h:outputLabel value="委托单位名称:"/>
+                            <h:outputText value="#{billPayAction.billInfo.consign_ien_name}"/>
+                            <h:outputLabel value="缴款方式编码:"/>
+                            <h:outputText value="#{billPayAction.billInfo.pm_code}"/>
+                            <h:outputLabel value="缴款方式名称:"/>
+                            <h:outputText value="#{billPayAction.billInfo.pm_name}"/>
+                            <h:outputLabel value="结算号:"/>
+                            <h:outputText value="#{billPayAction.billInfo.cheque_no}"/>
+                            <h:outputLabel value="缴款人全称:"/>
+                            <h:outputText value="#{billPayAction.billInfo.payer}"/>
+                            <h:outputLabel value="缴款人账户开户行:"/>
+                            <h:outputText value="#{billPayAction.billInfo.payerbank}"/>
+                            <h:outputLabel value="缴款人账号:"/>
+                            <h:outputText value="#{billPayAction.billInfo.payeraccount}"/>
+                            <h:outputLabel value="收款人名称:"/>
+                            <h:outputText value="#{billPayAction.billInfo.receiver}"/>
+                            <h:outputLabel value="收款人开户行:"/>
+                            <h:outputText value="#{billPayAction.billInfo.receiverbank}"/>
+                            <h:outputLabel value="收款人账号:"/>
+                            <h:outputText value="#{billPayAction.billInfo.receiveraccount}"/>
+                            <h:outputLabel value="区划码:"/>
+                            <h:outputText value="#{billPayAction.billInfo.rg_code}"/>
+                            <h:outputLabel value="经办人姓名:"/>
+                            <h:outputText value="#{billPayAction.billInfo.inputername}"/>
+                            <h:outputLabel value="备注:"/>
+                            <h:outputText value="#{billPayAction.billInfo.remark}"/>
+
+                        </h:panelGrid>
+                        <p:separator/>
+                        <p:dataTable value="#{billPayAction.billInfo.items}" var="record" id="itemTable"
+                                     emptyMessage="数据记录为空...">
+                            <p:column headerText="明细ID" style="text-align:center">
+                                <h:outputText value="#{record.chr_id}"/>
+                            </p:column>
+                            <p:column headerText="收入项目业务码" style="text-align:center">
+                                <h:outputText value="#{record.in_bis_code}"/>
+                            </p:column>
+                            <p:column headerText="收入项目名称" style="text-align:left">
+                                <h:outputText value="#{record.in_bis_name}"/>
+                            </p:column>
+                            <p:column headerText="计收单位" style="text-align:center">
+                                <h:outputText value="#{record.measure}"/>
+                            </p:column>
+                            <p:column headerText="收入数量" style="text-align:center">
+                                <h:outputText value="#{record.chargenum}"/>
+                            </p:column>
+                            <p:column headerText="收费标准" style="text-align:center">
+                                <h:outputText value="#{record.chargestandard}"/>
+                            </p:column>
+                            <p:column headerText="收入金额" style="text-align:right">
+                                <h:outputText value="#{record.chargemoney}"/>
+                            </p:column>
+                            <p:column headerText="单位项目校验码" style="text-align:center">
+                                <h:outputText value="#{record.item_chkcode}"/>
+                            </p:column>
+
+                        </p:dataTable>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

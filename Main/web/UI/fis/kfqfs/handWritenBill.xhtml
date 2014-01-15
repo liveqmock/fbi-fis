@@ -1,0 +1,199 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                text-align: right;
+            }
+
+            .col-item {
+                text-align: right;
+                width: 125px;
+            }
+
+            .col-item2 {
+                text-align: right;
+                width: 191px;
+            }
+
+            .col-item3 {
+                text-align: right;
+                width: 200px;
+            }
+
+            .col-item-input {
+                text-align: left;
+            }
+        </style>
+        <script language="JavaScript" type="text/JavaScript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    event.keyCode = 9;
+                }
+            }
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:ajaxStatus style="height:18px;text-align:center">
+                <f:facet name="start">
+                    <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                </f:facet>
+                <f:facet name="complete">
+                    <h:outputText value=""/>
+                </f:facet>
+            </p:ajaxStatus>
+            <p:fieldset legend="票据主信息">
+                <p:focus for="typecode"/>
+                <p:growl id="msgs" showDetail="false" life="3000"/>
+                <h:panelGrid id="dataPanel" columns="1" style="width: 100%;">
+                    <h:panelGrid id="infoPanel" columns="6" cellpadding="0" cellspacing="5" border="0"
+                                 style="width:100%;"
+                                 columnClasses="col-label, col-item-input, col-label, col-item-input, col-label, col-item-input">
+                        <h:outputLabel value="样式编码:" style="text-align: right;margin-left: 140px;"/>
+                        <p:inputText id="typecode" value="#{billPayAction.billInfo.billtype_code}" required="true"
+                                     requiredMessage="必须输入样式编码"/>
+                        <h:outputLabel value="票据编号:" style="text-align: right;margin-left: 81px;"/>
+                        <p:inputText id="billno" value="#{billPayAction.billInfo.bill_no}" required="true"
+                                     requiredMessage="必须输入票据编号"/>
+                        <h:outputLabel value="*全票面校验码:"/>
+                        <p:inputText id="verifyno" value="#{billPayAction.billInfo.verify_no}" required="true"
+                                     requiredMessage="必须输入全票面校验码"/>
+                        <h:outputLabel value="*缴款方式:"/>
+                        <p:selectOneMenu value="#{billPayAction.billInfo.pm_code}" style="width: 150px;">
+                            <f:selectItems value="#{billPayAction.payMethodOptions}"/>
+                        </p:selectOneMenu>
+                        <h:outputLabel value="执收单位编码:"/>
+                        <p:inputText value="#{billPayAction.billInfo.ien_code}" id="zsdwbm"/>
+                        <h:outputLabel value="执收单位名称:"/>
+                        <p:inputText id="zsdwmc" value="#{billPayAction.billInfo.ien_name}"/>
+                        <h:outputLabel value="委托单位编码:"/>
+                        <p:inputText value="#{billPayAction.billInfo.consign_ien_code}" id="wtzsdwbm"/>
+                        <h:outputLabel value="委托单位名称:"/>
+                        <p:inputText id="wtzsdwmc" value="#{billPayAction.billInfo.consign_ien_name}"/>
+                        <h:outputLabel value="年度:"/>
+                        <p:inputText value="#{billPayAction.billInfo.set_year}"/>
+                        <h:outputLabel value="创建人:"/>
+                        <p:inputText value="#{billPayAction.billInfo.bank_user}"/>
+                        <h:outputLabel value="银行编码:"/>
+                        <p:inputText value="#{billPayAction.billInfo.bank_no}"/>
+                        <h:outputLabel value="*缴款人:"/>
+                        <p:inputText value="#{billPayAction.billInfo.payer}"/>
+                        <h:outputLabel value="缴款人开户行:"/>
+                        <p:inputText value="#{billPayAction.billInfo.payerbank}"/>
+                        <h:outputLabel value="缴款人账号:"/>
+                        <p:inputText value="#{billPayAction.billInfo.payeraccount}"/>
+                        <h:outputLabel value="收款人:"/>
+                        <p:inputText value="#{billPayAction.billInfo.receiver}"/>
+                        <h:outputLabel value="收款人开户行:"/>
+                        <p:inputText value="#{billPayAction.billInfo.receiverbank}"/>
+                        <h:outputLabel value="收款人账户:"/>
+                        <p:inputText value="#{billPayAction.billInfo.receiveraccount}"/>
+                        <h:outputLabel value="*是否委托:"/>
+                        <p:selectOneMenu value="#{billPayAction.billInfo.is_consign}" style="width: 150px;" id="wtzsbz">
+                            <f:selectItems value="#{billPayAction.consignOptions}"/>
+                        </p:selectOneMenu>
+                        <h:outputLabel value="*金额:"/>
+                        <p:inputText value="#{billPayAction.billMoney}" required="true" requiredMessage="必须输入金额">
+                            <f:convertNumber pattern="###,###,##0.00"/>
+                        </p:inputText>
+                        <h:outputLabel value="备注:"/>
+                        <p:inputText value="#{billPayAction.billInfo.remark}"/>
+                    </h:panelGrid>
+                </h:panelGrid>
+            </p:fieldset>
+            <br/>
+            <p:fieldset legend="票据缴费项目" style="width: 100%">
+                <br/>
+                <p:panel>
+                    <h:panelGrid id="itemPanel1" columns="4" cellpadding="0" cellspacing="5" border="0"
+                                 columnClasses="col-item, col-item-input, col-item2, col-item-input">
+                        <h:outputLabel value="*收入项目业务码:"/>
+                        <p:inputText value="#{billPayAction.item1.in_bis_code}"
+                                     required="true" requiredMessage="必须输入项目业务码"/>
+                        <h:outputLabel value="*收入项目名称:"/>
+                        <p:inputText value="#{billPayAction.item1.in_bis_name}"
+                                     required="true" requiredMessage="必须输入项目业务名称"/>
+                        <h:outputLabel value="*数量:"/>
+                        <p:inputText value="#{billPayAction.item1.chargenum}"
+                                     required="true" requiredMessage="必须输入数量"/>
+                        <h:outputLabel value="*金额(元):"/>
+                        <p:inputText value="#{billPayAction.item1.chargemoney}"
+                                     required="true" requiredMessage="必须输入金额"/>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+                <p:panel>
+                    <h:panelGrid id="itemPanel2" columns="4" cellpadding="0" cellspacing="5" border="0"
+                                 columnClasses="col-item, col-item-input, col-item2, col-item-input">
+                        <h:outputLabel value="收入项目业务码:"/>
+                        <p:inputText value="#{billPayAction.item2.in_bis_code}"/>
+                        <h:outputLabel value="收入项目名称:"/>
+                        <p:inputText value="#{billPayAction.item2.in_bis_name}"/>
+                        <h:outputLabel value="数量:"/>
+                        <p:inputText value="#{billPayAction.item2.chargenum}"/>
+                        <h:outputLabel value="金额(元):"/>
+                        <p:inputText value="#{billPayAction.item2.chargemoney}"/>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+                <p:panel>
+                    <h:panelGrid id="itemPanel3" columns="4" cellpadding="0" cellspacing="5" border="0"
+                                 columnClasses="col-item, col-item-input, col-item2, col-item-input">
+                        <h:outputLabel value="收入项目业务码:"/>
+                        <p:inputText value="#{billPayAction.item3.in_bis_code}"/>
+                        <h:outputLabel value="收入项目名称:"/>
+                        <p:inputText value="#{billPayAction.item3.in_bis_name}"/>
+                        <h:outputLabel value="数量:"/>
+                        <p:inputText value="#{billPayAction.item3.chargenum}"/>
+                        <h:outputLabel value="金额(元):"/>
+                        <p:inputText value="#{billPayAction.item3.chargemoney}"/>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+                <p:panel>
+                    <h:panelGrid id="itemPanel4" columns="4" cellpadding="0" cellspacing="5" border="0"
+                                 columnClasses="col-item, col-item-input, col-item2, col-item-input">
+                        <h:outputLabel value="收入项目业务码:"/>
+                        <p:inputText value="#{billPayAction.item4.in_bis_code}"/>
+                        <h:outputLabel value="收入项目名称:"/>
+                        <p:inputText value="#{billPayAction.item4.in_bis_name}"/>
+                        <h:outputLabel value="数量:"/>
+                        <p:inputText value="#{billPayAction.item4.chargenum}"/>
+                        <h:outputLabel value="金额(元):"/>
+                        <p:inputText value="#{billPayAction.item4.chargemoney}"/>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+                <p:panel>
+                    <h:panelGrid id="itemPanel5" columns="4" cellpadding="0" cellspacing="5" border="0"
+                                 columnClasses="col-item, col-item-input, col-item2, col-item-input">
+                        <h:outputLabel value="收入项目业务码:"/>
+                        <p:inputText value="#{billPayAction.item5.in_bis_code}"/>
+                        <h:outputLabel value="收入项目名称:"/>
+                        <p:inputText value="#{billPayAction.item5.in_bis_name}"/>
+                        <h:outputLabel value="数量:"/>
+                        <p:inputText value="#{billPayAction.item5.chargenum}"/>
+                        <h:outputLabel value="金额(元):"/>
+                        <p:inputText value="#{billPayAction.item5.chargemoney}"/>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+            </p:fieldset>
+            <p:separator/>
+            <h:panelGrid columns="1" style="width: 100%">
+                <p:commandButton id="paybtn" style="text-align: center;width: 180px;margin-left: 500px;"
+                                 action="#{billPayAction.onHandWritenPay}"
+                                 value="确认缴款" update="msgs,paybtn"/>
+            </h:panelGrid>
+        </h:form>
+    </ui:define>
+</ui:composition>

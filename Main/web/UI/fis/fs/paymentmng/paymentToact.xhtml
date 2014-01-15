@@ -1,0 +1,139 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .col-label {
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                padding-left: 80px;
+                width: 110px;
+                text-align: right;
+            }
+
+            .col-input {
+                width: 120px;
+            }
+
+            .col-qry1 {
+                width: 40%;
+            }
+        </style>
+        <script type="text/javascript">
+
+        </script>
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px">
+            <p:tabView style="font-weight:normal;font-style:normal">
+                <p:tab title="确认到账处理">
+                    <p:growl id="qrymsgs" showDetail="false"/>
+
+                    <div id="qrytable">
+                        <h:form id="qryform">
+                            <p:menubar style="margin-top:10px;margin-bottom:10px;">
+                                <p:menuitem type="push" value="多笔确认处理" icon="ui-icon ui-icon-gear"
+                                            action="#{paymentToactAction.onMultipleSend}" update="qrymsgs, qrypdt"
+                                            ajax="false"/>
+                            </p:menubar>
+                            <p:ajaxStatus style="height:18px;text-align:center">
+                                <f:facet name="start">
+                                    <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                                </f:facet>
+                                <f:facet name="complete">
+                                    <h:outputText value=""/>
+                                </f:facet>
+                            </p:ajaxStatus>
+                            <p:dataTable id="qrypdt"
+                                         value="#{paymentToactAction.fsPaymentinfoList1}" var="record"
+                                         selection="#{paymentToactAction.fsPaymentinfos}" rowKey="#{record.paynotescode}"
+                                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         paginator="true" rows="15" paginatorPosition="bottom"
+                                         rowsPerPageTemplate="100,50,30,15,5"
+                                         emptyMessage="数据记录为空...">
+                                <p:column selectionMode="multiple"/>
+                                <p:column headerText="缴款书编号" style="text-align:center">
+                                    <h:outputText value="#{record.paynotescode}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="缴款人" style="text-align:center">
+                                    <h:outputText value="#{record.payer}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="校验码" style="text-align:center">
+                                    <h:outputText value="#{record.checkcode}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="执收单位名称" style="text-align:center">
+                                    <h:outputText value="#{record.prfrmdeptname}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="执收单位编号">
+                                    <h:outputText value="#{record.performdept}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="总金额" style="text-align:center">
+                                    <h:outputText value="#{record.totalamt}">
+                                        <f:convertNumber pattern="###,##0.00"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="到账标志" style="text-align:center">
+                                    <h:outputText value="#{paymentToactAction.recfeeFlag.aliasEnums[record.recfeeflag].title}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="处理状态" style="text-align:center">
+                                    <h:outputText value="#{paymentToactAction.processStatus.aliasEnums[record.processstatus].title}"></h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                    </div>
+                </p:tab>
+                <p:tab title="已确认到账清单">
+                    <div id="table">
+                        <h:form id="form">
+                            <p:dataTable id="pdt"
+                                         value="#{paymentToactAction.fsPaymentinfoList2}" var="record"
+                                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         paginator="true" rows="15" paginatorPosition="bottom"
+                                         rowsPerPageTemplate="100,50,30,15,5"
+                                         emptyMessage="数据记录为空...">
+                               <p:column headerText="缴款书编号" style="text-align:center">
+                                    <h:outputText value="#{record.paynotescode}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="缴款人" style="text-align:center;">
+                                    <h:outputText value="#{record.payer}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="校验码" style="text-align:center;">
+                                    <h:outputText value="#{record.checkcode}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="执收单位名称" style="text-align:center">
+                                    <h:outputText value="#{record.prfrmdeptname}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="执收单位编号" style="text-align:center">
+                                    <h:outputText value="#{record.performdept}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="总金额" style="text-align:right;">
+                                    <h:outputText value="#{record.totalamt}">
+                                        <f:convertNumber pattern="###,##0.00"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="记账日期" style="text-align:center;">
+                                    <h:outputText value="#{record.bankacctdate}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="到账标志" style="text-align:center;">
+                                    <h:outputText value="#{paymentToactAction.recfeeFlag.aliasEnums[record.recfeeflag].title}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="处理状态" style="text-align:center;">
+                                    <h:outputText value="#{paymentToactAction.processStatus.aliasEnums[record.processstatus].title}"></h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                    </div>
+                </p:tab>
+            </p:tabView>
+        </div>
+    </ui:define>
+
+</ui:composition>

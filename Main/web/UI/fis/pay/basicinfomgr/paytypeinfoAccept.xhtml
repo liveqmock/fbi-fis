@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+    <ui:define name="head">
+
+    </ui:define>
+    <ui:define name="content">
+        <div style="margin:5px;">
+            <p:growl id="msgs" showDetail="false"/>
+            <h:form id="paytypeform">
+                <ui:include src="basicTemplate.xhtml">
+                    <ui:param name="basicflag" value="PAYTYPE"/>
+                </ui:include>
+                <p:dataTable id="qrytab" dynamic="true" value="#{basicinfoAcptAction.basicPaytypeList}" var="record"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             paginator="true" rows="15" paginatorPosition="bottom"
+                             rowsPerPageTemplate="100,50,30,15,5"
+                             emptyMessage="数据记录为空...">
+                    <p:column headerText="编号">
+                        <h:outputText value="#{record.code}"/>
+                    </p:column>
+                    <p:column headerText="名称">
+                        <h:outputText value="#{record.name}"/>
+                    </p:column>
+                    <p:column headerText="guid">
+                        <h:outputText value="#{record.guid}"/>
+                    </p:column>
+                    <p:column headerText="上级编码">
+                        <h:outputText value="#{record.supercode}"/>
+                    </p:column>
+                    <p:column headerText="是否末级">
+                        <h:outputText value="#{record.isleaf}"/>
+                    </p:column>
+                    <p:column headerText="级次">
+                        <h:outputText value="#{record.levelno}"/>
+                    </p:column>
+                    <p:column headerText="版本">
+                        <h:outputText value="#{record.version}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

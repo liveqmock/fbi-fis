@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+
+    <ui:define name="head">
+        <script type="text/javascript">
+
+        </script>
+        <style type="text/css">
+            .col-label {
+                width: 70px;
+            }
+
+            .col-input {
+                width: 120px;
+            }
+
+            .col-input-200 {
+                width: 300px;
+            }
+
+
+        </style>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="margin:5px">
+            <p:growl id="qrymsgs" showDetail="false"/>
+            <div id="qrytable">
+                <h:form id="qryform">
+                    <p:menubar>
+                        <p:menuitem type="push" value="获取授权额度" icon="ui-icon ui-icon-gear"
+                                    url="accreditAccept.xhtml" update="qrymsgs,qrypdt"/>
+                        <p:menuitem type="push" value="授权额度查询" icon="ui-icon ui-icon-download"
+                                    url="accreditQry.xhtml" update="qrymsgs, qrypdt"/>
+                        <p:menuitem type="push" value="打印授权额度通知单" icon="ui-icon ui-icon-print"
+                                    url="accreditPrint.xhtml" update="qrymsgs, qrypdt"/>
+                    </p:menubar>
+                    <p:ajaxStatus style="height:18px;text-align:center">
+                        <f:facet name="start">
+                            <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                        </f:facet>
+                        <f:facet name="complete">
+                            <h:outputText value=""/>
+                        </f:facet>
+                    </p:ajaxStatus>
+                    <p:panel header="本月授权额度清单">
+                        <p:dataTable id="qrypdt" dynamic="true"
+                                     value="#{accreditAcceptAction.payAccreditvoucherList}" var="record"
+                                     selection="#{accreditAcceptAction.payAccreditvoucher}"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" rows="15" paginatorPosition="bottom"
+                                     rowsPerPageTemplate="100,50,30,15,5"
+                                     emptyMessage="数据记录为空...">
+
+                            <p:column headerText="凭证编号" style="text-align:center"
+                                      sortBy="#{record.billcode}"
+                                      filterBy="#{record.billcode}" filterMatchMode="contains">
+                                <h:outputText value="#{record.billcode}"/>
+                            </p:column>
+                            <p:column headerText="账号" style="text-align:center" sortBy="#{record.paybankaccount}"
+                                      filterBy="#{record.paybankaccount}"
+                                      filterMatchMode="contains">
+                                <h:outputText value="#{record.paybankaccount}"/>
+                            </p:column>
+                            <p:column headerText="月份" style="text-align:center" sortBy="#{record.month}">
+                                <h:outputText value="#{record.month}"/>
+                            </p:column>
+                            <p:column headerText="授权额度" style="text-align:center">
+                                <h:outputText value="#{record.amt}" style="float:right"/>
+                            </p:column>
+                            <p:column headerText="预算单位" style="text-align:center">
+                                <h:outputText value="#{record.bdgagencyname}"/>
+                            </p:column>
+                            <p:column headerText="功能分类" style="text-align:center">
+                                <h:outputText value="#{record.funcname}"/>
+                            </p:column>
+                            <p:column headerText="项目名称" style="text-align:center">
+                                <h:outputText value="#{record.programname}"/>
+                            </p:column>
+                            <p:column headerText="详细" style="width:50px;text-align:center">
+                                <p:commandLink style="color:blue;" value="详 细">
+                                </p:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </h:form>
+            </div>
+
+        </div>
+    </ui:define>
+
+</ui:composition>
