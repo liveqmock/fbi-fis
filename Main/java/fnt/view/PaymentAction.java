@@ -100,6 +100,11 @@ public class PaymentAction implements Serializable {
         payBillOptions.add(new SelectItem("05", "103《山东省非税收入缴款书（法院专用）》"));
         payBillOptions.add(new SelectItem("06", "107《山东省非税收入缴款书（排污费专用）》"));
         payBillOptions.add(new SelectItem("07", "109《山东省非税收入缴款书（新型墙体材料基金专用）》"));
+        payBillOptions.add(new SelectItem("08", "山东省非税收入通用票据"));
+        payBillOptions.add(new SelectItem("09", "山东省非税收入定额票据（伍元）"));
+        payBillOptions.add(new SelectItem("10", "山东省非税收入定额票据（贰拾元）"));
+        payBillOptions.add(new SelectItem("11", "山东省非税收入定额票据（伍拾元）"));
+        payBillOptions.add(new SelectItem("12", "山东省人民法院诉讼费专用票据（预收）"));
     }
 
     public String onQuery() {
