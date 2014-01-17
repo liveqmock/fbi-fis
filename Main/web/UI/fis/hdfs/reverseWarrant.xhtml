@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+            .col-95 {
+                width: 95%;
+            }
+
+            .col-5 {
+                width: 5%;
+            }
+
+            .col-label {
+                width: 150px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                /*padding-left: 80px;*/
+                width: 150px;
+                text-align: right;
+            }
+
+            .col-input {
+                /*width: 180px;*/
+                /*text-align: left;*/
+            }
+
+            .col-qry1 {
+                width: 80%;
+            }
+        </style>
+        <script language="JavaScript" type="text/JavaScript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    event.keyCode = 9;
+                }
+            }
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <div style="margin:5px">
+            <h:form id="form">
+                <p:focus for="billId"/>
+                <p:growl id="msgs" showDetail="true"/>
+                <p:panel id="qryfields">
+                    <h:panelGrid columns="2" cellspacing="5">
+
+                        <h:panelGrid id="inputVchTxn" columns="4" cellspacing="5" cellpadding="0"
+                                     columnClasses="col-label,col-input,col-label,col-input">
+                            <h:outputLabel value="编号:" style="text-align: right;"/>
+                            <p:inputText id="billId" value="#{payinWarrantAction.billId}" style="width: 150px;"
+                                         required="true" requiredMessage="必须输入缴款书编号"/>
+
+                            <h:outputLabel value="票据类型:" style="text-align: right;"/>
+                            <p:inputText id="voucherType" value="#{payinWarrantAction.voucherType}"
+                                         style="width: 150px;" required="true" requiredMessage="必须输入票据类型"/>
+
+                            <h:outputLabel value="金额:" style="text-align: right;"/>
+                            <p:inputText id="payAmt" value="#{payinWarrantAction.payAmt}"
+                                         style="width: 150px;" required="true" requiredMessage="必须输入金额">
+                                <f:convertNumber pattern="###,###,##0.00"/>
+                            </p:inputText>
+
+                        </h:panelGrid>
+                        <h:panelGrid columns="2" cellspacing="5" cellpadding="0" style="margin-left: 300px;"
+                                     width="10%">
+
+                            <p:commandButton id="actbtn" style="width:100px;" value="撤销缴款"
+                                             action="#{payinWarrantAction.onReverse}"
+                                             ajax="true" update="actbtn,msgs">
+                            </p:commandButton>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+                <p:ajaxStatus style="height:18px;text-align:center">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
