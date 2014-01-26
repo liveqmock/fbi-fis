@@ -15,7 +15,7 @@
             }
 
             .col-label {
-                width: 150px;
+                width: 180px;
                 text-align: right;
             }
 
@@ -49,29 +49,26 @@
                 <p:growl id="msgs" showDetail="true"/>
                 <p:panel id="qryfields">
                     <h:panelGrid columns="2" cellspacing="5">
-                        <h:panelGrid id="inputVchTxn" columns="4" cellspacing="5" cellpadding="0"
-                                     columnClasses="col-label,col-input,col-label,col-input">
 
+                        <h:panelGrid id="inputVchTxn" columns="4" cellspacing="5" cellpadding="0"
+                                     columnClasses="col-label,col-input">
                             <h:outputLabel value="编号:" style="text-align: right;"/>
                             <p:inputText id="billId" value="#{payinWarrantAction.billId}" style="width: 150px;"
-                                         required="true" requiredMessage="请输入缴款书编号！"/>
+                                         required="true" requiredMessage="必须输入缴款书编号"/>
 
-                            <h:outputLabel value="票据类型:" style="text-align: right;"/>
-                            <p:inputText id="voucherType" value="#{payinWarrantAction.voucherType}"
-                                         style="width: 150px;" disabled="#{!payinWarrantAction.payable}"/>
+                            <h:outputLabel value="金额:" style="text-align: right;"/>
+                            <p:inputText id="payAmt" value="#{payinWarrantAction.payAmt}"
+                                         style="width: 150px;" required="true" requiredMessage="必须输入金额">
+                                <f:convertNumber pattern="###,###,##0.00"/>
+                            </p:inputText>
 
                         </h:panelGrid>
-                        <h:panelGrid columns="1" cellspacing="5" cellpadding="0" style="margin-left: 300px;"
+                        <h:panelGrid columns="2" cellspacing="5" cellpadding="0" style="margin-left: 300px;"
                                      width="10%">
-                            <p:commandButton id="getbtn" style="width:100px;" value="查询"
-                                             action="#{payinWarrantAction.onQuery}"
-                                             ajax="true"
-                                             update="actbtn,msgs,dataPanel,qryfields">
-                            </p:commandButton>
-                            <p:commandButton id="actbtn" style="width:100px;" value="缴款"
-                                             disabled="#{!payinWarrantAction.payable}"
-                                             action="#{payinWarrantAction.onPay}"
-                                             ajax="true" update="actbtn,msgs,qryfields">
+
+                            <p:commandButton id="actbtn" style="width:100px;" value="确认冲正"
+                                             action="#{payinWarrantAction.onWrtnReverse}"
+                                             ajax="true" update="actbtn,msgs">
                             </p:commandButton>
                         </h:panelGrid>
                     </h:panelGrid>
@@ -84,48 +81,6 @@
                         <h:outputText value=""/>
                     </f:facet>
                 </p:ajaxStatus>
-                <p:panel>
-                    <h:panelGrid id="dataPanel" columns="1" style="width: 100%;">
-                        <h:panelGrid columns="6" cellpadding="0" cellspacing="5" border="0" style="width:100%;"
-                                     columnClasses="col-label, col-input, col-label, col-input, col-label, col-input">
-                            <h:outputLabel value="缴款书编号:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.billId}"/>
-                            <h:outputLabel value="单位代码:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.instCode}"/>
-                            <h:outputLabel value="缴款人:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.payerName}"/>
-                            <h:outputLabel value="通知日期:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.notifyDate}"/>
-                            <h:outputLabel value="最迟日期:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.latestDate}"/>
-                            <h:outputLabel value="滞纳金比例:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.overdueRatio}"/>
-                            <h:outputLabel value="滞纳金金额:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.overdueAmt}"/>
-                            <h:outputLabel value="校验码:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.verifyNo}"/>
-
-                        </h:panelGrid>
-                        <p:separator/>
-                        <p:dataTable value="#{payinWarrantAction.warrantInfo.items}" var="record" id="itemTable"
-                                     emptyMessage="数据记录为空...">
-
-                            <p:column headerText="项目代码" style="text-align:center">
-                                <h:outputText value="#{record.prjCode}"/>
-                            </p:column>
-                            <p:column headerText="计量单位" style="text-align:center">
-                                <h:outputText value="#{record.measure}"/>
-                            </p:column>
-                            <p:column headerText="数量" style="text-align:left">
-                                <h:outputText value="#{record.handleNum}"/>
-                            </p:column>
-                            <p:column headerText="金额" style="text-align:center">
-                                <h:outputText value="#{record.txnAmt}"/>
-                            </p:column>
-
-                        </p:dataTable>
-                    </h:panelGrid>
-                </p:panel>
             </h:form>
         </div>
     </ui:define>

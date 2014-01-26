@@ -3,35 +3,33 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
                 template="/templates/ui.xhtml">
+
     <ui:define name="head">
         <style type="text/css">
-            .col-95 {
-                width: 95%;
-            }
-
-            .col-5 {
-                width: 5%;
-            }
-
             .col-label {
-                width: 150px;
                 text-align: right;
             }
 
-            .col-label2 {
-                /*padding-left: 80px;*/
-                width: 150px;
+            .col-item {
                 text-align: right;
+                width: 125px;
             }
 
-            .col-input {
-                /*width: 180px;*/
-                /*text-align: left;*/
+            .col-item2 {
+                text-align: right;
+                width: 191px;
             }
 
-            .col-qry1 {
-                width: 80%;
+            .col-item3 {
+                text-align: right;
+                width: 200px;
+            }
+
+            .col-item-input {
+                text-align: left;
             }
         </style>
         <script language="JavaScript" type="text/JavaScript">
@@ -42,91 +40,138 @@
             }
         </script>
     </ui:define>
+
     <ui:define name="content">
-        <div style="margin:5px">
-            <h:form id="form">
-                <p:focus for="billId"/>
-                <p:growl id="msgs" showDetail="true"/>
-                <p:panel id="qryfields">
-                    <h:panelGrid columns="2" cellspacing="5">
-                        <h:panelGrid id="inputVchTxn" columns="4" cellspacing="5" cellpadding="0"
-                                     columnClasses="col-label,col-input,col-label,col-input">
+        <h:form id="form">
+            <p:ajaxStatus style="height:18px;text-align:center">
+                <f:facet name="start">
+                    <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                </f:facet>
+                <f:facet name="complete">
+                    <h:outputText value=""/>
+                </f:facet>
+            </p:ajaxStatus>
+            <p:fieldset legend="票据主信息">
+                <p:focus for="billType"/>
+                <p:growl id="msgs" showDetail="false" life="3000"/>
+                <h:panelGrid id="dataPanel" columns="1" style="width: 100%;">
+                    <h:panelGrid id="infoPanel" columns="6" cellpadding="0" cellspacing="5" border="0"
+                                 style="width:100%;"
+                                 columnClasses="col-label, col-item-input, col-label, col-item-input, col-label, col-item-input">
+                        <h:outputLabel value="通知书类别:" style="text-align: right;margin-left: 81px;"/>
+                        <p:inputText id="billType" value="#{payinWarrantAction.warrantInfo.billType}" required="true"
+                                     requiredMessage="必须输入通知书类别"/>
+                        <h:outputLabel value="缴款通知书号:" style="text-align: right;margin-left: 81px;"/>
+                        <p:inputText id="billId" value="#{payinWarrantAction.warrantInfo.billId}" required="true"
+                                     requiredMessage="必须输入缴款通知书号"/>
 
-                            <h:outputLabel value="编号:" style="text-align: right;"/>
-                            <p:inputText id="billId" value="#{payinWarrantAction.billId}" style="width: 150px;"
-                                         required="true" requiredMessage="请输入缴款书编号！"/>
+                        <h:outputLabel value="票据类型:" style="text-align: right;margin-left: 81px;"/>
+                        <p:inputText id="voucherType" value="#{payinWarrantAction.warrantInfo.voucherType}"
+                                     required="true"
+                                     requiredMessage="必须输入票据类型"/>
 
-                            <h:outputLabel value="票据类型:" style="text-align: right;"/>
-                            <p:inputText id="voucherType" value="#{payinWarrantAction.voucherType}"
-                                         style="width: 150px;" disabled="#{!payinWarrantAction.payable}"/>
+                        <h:outputLabel value="单位代码:"/>
+                        <p:inputText id="instCode" value="#{payinWarrantAction.warrantInfo.instCode}"/>
 
-                        </h:panelGrid>
-                        <h:panelGrid columns="1" cellspacing="5" cellpadding="0" style="margin-left: 300px;"
-                                     width="10%">
-                            <p:commandButton id="getbtn" style="width:100px;" value="查询"
-                                             action="#{payinWarrantAction.onQuery}"
-                                             ajax="true"
-                                             update="actbtn,msgs,dataPanel,qryfields">
-                            </p:commandButton>
-                            <p:commandButton id="actbtn" style="width:100px;" value="缴款"
-                                             disabled="#{!payinWarrantAction.payable}"
-                                             action="#{payinWarrantAction.onPay}"
-                                             ajax="true" update="actbtn,msgs,qryfields">
-                            </p:commandButton>
-                        </h:panelGrid>
+                        <h:outputLabel value="缴款人:"/>
+                        <p:inputText value="#{payinWarrantAction.warrantInfo.payerName}" id="payerName"/>
+                        <h:outputLabel value="通知日期:"/>
+                        <p:inputText id="notifyDate" value="#{payinWarrantAction.warrantInfo.notifyDate}"/>
+                        <h:outputLabel value="最迟日期:"/>
+                        <p:inputText value="#{payinWarrantAction.warrantInfo.latestDate}" id="latestDate"/>
+                        <h:outputLabel value="校验码:"/>
+                        <p:inputText id="verifyNo" value="#{payinWarrantAction.warrantInfo.verifyNo}"/>
+                        <h:outputLabel value="合同号:"/>
+                        <p:inputText value="#{payinWarrantAction.warrantInfo.contractNo}"/>
+                        <h:outputLabel value="备注:"/>
+                        <p:inputText value="#{payinWarrantAction.warrantInfo.remark}"/>
                     </h:panelGrid>
-                </p:panel>
-                <p:ajaxStatus style="height:18px;text-align:center">
-                    <f:facet name="start">
-                        <h:graphicImage value="/images/ajaxloadingbar.gif"/>
-                    </f:facet>
-                    <f:facet name="complete">
-                        <h:outputText value=""/>
-                    </f:facet>
-                </p:ajaxStatus>
+                </h:panelGrid>
+            </p:fieldset>
+            <br/>
+            <p:fieldset legend="票据缴费项目" style="width: 100%">
+                <br/>
                 <p:panel>
-                    <h:panelGrid id="dataPanel" columns="1" style="width: 100%;">
-                        <h:panelGrid columns="6" cellpadding="0" cellspacing="5" border="0" style="width:100%;"
-                                     columnClasses="col-label, col-input, col-label, col-input, col-label, col-input">
-                            <h:outputLabel value="缴款书编号:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.billId}"/>
-                            <h:outputLabel value="单位代码:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.instCode}"/>
-                            <h:outputLabel value="缴款人:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.payerName}"/>
-                            <h:outputLabel value="通知日期:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.notifyDate}"/>
-                            <h:outputLabel value="最迟日期:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.latestDate}"/>
-                            <h:outputLabel value="滞纳金比例:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.overdueRatio}"/>
-                            <h:outputLabel value="滞纳金金额:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.overdueAmt}"/>
-                            <h:outputLabel value="校验码:"/>
-                            <h:outputText value="#{payinWarrantAction.warrantInfo.verifyNo}"/>
-
-                        </h:panelGrid>
-                        <p:separator/>
-                        <p:dataTable value="#{payinWarrantAction.warrantInfo.items}" var="record" id="itemTable"
-                                     emptyMessage="数据记录为空...">
-
-                            <p:column headerText="项目代码" style="text-align:center">
-                                <h:outputText value="#{record.prjCode}"/>
-                            </p:column>
-                            <p:column headerText="计量单位" style="text-align:center">
-                                <h:outputText value="#{record.measure}"/>
-                            </p:column>
-                            <p:column headerText="数量" style="text-align:left">
-                                <h:outputText value="#{record.handleNum}"/>
-                            </p:column>
-                            <p:column headerText="金额" style="text-align:center">
-                                <h:outputText value="#{record.txnAmt}"/>
-                            </p:column>
-
-                        </p:dataTable>
+                    <h:panelGrid id="itemPanel1" columns="4" cellpadding="0" cellspacing="5" border="0"
+                                 columnClasses="col-item, col-item-input, col-item2, col-item-input">
+                        <h:outputLabel value="项目编码:"/>
+                        <p:inputText value="#{payinWarrantAction.item1.prjCode}"
+                                     required="true" requiredMessage="必须输入项目编码"/>
+                        <h:outputLabel value="计量单位:"/>
+                        <p:inputText value="#{payinWarrantAction.item1.measure}"
+                                     required="true" requiredMessage="必须输入计量单位"/>
+                        <h:outputLabel value="数量:"/>
+                        <p:inputText value="#{payinWarrantAction.item1.handleNum}"
+                                     required="true" requiredMessage="必须输入数量"/>
+                        <h:outputLabel value="金额(元):"/>
+                        <p:inputText value="#{payinWarrantAction.item1.txnAmt}"
+                                     required="true" requiredMessage="必须输入金额"/>
                     </h:panelGrid>
                 </p:panel>
-            </h:form>
-        </div>
+                <br/>
+                <p:panel>
+                    <h:panelGrid id="itemPanel2" columns="4" cellpadding="0" cellspacing="5" border="0"
+                                 columnClasses="col-item, col-item-input, col-item2, col-item-input">
+                        <h:outputLabel value="项目编码:"/>
+                        <p:inputText value="#{payinWarrantAction.item2.prjCode}"/>
+                        <h:outputLabel value="计量单位:"/>
+                        <p:inputText value="#{payinWarrantAction.item2.measure}"/>
+                        <h:outputLabel value="数量:"/>
+                        <p:inputText value="#{payinWarrantAction.item2.handleNum}"/>
+                        <h:outputLabel value="金额(元):"/>
+                        <p:inputText value="#{payinWarrantAction.item2.txnAmt}"/>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+                <p:panel>
+                    <h:panelGrid id="itemPanel3" columns="4" cellpadding="0" cellspacing="5" border="0"
+                                 columnClasses="col-item, col-item-input, col-item2, col-item-input">
+                        <h:outputLabel value="项目编码:"/>
+                        <p:inputText value="#{payinWarrantAction.item3.prjCode}"/>
+                        <h:outputLabel value="计量单位:"/>
+                        <p:inputText value="#{payinWarrantAction.item3.measure}"/>
+                        <h:outputLabel value="数量:"/>
+                        <p:inputText value="#{payinWarrantAction.item3.handleNum}"/>
+                        <h:outputLabel value="金额(元):"/>
+                        <p:inputText value="#{payinWarrantAction.item3.txnAmt}"/>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+                <p:panel>
+                    <h:panelGrid id="itemPanel4" columns="4" cellpadding="0" cellspacing="5" border="0"
+                                 columnClasses="col-item, col-item-input, col-item2, col-item-input">
+                        <h:outputLabel value="项目编码:"/>
+                        <p:inputText value="#{payinWarrantAction.item4.prjCode}"/>
+                        <h:outputLabel value="计量单位:"/>
+                        <p:inputText value="#{payinWarrantAction.item4.measure}"/>
+                        <h:outputLabel value="数量:"/>
+                        <p:inputText value="#{payinWarrantAction.item4.handleNum}"/>
+                        <h:outputLabel value="金额(元):"/>
+                        <p:inputText value="#{payinWarrantAction.item4.txnAmt}"/>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+                <p:panel>
+                    <h:panelGrid id="itemPanel5" columns="4" cellpadding="0" cellspacing="5" border="0"
+                                 columnClasses="col-item, col-item-input, col-item2, col-item-input">
+                        <h:outputLabel value="项目编码:"/>
+                        <p:inputText value="#{payinWarrantAction.item5.prjCode}"/>
+                        <h:outputLabel value="计量单位:"/>
+                        <p:inputText value="#{payinWarrantAction.item5.measure}"/>
+                        <h:outputLabel value="数量:"/>
+                        <p:inputText value="#{payinWarrantAction.item5.handleNum}"/>
+                        <h:outputLabel value="金额(元):"/>
+                        <p:inputText value="#{payinWarrantAction.item5.txnAmt}"/>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+            </p:fieldset>
+            <p:separator/>
+            <h:panelGrid columns="1" style="width: 100%">
+                <p:commandButton id="paybtn" style="text-align: center;width: 180px;margin-left: 500px;"
+                                 action="#{payinWarrantAction.onHandWritenPay}"
+                                 value="确认缴款" update="msgs,paybtn"/>
+            </h:panelGrid>
+        </h:form>
     </ui:define>
 </ui:composition>

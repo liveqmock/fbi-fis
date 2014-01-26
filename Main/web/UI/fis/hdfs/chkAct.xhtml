@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/ui.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+            .col-95 {
+                width: 95%;
+            }
+
+            .col-5 {
+                width: 5%;
+            }
+
+            .col-label {
+                width: 170px;
+                text-align: right;
+            }
+
+            .col-label2 {
+                /*padding-left: 80px;*/
+                text-align: left;
+            }
+
+            .col-input {
+                /*width: 180px;*/
+                /*text-align: left;*/
+            }
+
+            .col-qry1 {
+                width: 80%;
+            }
+        </style>
+        <script language="JavaScript" type="text/JavaScript">
+            document.onkeydown = function TabReplace() {
+                if (event.keyCode == 13) {
+                    event.keyCode = 9;
+                }
+            }
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <div style="margin:5px">
+            <h:form id="form">
+                <p:focus for="startDate"/>
+                <p:growl id="msgs" showDetail="true"/>
+                <p:panel id="qryfields">
+                    <h:panelGrid columns="2" cellspacing="5">
+                        <h:panelGrid id="inputVchTxn" columns="6" cellspacing="5" cellpadding="0"
+                                     columnClasses="col-label,col-input,col-label,col-input,col-label,col-input">
+                            <h:outputLabel value="起始日期:" style="text-align: right;"/>
+                            <p:inputText id="startDate" value="#{checkActAction.startDate}"
+                                         required="true"
+                                         onclick="WdatePicker({dateFmt:'yyyyMMdd'})"/>
+                            <h:outputLabel value="截止日期:" style="text-align: right;"/>
+                            <p:inputText id="endDate" value="#{checkActAction.endDate}"
+                                         required="true"
+                                         onclick="WdatePicker({dateFmt:'yyyyMMdd'})"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="1" cellspacing="5" cellpadding="0" style="margin-left: 300px;"
+                                     width="10%">
+                            <p:commandButton id="getbtn" style="width:100px;" value="查询"
+                                             action="#{checkActAction.onChk}"
+                                             ajax="true"
+                                             update="actbtn,msgs,dataPanel,qryfields">
+                            </p:commandButton>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+                <p:ajaxStatus style="height:18px;text-align:center">
+                    <f:facet name="start">
+                        <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value=""/>
+                    </f:facet>
+                </p:ajaxStatus>
+                <p:panel>
+                    <h:panelGrid id="dataPanel" columns="1" style="width: 100%;">
+                        <h:panelGrid columns="2" cellpadding="0" cellspacing="5" border="0" style="width:100%;"
+                                     columnClasses="col-label, col-label2">
+                            <h:outputLabel value="返回码:"/>
+                            <h:outputText value="#{checkActAction.chkactRtnInfo.rtnCode}"/>
+                            <h:outputLabel value="返回信息:"/>
+                            <h:outputText value="#{checkActAction.chkactRtnInfo.rtnMsg}"/>
+                            <h:outputLabel value="失败明细数:"/>
+                            <h:outputText value="#{checkActAction.chkactRtnInfo.itemNum}"/>
+                        </h:panelGrid>
+                        <p:separator/>
+                        <p:dataTable value="#{checkActAction.chkactRtnInfo.items}" var="record" id="itemTable"
+                                     emptyMessage="数据记录为空...">
+
+                            <p:column headerText="通知日期" style="text-align:center">
+                                <h:outputText value="#{record.notifyDate}"/>
+                            </p:column>
+                            <p:column headerText="票据号" style="text-align:center">
+                                <h:outputText value="#{record.billId}"/>
+                            </p:column>
+                            <p:column headerText="财政业务ID" style="text-align:left">
+                                <h:outputText value="#{record.fisBizId}"/>
+                            </p:column>
+                            <p:column headerText="缴款人" style="text-align:left">
+                                <h:outputText value="#{record.payerName}"/>
+                            </p:column>
+                            <p:column headerText="金额" style="text-align:center">
+                                <h:outputText value="#{record.payAmt}"/>
+                            </p:column>
+                            <p:column headerText="返回信息" style="text-align:left">
+                                <h:outputText value="#{record.rtnMsg}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

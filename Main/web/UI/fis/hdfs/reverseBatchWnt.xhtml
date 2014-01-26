@@ -53,15 +53,19 @@
                         <h:panelGrid id="inputVchTxn" columns="2" cellspacing="5" cellpadding="0"
                                      columnClasses="col-label,col-input">
                             <h:outputLabel value="编号:" style="text-align: right;"/>
-                            <p:inputText id="billId" value="#{payinWarrantAction.billId}" style="width: 150px;"
+                            <p:inputText id="billId" value="#{batchWarrantAction.billId}" style="width: 150px;"
                                          required="true" requiredMessage="必须输入缴款书编号"/>
 
                             <h:outputLabel value="票据类型:" style="text-align: right;"/>
-                            <p:inputText id="voucherType" value="#{payinWarrantAction.voucherType}"
+                            <p:inputText id="voucherType" value="#{batchWarrantAction.voucherType}"
                                          style="width: 150px;" required="true" requiredMessage="必须输入票据类型"/>
 
+                            <h:outputLabel value="批次号码:" style="text-align: right;"/>
+                            <p:inputText id="fisBatchSn" value="#{batchWarrantAction.fisBatchSn}"
+                                         style="width: 150px;" required="true" requiredMessage="必须输入批次号码"/>
+
                             <h:outputLabel value="金额:" style="text-align: right;"/>
-                            <p:inputText id="payAmt" value="#{payinWarrantAction.payAmt}"
+                            <p:inputText id="payAmt" value="#{batchWarrantAction.payAmt}"
                                          style="width: 150px;" required="true" requiredMessage="必须输入金额">
                                 <f:convertNumber pattern="###,###,##0.00"/>
                             </p:inputText>
@@ -71,7 +75,7 @@
                                      width="10%">
 
                             <p:commandButton id="actbtn" style="width:100px;" value="确认冲正"
-                                             action="#{payinWarrantAction.onReverse}"
+                                             action="#{batchWarrantAction.onReverse}"
                                              ajax="true" update="actbtn,msgs">
                             </p:commandButton>
                         </h:panelGrid>

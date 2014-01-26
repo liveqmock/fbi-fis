@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 缴款单信息
+ * 汇总缴款单信息
  */
-public class WarrantInfo {
+public class BatchWarrantInfo {
 
     private String billId;            // 缴款通知书号
     private String instCode;          // 单位代码
@@ -25,7 +25,7 @@ public class WarrantInfo {
     private String remark;            // 备注
 
     private int itemNum;              // 明细数
-    private List<WarrantItem> items = new ArrayList<WarrantItem>();
+    private List<BatchWarrantItem> items = new ArrayList<BatchWarrantItem>();
 
     public void assemble(String infoMsg) {
         // 解析报文体
@@ -42,7 +42,7 @@ public class WarrantInfo {
         itemNum = Integer.parseInt(fieldArray[8]); // 明细数
         items.clear();
         for (int i = 0; i < itemNum; i++) {
-            WarrantItem item = new WarrantItem();
+            BatchWarrantItem item = new BatchWarrantItem();
             item.assemble(fieldArray[9 + i]);
             items.add(item);
         }
@@ -120,11 +120,11 @@ public class WarrantInfo {
         this.itemNum = itemNum;
     }
 
-    public List<WarrantItem> getItems() {
+    public List<BatchWarrantItem> getItems() {
         return items;
     }
 
-    public void setItems(List<WarrantItem> items) {
+    public void setItems(List<BatchWarrantItem> items) {
         this.items = items;
     }
 
