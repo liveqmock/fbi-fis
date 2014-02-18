@@ -67,6 +67,11 @@ public class PayinWarrantAction implements Serializable {
         }
         if ("0000".equals(toa.rtnCode)) {
             warrantInfo.assemble(toamsg);
+            payAmt = new BigDecimal("0.00");
+            warrantInfo.assemble(toamsg);
+            for (WarrantItem item : warrantInfo.getItems()) {
+                payAmt = payAmt.add(new BigDecimal(item.getTxnAmt()));
+            }
             payable = true;
         } else {
             MessageUtil.addError("[" + toa.rtnCode + "]" + new String(toa.msgBody));
@@ -77,10 +82,10 @@ public class PayinWarrantAction implements Serializable {
     // 机打票缴款
     public String onPay() {
 
-        if (StringUtils.isEmpty(voucherType)) {
+       /* if (StringUtils.isEmpty(voucherType)) {
             MessageUtil.addError("必须输入票据类型");
             return null;
-        }
+        }*/
         LFixedLengthProtocol tia = newFixedLengthProtocol();
         tia.txnCode = "1531010";
         tia.msgBody = (billId + "|" + voucherType + "|" + payAmt + "|").getBytes();

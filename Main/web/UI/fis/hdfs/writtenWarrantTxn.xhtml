@@ -52,15 +52,12 @@
                 </f:facet>
             </p:ajaxStatus>
             <p:fieldset legend="票据主信息">
-                <p:focus for="billType"/>
+                <p:focus for="billId"/>
                 <p:growl id="msgs" showDetail="false" life="3000"/>
                 <h:panelGrid id="dataPanel" columns="1" style="width: 100%;">
                     <h:panelGrid id="infoPanel" columns="6" cellpadding="0" cellspacing="5" border="0"
                                  style="width:100%;"
                                  columnClasses="col-label, col-item-input, col-label, col-item-input, col-label, col-item-input">
-                        <h:outputLabel value="通知书类别:" style="text-align: right;margin-left: 81px;"/>
-                        <p:inputText id="billType" value="#{payinWarrantAction.warrantInfo.billType}" required="true"
-                                     requiredMessage="必须输入通知书类别"/>
                         <h:outputLabel value="缴款通知书号:" style="text-align: right;margin-left: 81px;"/>
                         <p:inputText id="billId" value="#{payinWarrantAction.warrantInfo.billId}" required="true"
                                      requiredMessage="必须输入缴款通知书号"/>
@@ -81,8 +78,6 @@
                         <p:inputText value="#{payinWarrantAction.warrantInfo.latestDate}" id="latestDate"/>
                         <h:outputLabel value="校验码:"/>
                         <p:inputText id="verifyNo" value="#{payinWarrantAction.warrantInfo.verifyNo}"/>
-                        <h:outputLabel value="合同号:"/>
-                        <p:inputText value="#{payinWarrantAction.warrantInfo.contractNo}"/>
                         <h:outputLabel value="备注:"/>
                         <p:inputText value="#{payinWarrantAction.warrantInfo.remark}"/>
                     </h:panelGrid>

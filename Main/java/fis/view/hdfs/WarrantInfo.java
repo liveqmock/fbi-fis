@@ -17,7 +17,7 @@ public class WarrantInfo {
     private String latestDate;        // 最迟日期
     private String overdueRatio;      // 滞纳金比例
     private String overdueAmt;        // 滞纳金金额
-    private String verifyNo;          // 校验码
+    private String verifyNo = "00000";          // 校验码
 
     private String voucherType;       // 票据类型
     private String billType;          // 通知书类型

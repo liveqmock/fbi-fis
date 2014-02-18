@@ -61,12 +61,12 @@
                                          style="width: 150px;"/>
 
                             <h:outputLabel value="批次号码:" style="text-align: right;"/>
-                            <p:inputText id="payAmt" value="#{batchWarrantAction.fisBatchSn}"
+                            <p:inputText id="fisBatchSn" value="#{batchWarrantAction.fisBatchSn}"
                                          style="width: 150px;" required="true" requiredMessage="必须输入批次号码"/>
 
                             <h:outputLabel value="金额:" style="text-align: right;"/>
                             <p:inputText id="payAmt" value="#{batchWarrantAction.payAmt}"
-                                         style="width: 150px;" disabled="#{!payinWarrantAction.payable}">
+                                         style="width: 150px;">
                                 <f:convertNumber pattern="###,###,##0.00"/>
                             </p:inputText>
 
@@ -76,12 +76,12 @@
                             <p:commandButton id="getbtn" style="width:100px;" value="查询"
                                              action="#{batchWarrantAction.onQuery}"
                                              ajax="true"
-                                             update="actbtn,msgs,dataPanel,qryfields">
+                                             update="actbtn,getbtn,msgs,dataPanel,qryfields,payAmt">
                             </p:commandButton>
                             <p:commandButton id="actbtn" style="width:100px;" value="缴款"
                                              disabled="#{!batchWarrantAction.payable}"
                                              action="#{batchWarrantAction.onPay}"
-                                             ajax="true" update="actbtn,msgs,qryfields">
+                                             ajax="true" update="actbtn,getbtn,msgs,qryfields">
                             </p:commandButton>
                         </h:panelGrid>
                     </h:panelGrid>

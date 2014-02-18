@@ -49,8 +49,8 @@
                 <p:growl id="msgs" showDetail="true"/>
                 <p:panel id="qryfields">
                     <h:panelGrid columns="2">
-                        <h:panelGrid id="inputVchTxn" columns="6" cellspacing="5" cellpadding="0"
-                                     columnClasses="col-label,col-input,col-label,col-input,col-label,col-input">
+                        <h:panelGrid id="inputVchTxn" columns="4" cellspacing="5" cellpadding="0"
+                                     columnClasses="col-label,col-input,col-label,col-input">
 
 
 
@@ -85,7 +85,7 @@
                             <p:commandButton id="getbtn" style="width:100px;" value="查询"
                                              action="#{pendingQryAction.onReverseQuery}"
                                              ajax="true"
-                                             update="actbtn,msgs,dataPanel,qryfields">
+                                             update="msgs,dataPanel,qryfields">
                             </p:commandButton>
                         </h:panelGrid>
                     </h:panelGrid>

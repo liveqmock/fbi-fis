@@ -61,7 +61,11 @@ public class BatchWarrantAction implements Serializable {
             return null;
         }
         if ("0000".equals(toa.rtnCode)) {
+            payAmt = new BigDecimal("0.00");
             warrantInfo.assemble(toamsg);
+            for (BatchWarrantItem item : warrantInfo.getItems()) {
+                payAmt = payAmt.add(new BigDecimal(item.getTxnAmt()));
+            }
             payable = true;
         } else {
             MessageUtil.addError("[" + toa.rtnCode + "]" + new String(toa.msgBody));
@@ -78,7 +82,7 @@ public class BatchWarrantAction implements Serializable {
         }
         LFixedLengthProtocol tia = newFixedLengthProtocol();
         tia.txnCode = "1533010";
-        tia.msgBody = (billId + "|" + voucherType + "|" + fisBatchSn + "|" + payAmt + "|").getBytes();
+        tia.msgBody = (billId + "|" + voucherType + "|" + payAmt + "|" + fisBatchSn + "|").getBytes();
         LFixedLengthProtocol toa = null;
         String toamsg = null;
         try {
@@ -107,7 +111,7 @@ public class BatchWarrantAction implements Serializable {
     public String onReverse() {
         LFixedLengthProtocol tia = newFixedLengthProtocol();
         tia.txnCode = "1533090";
-        tia.msgBody = (billId + "|" + voucherType + "|" + fisBatchSn + "|" + payAmt + "|").getBytes();
+        tia.msgBody = (billId + "|" + voucherType + "|" + payAmt + "|" + fisBatchSn + "|").getBytes();
         LFixedLengthProtocol toa = null;
         String toamsg = null;
         try {
