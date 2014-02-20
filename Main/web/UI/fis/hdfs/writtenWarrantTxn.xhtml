@@ -78,8 +78,6 @@
                         <p:inputText value="#{payinWarrantAction.warrantInfo.latestDate}" id="latestDate"/>
                         <h:outputLabel value="校验码:"/>
                         <p:inputText id="verifyNo" value="#{payinWarrantAction.warrantInfo.verifyNo}"/>
-                        <h:outputLabel value="备注:"/>
-                        <p:inputText value="#{payinWarrantAction.warrantInfo.remark}"/>
                     </h:panelGrid>
                 </h:panelGrid>
             </p:fieldset>
@@ -101,6 +99,9 @@
                         <h:outputLabel value="金额(元):"/>
                         <p:inputText value="#{payinWarrantAction.item1.txnAmt}"
                                      required="true" requiredMessage="必须输入金额"/>
+                        <h:outputLabel value="票据号:"/>
+                        <p:inputText value="#{payinWarrantAction.vch1.vchNum}"
+                                     required="true" requiredMessage="必须输入票据号"/>
                     </h:panelGrid>
                 </p:panel>
                 <br/>
@@ -115,6 +116,8 @@
                         <p:inputText value="#{payinWarrantAction.item2.handleNum}"/>
                         <h:outputLabel value="金额(元):"/>
                         <p:inputText value="#{payinWarrantAction.item2.txnAmt}"/>
+                        <h:outputLabel value="票据号:"/>
+                        <p:inputText value="#{payinWarrantAction.vch2.vchNum}"/>
                     </h:panelGrid>
                 </p:panel>
                 <br/>
@@ -129,6 +132,8 @@
                         <p:inputText value="#{payinWarrantAction.item3.handleNum}"/>
                         <h:outputLabel value="金额(元):"/>
                         <p:inputText value="#{payinWarrantAction.item3.txnAmt}"/>
+                        <h:outputLabel value="票据号:"/>
+                        <p:inputText value="#{payinWarrantAction.vch3.vchNum}"/>
                     </h:panelGrid>
                 </p:panel>
                 <br/>
@@ -143,6 +148,8 @@
                         <p:inputText value="#{payinWarrantAction.item4.handleNum}"/>
                         <h:outputLabel value="金额(元):"/>
                         <p:inputText value="#{payinWarrantAction.item4.txnAmt}"/>
+                        <h:outputLabel value="票据号:"/>
+                        <p:inputText value="#{payinWarrantAction.vch4.vchNum}"/>
                     </h:panelGrid>
                 </p:panel>
                 <br/>
@@ -157,15 +164,21 @@
                         <p:inputText value="#{payinWarrantAction.item5.handleNum}"/>
                         <h:outputLabel value="金额(元):"/>
                         <p:inputText value="#{payinWarrantAction.item5.txnAmt}"/>
+                        <h:outputLabel value="票据号:"/>
+                        <p:inputText value="#{payinWarrantAction.vch5.vchNum}"/>
                     </h:panelGrid>
                 </p:panel>
                 <br/>
             </p:fieldset>
             <p:separator/>
-            <h:panelGrid columns="1" style="width: 100%">
-                <p:commandButton id="paybtn" style="text-align: center;width: 180px;margin-left: 500px;"
+            <h:panelGrid columns="2" style="width: 100%">
+                <p:commandButton id="cfmbtn" style="text-align: center;width: 180px;margin-left: 500px;"
+                                 action="#{payinWarrantAction.onHandWritenPayConfirm}"
+                                 value="缴款验证" disabled="#{payinWarrantAction.confirmed}" update="msgs,paybtn,cfmbtn"/>
+                <p:commandButton id="paybtn" style="text-align: center;width: 180px;margin-left: 10px;"
+                                 disabled="#{!payinWarrantAction.confirmed}"
                                  action="#{payinWarrantAction.onHandWritenPay}"
-                                 value="确认缴款" update="msgs,paybtn"/>
+                                 value="确认缴款" update="msgs,paybtn,cfmbtn"/>
             </h:panelGrid>
         </h:form>
     </ui:define>

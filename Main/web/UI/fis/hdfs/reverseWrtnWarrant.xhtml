@@ -50,12 +50,14 @@
                 <p:panel id="qryfields">
                     <h:panelGrid columns="2" cellspacing="5">
 
-                        <h:panelGrid id="inputVchTxn" columns="4" cellspacing="5" cellpadding="0"
+                        <h:panelGrid id="inputVchTxn" columns="2" cellspacing="5" cellpadding="0"
                                      columnClasses="col-label,col-input">
-                            <h:outputLabel value="编号:" style="text-align: right;"/>
+                            <h:outputLabel value="缴款通知书号:" style="text-align: right;"/>
                             <p:inputText id="billId" value="#{payinWarrantAction.billId}" style="width: 150px;"
-                                         required="true" requiredMessage="必须输入缴款书编号"/>
-
+                                         required="true" requiredMessage="必须输入缴款通知书号"/>
+                            <h:outputLabel value="单位代码:" style="text-align: right;"/>
+                            <p:inputText id="instCode" value="#{payinWarrantAction.instCode}" style="width: 150px;"
+                                         required="true" requiredMessage="必须输入单位代码"/>
                             <h:outputLabel value="金额:" style="text-align: right;"/>
                             <p:inputText id="payAmt" value="#{payinWarrantAction.payAmt}"
                                          style="width: 150px;" required="true" requiredMessage="必须输入金额">
