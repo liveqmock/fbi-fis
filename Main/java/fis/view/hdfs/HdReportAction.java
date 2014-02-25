@@ -1,5 +1,6 @@
-package fis.view.kfqfs;
+package fis.view.hdfs;
 
+import fis.view.kfqfs.ReportItem;
 import fnt.common.utils.JxlsManager;
 import gateway.client.KarafLinkingSocketClient;
 import gateway.domain.LFixedLengthProtocol;
@@ -23,13 +24,14 @@ import java.util.*;
  */
 @ManagedBean
 @ViewScoped
-public class GatherReportAction implements Serializable {
-    private static final Logger logger = LoggerFactory.getLogger(GatherReportAction.class);
+public class HdReportAction implements Serializable {
+    private static final Logger logger = LoggerFactory.getLogger(HdReportAction.class);
 
     private String startDate;
     private String endDate;
+    private String totalMsg;
 
-    private List<ReportItem> items = new ArrayList<ReportItem>();
+    private List<HdReportItem> items = new ArrayList<HdReportItem>();
 
     @PostConstruct
     public void init() {
@@ -42,8 +44,8 @@ public class GatherReportAction implements Serializable {
         // 仅使用一个日期，日报
         endDate = startDate;
         LFixedLengthProtocol tia = newFixedLengthProtocol();
-        tia.txnCode = "1534080";
-        tia.msgBody = ("1|370211|" + startDate + "|" + endDate + "|").getBytes();
+        tia.txnCode = "1536000";
+        tia.msgBody = (startDate + "|" + endDate + "|").getBytes();
         LFixedLengthProtocol toa = null;
         String toamsg = null;
         try {
@@ -58,15 +60,19 @@ public class GatherReportAction implements Serializable {
         }
         if ("0000".equals(toa.rtnCode)) {
             String[] fieldArray = StringUtils.splitByWholeSeparatorPreserveAllTokens(toamsg, "|");
-            int itemCnt = Integer.parseInt(fieldArray[0]); // 明细数
+            totalMsg = fieldArray[1];
+            int itemCnt = Integer.parseInt(fieldArray[2]); // 明细数
             items.clear();
             for (int i = 0; i < itemCnt; i++) {
-                ReportItem item = new ReportItem();
-                item.assemble(fieldArray[1 + i]);
+                HdReportItem item = new HdReportItem();
+                item.setSeqId(String.valueOf(i + 1));
+                item.assemble(fieldArray[3 + i]);
                 items.add(item);
             }
             if (items.size() == 0) {
                 MessageUtil.addWarn("报表相关数据为空");
+            } else {
+                MessageUtil.addInfo(totalMsg);
             }
         } else {
             MessageUtil.addError("[" + toa.rtnCode + "]" + new String(toa.msgBody));
@@ -81,12 +87,13 @@ public class GatherReportAction implements Serializable {
                 MessageUtil.addWarn("请先查询报表数据。");
                 return null;
             } else {
-                String excelFilename = "开发区财政非税收入日报表" + startDate + ".xls";
+                String excelFilename = "黄岛非税收入日报表" + startDate + ".xls";
                 JxlsManager jxls = new JxlsManager();
                 Map beansMap = new HashMap();
                 beansMap.put("records", items);
                 beansMap.put("startDate", startDate);
-                jxls.exportDataToXls(excelFilename, "/report/KfqfsDayReport.xls", beansMap);
+                beansMap.put("totalMsg", totalMsg);
+                jxls.exportDataToXls(excelFilename, "/report/HdfsDayReport.xls", beansMap);
             }
         } catch (Exception e) {
             logger.error("生成收入日报表失败。", e);
@@ -97,16 +104,17 @@ public class GatherReportAction implements Serializable {
 
     private LFixedLengthProtocol newFixedLengthProtocol() {
         LFixedLengthProtocol proto = new LFixedLengthProtocol();
-        proto.appID = "FISKFQ";
+        proto.appID = "FISHD";
         String date14 = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         proto.txnTime = date14;
-        proto.serialNo = "KFQFS" + date14.substring(8);
+        proto.serialNo = "HDFS" + date14.substring(8);
         proto.ueserID = PropertyManager.getProperty("linking.wsys.userid");
         OperatorManager om = ProtocolFactory.getOperatorManager();
         proto.branchID = om.getOperator().getDeptid();
         proto.tellerID = om.getOperatorId();
         return proto;
     }
+
 
     public String getStartDate() {
         return startDate;
@@ -124,11 +132,19 @@ public class GatherReportAction implements Serializable {
         this.endDate = endDate;
     }
 
-    public List<ReportItem> getItems() {
+    public List<HdReportItem> getItems() {
         return items;
     }
 
-    public void setItems(List<ReportItem> items) {
+    public void setItems(List<HdReportItem> items) {
         this.items = items;
+    }
+
+    public String getTotalMsg() {
+        return totalMsg;
+    }
+
+    public void setTotalMsg(String totalMsg) {
+        this.totalMsg = totalMsg;
     }
 }

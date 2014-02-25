@@ -1,6 +1,6 @@
 package fis.view.hdfs;
 
-import gateway.client.SyncSocketClient;
+import gateway.client.KarafLinkingSocketClient;
 import gateway.domain.LFixedLengthProtocol;
 import gateway.domain.ProtocolFactory;
 import org.apache.commons.lang.StringUtils;
@@ -51,7 +51,7 @@ public class PendingQryAction implements Serializable {
         LFixedLengthProtocol toa = null;
         String toamsg = null;
         try {
-            SyncSocketClient client = new SyncSocketClient();
+            KarafLinkingSocketClient client = new KarafLinkingSocketClient();
             toa = client.onRequest(tia);
             toamsg = new String(toa.msgBody);
             logger.info("返回报文体：" + toamsg);
@@ -81,7 +81,7 @@ public class PendingQryAction implements Serializable {
         LFixedLengthProtocol toa = null;
         String toamsg = null;
         try {
-            SyncSocketClient client = new SyncSocketClient();
+            KarafLinkingSocketClient client = new KarafLinkingSocketClient();
             toa = client.onRequest(tia);
             toamsg = new String(toa.msgBody);
             logger.info("返回报文体：" + toamsg);

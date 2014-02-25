@@ -43,14 +43,6 @@
 
     <ui:define name="content">
         <h:form id="form">
-            <p:ajaxStatus style="height:18px;text-align:center">
-                <f:facet name="start">
-                    <h:graphicImage value="/images/ajaxloadingbar.gif"/>
-                </f:facet>
-                <f:facet name="complete">
-                    <h:outputText value=""/>
-                </f:facet>
-            </p:ajaxStatus>
             <p:fieldset legend="票据主信息">
                 <p:focus for="typecode"/>
                 <p:growl id="msgs" showDetail="false" life="3000"/>
@@ -58,10 +50,10 @@
                     <h:panelGrid id="infoPanel" columns="6" cellpadding="0" cellspacing="5" border="0"
                                  style="width:100%;"
                                  columnClasses="col-label, col-item-input, col-label, col-item-input, col-label, col-item-input">
-                        <h:outputLabel value="样式编码:" style="text-align: right;margin-left: 140px;"/>
+                        <h:outputLabel value="*样式编码:" style="text-align: right;margin-left: 140px;"/>
                         <p:inputText id="typecode" value="#{billPayAction.billInfo.billtype_code}" required="true"
                                      requiredMessage="必须输入样式编码"/>
-                        <h:outputLabel value="票据编号:" style="text-align: right;margin-left: 81px;"/>
+                        <h:outputLabel value="*票据编号:" style="text-align: right;margin-left: 81px;"/>
                         <p:inputText id="billno" value="#{billPayAction.billInfo.bill_no}" required="true"
                                      requiredMessage="必须输入票据编号"/>
                         <h:outputLabel value="*全票面校验码:"/>
@@ -71,7 +63,7 @@
                         <p:selectOneMenu value="#{billPayAction.billInfo.pm_code}" style="width: 150px;">
                             <f:selectItems value="#{billPayAction.payMethodOptions}"/>
                         </p:selectOneMenu>
-                        <h:outputLabel value="执收单位编码:"/>
+                        <h:outputLabel value="*执收单位编码:"/>
                         <p:inputText value="#{billPayAction.billInfo.ien_code}" id="zsdwbm"/>
                         <h:outputLabel value="执收单位名称:"/>
                         <p:inputText id="zsdwmc" value="#{billPayAction.billInfo.ien_name}"/>
@@ -81,12 +73,10 @@
                         <p:inputText id="wtzsdwmc" value="#{billPayAction.billInfo.consign_ien_name}"/>
                         <h:outputLabel value="年度:"/>
                         <p:inputText value="#{billPayAction.billInfo.set_year}"/>
-                        <h:outputLabel value="创建人:"/>
-                        <p:inputText value="#{billPayAction.billInfo.bank_user}"/>
-                        <h:outputLabel value="银行编码:"/>
-                        <p:inputText value="#{billPayAction.billInfo.bank_no}"/>
+
                         <h:outputLabel value="*缴款人:"/>
-                        <p:inputText value="#{billPayAction.billInfo.payer}"/>
+                        <p:inputText value="#{billPayAction.billInfo.payer}" required="true"
+                                     requiredMessage="必须输入缴款人"/>
                         <h:outputLabel value="缴款人开户行:"/>
                         <p:inputText value="#{billPayAction.billInfo.payerbank}"/>
                         <h:outputLabel value="缴款人账号:"/>
@@ -188,6 +178,15 @@
                 </p:panel>
                 <br/>
             </p:fieldset>
+            <p:ajaxStatus style="height:18px;text-align:center">
+                <f:facet name="start">
+                    <h:graphicImage value="/images/ajaxloadingbar.gif"/>
+                </f:facet>
+                <f:facet name="complete">
+                    <h:outputText value=""/>
+                </f:facet>
+            </p:ajaxStatus>
+
             <p:separator/>
             <h:panelGrid columns="1" style="width: 100%">
                 <p:commandButton id="paybtn" style="text-align: center;width: 180px;margin-left: 500px;"

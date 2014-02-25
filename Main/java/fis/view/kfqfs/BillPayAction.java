@@ -1,6 +1,6 @@
 package fis.view.kfqfs;
 
-import gateway.client.SyncSocketClient;
+import gateway.client.KarafLinkingSocketClient;
 import gateway.domain.LFixedLengthProtocol;
 import gateway.domain.ProtocolFactory;
 import org.apache.commons.lang.StringUtils;
@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import pub.platform.advance.utils.PropertyManager;
 import pub.platform.security.OperatorManager;
 import skyline.common.utils.MessageUtil;
+import skyline.service.SystemService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -65,8 +66,9 @@ public class BillPayAction implements Serializable {
         payMethodOptions.add(new SelectItem("3", "电汇"));
 
 
-        consignOptions.add(new SelectItem("true", "是"));
         consignOptions.add(new SelectItem("false", "否"));
+        consignOptions.add(new SelectItem("true", "是"));
+
     }
 
     public String onQuery() {
@@ -80,7 +82,7 @@ public class BillPayAction implements Serializable {
         LFixedLengthProtocol toa = null;
         String toamsg = null;
         try {
-            SyncSocketClient client = new SyncSocketClient();
+            KarafLinkingSocketClient client = new KarafLinkingSocketClient();
             toa = client.onRequest(tia);
             toamsg = new String(toa.msgBody);
             logger.info("返回报文体：" + toamsg);
@@ -127,7 +129,7 @@ public class BillPayAction implements Serializable {
         LFixedLengthProtocol toa = null;
         String toamsg = null;
         try {
-            SyncSocketClient client = new SyncSocketClient();
+            KarafLinkingSocketClient client = new KarafLinkingSocketClient();
             toa = client.onRequest(tia);
             toamsg = new String(toa.msgBody);
             logger.info("返回报文体：" + toamsg);
@@ -157,6 +159,7 @@ public class BillPayAction implements Serializable {
          /*
           手工票
          */
+        billInfo.setBank_user(SystemService.getOperatorManager().getOperatorId());
         LFixedLengthProtocol tia = newFixedLengthProtocol();
         tia.txnCode = "1534013";
         StringBuffer msgbuf = new StringBuffer("370211|");
@@ -191,7 +194,7 @@ public class BillPayAction implements Serializable {
         LFixedLengthProtocol toa = null;
         String toamsg = null;
         try {
-            SyncSocketClient client = new SyncSocketClient();
+            KarafLinkingSocketClient client = new KarafLinkingSocketClient();
             toa = client.onRequest(tia);
             toamsg = new String(toa.msgBody);
             logger.info("返回报文体：" + toamsg);
@@ -201,6 +204,8 @@ public class BillPayAction implements Serializable {
         }
         if ("0000".equals(toa.rtnCode)) {
             MessageUtil.addInfo("缴款成功!");
+            billInfo = new BillInfo();
+            billInfo.setSet_year(new SimpleDateFormat("yyyy").format(new Date()));
         } else {
             MessageUtil.addError("[" + toa.rtnCode + "]" + new String(toa.msgBody));
         }
@@ -217,7 +222,7 @@ public class BillPayAction implements Serializable {
         LFixedLengthProtocol toa = null;
         String toamsg = null;
         try {
-            SyncSocketClient client = new SyncSocketClient();
+            KarafLinkingSocketClient client = new KarafLinkingSocketClient();
             toa = client.onRequest(tia);
             toamsg = new String(toa.msgBody);
             logger.info("返回报文体：" + toamsg);
@@ -245,7 +250,7 @@ public class BillPayAction implements Serializable {
         LFixedLengthProtocol toa = null;
         String toamsg = null;
         try {
-            SyncSocketClient client = new SyncSocketClient();
+            KarafLinkingSocketClient client = new KarafLinkingSocketClient();
             toa = client.onRequest(tia);
             toamsg = new String(toa.msgBody);
             logger.info("返回报文体：" + toamsg);

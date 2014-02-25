@@ -1,6 +1,7 @@
 package fis.view.kfqfs;
 
 import org.apache.commons.lang.StringUtils;
+import pub.platform.advance.utils.PropertyManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +26,11 @@ public class BillInfo {
     private String payer = "";
     private String payerbank = "";
     private String payeraccount = "";
-    private String receiver = "";
-    private String receiverbank = "";
-    private String receiveraccount = "";
+//    private String receiver = PropertyManager.getProperty("hdfs.recever");
+    private String receiver = "青岛经济技术开发区财政局";
+    private String receiverbank = "浦发银行青岛开发区支行";;
+//    private String receiverbank = PropertyManager.getProperty("hdfs.receiverbank");;
+    private String receiveraccount = PropertyManager.getProperty("hdfs.receiveraccount");;
     private String verify_no = "";
     private String rg_code = "";
     private String receivetype = "";
@@ -41,7 +44,7 @@ public class BillInfo {
     // 手工票多余字段
     private String set_year = "";
     private String bank_user = "";
-    private String bank_no = "";
+    private String bank_no = PropertyManager.getProperty("hdfs.bank_no");;
 
     private int itemCnt = 0;
 
