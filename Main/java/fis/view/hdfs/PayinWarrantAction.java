@@ -159,28 +159,28 @@ public class PayinWarrantAction implements Serializable {
         warrantInfo.getItems().clear();
         if (!StringUtils.isEmpty(item1.getPrjCode())) {
             warrantInfo.getItems().add(item1);
-            vch1.setVchAmt(item1.getTxnAmt());
-            vchs.add(vch1);
+//            vch1.setVchAmt(item1.getTxnAmt());
+//            vchs.add(vch1);
         }
         if (!StringUtils.isEmpty(item2.getPrjCode())) {
             warrantInfo.getItems().add(item2);
-            vch2.setVchAmt(item2.getTxnAmt());
-            vchs.add(vch2);
+//            vch2.setVchAmt(item2.getTxnAmt());
+//            vchs.add(vch2);
         }
         if (!StringUtils.isEmpty(item3.getPrjCode())) {
             warrantInfo.getItems().add(item3);
-            vch3.setVchAmt(item3.getTxnAmt());
-            vchs.add(vch3);
+//            vch3.setVchAmt(item3.getTxnAmt());
+//            vchs.add(vch3);
         }
         if (!StringUtils.isEmpty(item4.getPrjCode())) {
             warrantInfo.getItems().add(item4);
-            vch4.setVchAmt(item4.getTxnAmt());
-            vchs.add(vch4);
+//            vch4.setVchAmt(item4.getTxnAmt());
+//            vchs.add(vch4);
         }
         if (!StringUtils.isEmpty(item5.getPrjCode())) {
             warrantInfo.getItems().add(item5);
-            vch5.setVchAmt(item5.getTxnAmt());
-            vchs.add(vch5);
+//            vch5.setVchAmt(item5.getTxnAmt());
+//            vchs.add(vch5);
         }
         warrantInfo.setItemNum(warrantInfo.getItems().size());
 
@@ -239,13 +239,14 @@ public class PayinWarrantAction implements Serializable {
         LFixedLengthProtocol tia = newFixedLengthProtocol();
         tia.txnCode = "1532010";
         StringBuilder strBuilder = new StringBuilder();
-        strBuilder.append(fisBizId).append("|").append(instName).append("|").append(vchs.size()).append("|");
-        for (Voucher vch : vchs) {
+//        strBuilder.append(fisBizId).append("|").append(instName).append("|").append(vchs.size()).append("|");
+        strBuilder.append(fisBizId).append("|").append(instName).append("|").append("0|");
+        /*for (Voucher vch : vchs) {
             strBuilder.append(vch.getVchType()).append(",");
             strBuilder.append(vch.getVchNum()).append(",");
             strBuilder.append(vch.getVchAmt()).append(",");
             strBuilder.append(vch.getVchSts()).append("|");
-        }
+        }*/
         tia.msgBody = strBuilder.toString().getBytes();
         LFixedLengthProtocol toa = null;
         String toamsg = null;

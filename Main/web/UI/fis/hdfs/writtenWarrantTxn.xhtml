@@ -78,29 +78,25 @@
             <p:fieldset legend="票据缴费项目" style="width: 100%">
                 <br/>
                 <p:panel>
-                    <h:panelGrid id="itemPanel1" columns="6" cellpadding="0" cellspacing="5" border="0"
-                                 columnClasses="col-item, col-item-input, col-item2, col-item-input, col-item2, col-item-input">
+                    <h:panelGrid id="itemPanel1" columns="4" cellpadding="0" cellspacing="5" border="0"
+                                 columnClasses="col-item, col-item-input, col-item2, col-item-input">
                         <h:outputLabel value="项目编码:"/>
                         <p:inputText value="#{payinWarrantAction.item1.prjCode}"
                                      required="true" requiredMessage="必须输入项目编码"/>
                         <h:outputLabel value="计量单位:"/>
-                        <p:inputText value="#{payinWarrantAction.item1.measure}"
-                                     required="true" requiredMessage="必须输入计量单位"/>
+                        <p:inputText value="#{payinWarrantAction.item1.measure}"/>
                         <h:outputLabel value="数量:"/>
                         <p:inputText value="#{payinWarrantAction.item1.handleNum}"
                                      required="true" requiredMessage="必须输入数量"/>
                         <h:outputLabel value="金额(元):"/>
                         <p:inputText value="#{payinWarrantAction.item1.txnAmt}"
                                      required="true" requiredMessage="必须输入金额"/>
-                        <h:outputLabel value="票据号:"/>
-                        <p:inputText value="#{payinWarrantAction.vch1.vchNum}"
-                                     required="true" requiredMessage="必须输入票据号"/>
                     </h:panelGrid>
                 </p:panel>
                 <br/>
                 <p:panel>
-                    <h:panelGrid id="itemPanel2" columns="6" cellpadding="0" cellspacing="5" border="0"
-                                 columnClasses="col-item, col-item-input, col-item2, col-item-input, col-item2, col-item-input">
+                    <h:panelGrid id="itemPanel2" columns="4" cellpadding="0" cellspacing="5" border="0"
+                                 columnClasses="col-item, col-item-input, col-item2, col-item-input">
                         <h:outputLabel value="项目编码:"/>
                         <p:inputText value="#{payinWarrantAction.item2.prjCode}"/>
                         <h:outputLabel value="计量单位:"/>
@@ -109,14 +105,12 @@
                         <p:inputText value="#{payinWarrantAction.item2.handleNum}"/>
                         <h:outputLabel value="金额(元):"/>
                         <p:inputText value="#{payinWarrantAction.item2.txnAmt}"/>
-                        <h:outputLabel value="票据号:"/>
-                        <p:inputText value="#{payinWarrantAction.vch2.vchNum}"/>
                     </h:panelGrid>
                 </p:panel>
                 <br/>
                 <p:panel>
-                    <h:panelGrid id="itemPanel3" columns="6" cellpadding="0" cellspacing="5" border="0"
-                                 columnClasses="col-item, col-item-input, col-item2, col-item-input, col-item2, col-item-input">
+                    <h:panelGrid id="itemPanel3" columns="4" cellpadding="0" cellspacing="5" border="0"
+                                 columnClasses="col-item, col-item-input, col-item2, col-item-input">
                         <h:outputLabel value="项目编码:"/>
                         <p:inputText value="#{payinWarrantAction.item3.prjCode}"/>
                         <h:outputLabel value="计量单位:"/>
@@ -125,14 +119,12 @@
                         <p:inputText value="#{payinWarrantAction.item3.handleNum}"/>
                         <h:outputLabel value="金额(元):"/>
                         <p:inputText value="#{payinWarrantAction.item3.txnAmt}"/>
-                        <h:outputLabel value="票据号:"/>
-                        <p:inputText value="#{payinWarrantAction.vch3.vchNum}"/>
                     </h:panelGrid>
                 </p:panel>
                 <br/>
                 <p:panel>
-                    <h:panelGrid id="itemPanel4" columns="6" cellpadding="0" cellspacing="5" border="0"
-                                 columnClasses="col-item, col-item-input, col-item2, col-item-input, col-item2, col-item-input">
+                    <h:panelGrid id="itemPanel4" columns="4" cellpadding="0" cellspacing="5" border="0"
+                                 columnClasses="col-item, col-item-input, col-item2, col-item-input">
                         <h:outputLabel value="项目编码:"/>
                         <p:inputText value="#{payinWarrantAction.item4.prjCode}"/>
                         <h:outputLabel value="计量单位:"/>
@@ -141,14 +133,12 @@
                         <p:inputText value="#{payinWarrantAction.item4.handleNum}"/>
                         <h:outputLabel value="金额(元):"/>
                         <p:inputText value="#{payinWarrantAction.item4.txnAmt}"/>
-                        <h:outputLabel value="票据号:"/>
-                        <p:inputText value="#{payinWarrantAction.vch4.vchNum}"/>
                     </h:panelGrid>
                 </p:panel>
                 <br/>
                 <p:panel>
-                    <h:panelGrid id="itemPanel5" columns="6" cellpadding="0" cellspacing="5" border="0"
-                                 columnClasses="col-item, col-item-input, col-item2, col-item-input, col-item2, col-item-input">
+                    <h:panelGrid id="itemPanel5" columns="4" cellpadding="0" cellspacing="5" border="0"
+                                 columnClasses="col-item, col-item-input, col-item2, col-item-input">
                         <h:outputLabel value="项目编码:"/>
                         <p:inputText value="#{payinWarrantAction.item5.prjCode}"/>
                         <h:outputLabel value="计量单位:"/>
@@ -157,8 +147,6 @@
                         <p:inputText value="#{payinWarrantAction.item5.handleNum}"/>
                         <h:outputLabel value="金额(元):"/>
                         <p:inputText value="#{payinWarrantAction.item5.txnAmt}"/>
-                        <h:outputLabel value="票据号:"/>
-                        <p:inputText value="#{payinWarrantAction.vch5.vchNum}"/>
                     </h:panelGrid>
                 </p:panel>
                 <br/>
