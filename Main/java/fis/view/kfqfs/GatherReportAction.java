@@ -5,6 +5,7 @@ import gateway.client.KarafLinkingSocketClient;
 import gateway.domain.LFixedLengthProtocol;
 import gateway.domain.ProtocolFactory;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pub.platform.advance.utils.PropertyManager;
@@ -14,6 +15,7 @@ import skyline.common.utils.MessageUtil;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -30,11 +32,13 @@ public class GatherReportAction implements Serializable {
     private String endDate;
 
     private List<ReportItem> items = new ArrayList<ReportItem>();
+    private String sysid = "";
 
     @PostConstruct
     public void init() {
         startDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
         endDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        sysid = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
     }
 
     public String onQry() {
@@ -43,7 +47,7 @@ public class GatherReportAction implements Serializable {
         endDate = startDate;
         LFixedLengthProtocol tia = newFixedLengthProtocol();
         tia.txnCode = "1534080";
-        tia.msgBody = ("1|370211|" + startDate + "|" + endDate + "|").getBytes();
+        tia.msgBody = ("1|370211|" + startDate + "|" + endDate + "|" + sysid + "|").getBytes();
         LFixedLengthProtocol toa = null;
         String toamsg = null;
         try {

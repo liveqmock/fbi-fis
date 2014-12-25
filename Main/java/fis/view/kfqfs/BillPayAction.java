@@ -14,6 +14,7 @@ import skyline.service.SystemService;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -54,6 +55,15 @@ public class BillPayAction implements Serializable {
 
     private String payDate;
 
+    private String kfqRecever = "青岛经济技术开发区财政局";
+    private String kfqReceiverbank = "浦发银行青岛开发区支行";
+
+    private String hdRecever = "胶南市财政局";
+    private String hdReceiverbank = "浦发银行黄岛支行";
+
+    private String sysid = "";
+    private BigDecimal delMoney;
+
     @PostConstruct
     public void init() {
 
@@ -69,6 +79,19 @@ public class BillPayAction implements Serializable {
         consignOptions.add(new SelectItem("false", "否"));
         consignOptions.add(new SelectItem("true", "是"));
 
+        sysid = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+        if ("kfq".equals(sysid)) {
+            billInfo.setReceiver(kfqRecever);
+            billInfo.setReceiverbank(kfqReceiverbank);
+            billInfo.setReceiveraccount(PropertyManager.getProperty("fs.receiveraccount." + sysid));
+        } else if ("hd".equals(sysid)) {
+            billInfo.setReceiver(hdRecever);
+            billInfo.setReceiverbank(hdReceiverbank);
+            billInfo.setReceiveraccount(PropertyManager.getProperty("fs.receiveraccount." + sysid));
+        } else {
+            logger.error("系统标识错误：id=" + sysid);
+        }
+
     }
 
     public String onQuery() {
@@ -78,7 +101,8 @@ public class BillPayAction implements Serializable {
          */
         LFixedLengthProtocol tia = newFixedLengthProtocol();
         tia.txnCode = "1534010";
-        tia.msgBody = (billTypeCode + "|" + billNo + "|" + verifyNo + "|" + billMoney.toString() + "|" + setYear + "|").getBytes();
+        if (billMoney == null) billMoney = new BigDecimal("0.00");
+        tia.msgBody = (billTypeCode + "|" + billNo + "|" + verifyNo + "|" + billMoney.toString() + "|" + setYear + "|" + sysid + "|").getBytes();
         LFixedLengthProtocol toa = null;
         String toamsg = null;
         try {
@@ -98,6 +122,10 @@ public class BillPayAction implements Serializable {
             billNo = "";
             verifyNo = "";
             billMoney = null;
+            delMoney = new BigDecimal("0.00");
+            for (BillItem b : billInfo.getItems()) {
+                delMoney = delMoney.add(new BigDecimal(b.getChargemoney()));
+            }
         } else {
             MessageUtil.addError("[" + toa.rtnCode + "]" + new String(toa.msgBody));
         }
@@ -125,6 +153,9 @@ public class BillPayAction implements Serializable {
 
         msgbuf.append(setYear).append("|").append("|").append("|");
         msgbuf.append(tia.serialNo).append("|");
+        msgbuf.append(billInfo.getReceiver()).append("|");
+        msgbuf.append(billInfo.getReceiverbank()).append("|");
+        msgbuf.append(billInfo.getReceiveraccount()).append("|" + sysid + "|");
         tia.msgBody = msgbuf.toString().getBytes();
         LFixedLengthProtocol toa = null;
         String toamsg = null;
@@ -183,6 +214,7 @@ public class BillPayAction implements Serializable {
         msgbuf.append(billInfo.getReceiveraccount()).append("|");
         msgbuf.append(billInfo.getIs_consign()).append("|");
         msgbuf.append(billInfo.getRemark()).append("|");
+        msgbuf.append(sysid).append("|");
         msgbuf.append(items.size()).append("|");
         for (BillItem item : items) {
             msgbuf.append(item.getIn_bis_code()).append(",");
@@ -203,7 +235,7 @@ public class BillPayAction implements Serializable {
             MessageUtil.addError("网络通信异常。");
         }
         if ("0000".equals(toa.rtnCode)) {
-            MessageUtil.addInfo("缴款成功!");
+            MessageUtil.addInfo("成功录入，已提交财政局。");
             billInfo = new BillInfo();
             billInfo.setSet_year(new SimpleDateFormat("yyyy").format(new Date()));
         } else {
@@ -218,7 +250,7 @@ public class BillPayAction implements Serializable {
         // TODO
         tia.txnCode = "1534040";
         tia.msgBody = (billInfo.getChr_id() + "|" + billInfo.getBilltype_code() + "|"
-                + billInfo.getBill_no() + "|" + billInfo.getSet_year() + "|").getBytes();
+                + billInfo.getBill_no() + "|" + billInfo.getSet_year() + "|" + sysid + "|").getBytes();
         LFixedLengthProtocol toa = null;
         String toamsg = null;
         try {
@@ -233,6 +265,34 @@ public class BillPayAction implements Serializable {
         }
         if ("0000".equals(toa.rtnCode)) {
             MessageUtil.addInfo("撤销票据缴款成功");
+            checkPassed = false;
+        } else {
+            MessageUtil.addError("[" + toa.rtnCode + "]" + new String(toa.msgBody));
+        }
+        return null;
+    }
+
+    // 删除手工票
+    public String onDel() {
+        LFixedLengthProtocol tia = newFixedLengthProtocol();
+        // TODO
+        tia.txnCode = "1534040";
+        tia.msgBody = (billInfo.getChr_id() + "|" + billInfo.getBilltype_code() + "|"
+                + billInfo.getBill_no() + "|" + billInfo.getSet_year() + "|" + sysid + "|").getBytes();
+        LFixedLengthProtocol toa = null;
+        String toamsg = null;
+        try {
+            KarafLinkingSocketClient client = new KarafLinkingSocketClient();
+            toa = client.onRequest(tia);
+            toamsg = new String(toa.msgBody);
+            logger.info("返回报文体：" + toamsg);
+        } catch (Exception e) {
+            logger.error("网络通信异常.", e);
+            MessageUtil.addError("网络通信异常。");
+            return null;
+        }
+        if ("0000".equals(toa.rtnCode)) {
+            MessageUtil.addInfo("手工票删除成功");
             checkPassed = false;
         } else {
             MessageUtil.addError("[" + toa.rtnCode + "]" + new String(toa.msgBody));
