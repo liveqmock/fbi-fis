@@ -44,6 +44,10 @@ public class PaymentService {
     @Resource
     private BizInterService bizInterService;
 
+    public List<FsPaymentinfo> qryPaymentsByDate(String qrydate, String code) {
+        return fsPaymentinfoMapper.qryPaymentsByDate(qrydate, code);
+    }
+
     @Transactional
     public List<FsPaymentinfo> selectPayinfoByPaynotescd(String bofcode, String paynotescd, String checkcode) {
         List<FsPaymentinfo> fsPaymentinfoList = fsPaymentinfoMapper.selectPayinfoByPaynotescd(paynotescd, checkcode, bofcode);

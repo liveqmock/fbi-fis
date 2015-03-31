@@ -3,6 +3,7 @@ package fis.repository.fs.dao;
 import fis.repository.fs.model.FsPaymentinfo;
 import fis.repository.fs.model.FsPaymentinfoExample;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -71,9 +72,17 @@ public interface FsPaymentinfoMapper {
 
     List<FsPaymentinfo> selectPayinfoForToact(Map m);
 
-    List<FsPaymentinfo> selectPayinfoForQry(@Param("processstatus") String processstatus,@Param("bofcode") String bofcode,
-                                            @Param("notescode") String notescode,@Param("recStartd") String recStartd,
-                                            @Param("recEndd") String recEndd,@Param("acctStartd") String acctStratd,
-                                            @Param("acctEndd") String acctEndd );
+    List<FsPaymentinfo> selectPayinfoForQry(@Param("processstatus") String processstatus, @Param("bofcode") String bofcode,
+                                            @Param("notescode") String notescode, @Param("recStartd") String recStartd,
+                                            @Param("recEndd") String recEndd, @Param("acctStartd") String acctStratd,
+                                            @Param("acctEndd") String acctEndd);
+
+    @Select("select t.pkid, t.bankacctdate, t.paynotescode, t.performdept, d.deptname as prfrmdeptname, t.program, t.programname, t.payer, t.amt, t.payfeemethod from FS_PAYMENTINFO t" +
+            " left join fs_base_performdept d " +
+            " on t.performdept = d.deptcode " +
+            " where t.bankacctdate = #{qrydate} " +
+            " and t.areacode = #{bofcode} ")
+    List<FsPaymentinfo> qryPaymentsByDate(@Param("qrydate") String qrydate,
+                                          @Param("bofcode") String bofcode);
 
 }
