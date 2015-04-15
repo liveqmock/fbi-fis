@@ -72,7 +72,7 @@ public class DayReportAction implements Serializable {
                 int i = 1;
                 for (FsPaymentinfo item : items) {
                     item.setPkid(String.valueOf(i++));
-                    item.setPayfeemethod("现金");
+                    item.setPayfeemethod("转账");
                 }
                 String excelFilename = "城阳财政非税收入日报表" + qrydate + ".xls";
                 JxlsManager jxls = new JxlsManager();

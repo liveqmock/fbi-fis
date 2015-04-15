@@ -77,9 +77,11 @@ public interface FsPaymentinfoMapper {
                                             @Param("recEndd") String recEndd, @Param("acctStartd") String acctStratd,
                                             @Param("acctEndd") String acctEndd);
 
-    @Select("select t.pkid, t.bankacctdate, t.paynotescode, t.performdept, d.deptname as prfrmdeptname, t.program, t.programname, t.payer, t.amt, t.payfeemethod from FS_PAYMENTINFO t" +
+    @Select("select t.pkid, t.bankacctdate, t.paynotescode, t.performdept, d.deptname as prfrmdeptname, t.program, p.programname as programname, t.payer, t.amt, t.payfeemethod from FS_PAYMENTINFO t" +
             " left join fs_base_performdept d " +
             " on t.performdept = d.deptcode " +
+            " left join FS_BASE_PROGRAMINFO p " +
+            " on t.program = p.programcode " +
             " where t.bankacctdate = #{qrydate} " +
             " and t.areacode = #{bofcode} ")
     List<FsPaymentinfo> qryPaymentsByDate(@Param("qrydate") String qrydate,

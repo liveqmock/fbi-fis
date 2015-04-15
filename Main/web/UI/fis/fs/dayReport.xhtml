@@ -95,7 +95,9 @@
                         <h:outputText value="#{record.payer}"/>
                     </p:column>
                     <p:column headerText="金额" style="text-align: right">
-                        <h:outputText value="#{record.amt}"/>
+                        <h:outputText value="#{record.amt}">
+                            <f:convertNumber pattern="###,##0.00"/>
+                        </h:outputText>
                     </p:column>
                 </p:dataTable>
             </h:form>
